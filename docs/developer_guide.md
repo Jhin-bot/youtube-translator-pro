@@ -29,9 +29,11 @@ YouTube Translator Pro follows a modular architecture designed for maintainabili
 
 - **YouTube Utils**: Functions for downloading and extracting information from YouTube videos
 - **Export Utils**: Functions for exporting transcriptions to various formats
-- **Cache Manager**: Advanced caching system for optimizing performance
+- **Cache Manager**: Advanced caching system for optimizing performance with LRU eviction policy
 - **Update Manager**: Handles application updates
-- **Error Handling**: Centralized error management system
+- **Error Handling**: Centralized error management system with custom exceptions and crash reporting
+- **Performance Monitor**: Analyzes application performance to identify bottlenecks
+- **Localization**: Internationalization support for multiple languages
 
 ## Code Organization
 

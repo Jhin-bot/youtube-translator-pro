@@ -7,6 +7,7 @@ import os
 import sys
 import logging
 import json
+import platform
 from typing import Dict, Any, Optional, List, Tuple
 from pathlib import Path
 
@@ -14,7 +15,7 @@ from PyQt6.QtCore import QObject, pyqtSignal, QSettings, QTimer
 from PyQt6.QtWidgets import QApplication
 
 # Import configuration and settings
-from src.config import load_settings, save_settings, DEFAULT_SETTINGS
+from src.config import load_settings, save_settings, DEFAULT_SETTINGS, VERSION
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -67,6 +68,9 @@ class ApplicationManager(QObject):
             from src.core.session_manager import SessionManager
             from src.core.error_handler import ErrorReporter, CrashHandler
             from src.utils.recent_files import RecentFilesManager
+            from src.utils.localization import localization
+            from src.utils.telemetry import telemetry
+            from src.utils.performance_monitor import monitor as performance_monitor
             
             # Initialize core components
             self.error_reporter = ErrorReporter(parent=self)
@@ -95,6 +99,44 @@ class ApplicationManager(QObject):
                 max_files=self.settings.get("max_recent_files", 20),
                 parent=self
             )
+            
+            # Initialize localization
+            language = self.settings.get("language", "en")
+            localization.set_language(language)
+            logger.info(f"Initialized localization with language: {language}")
+            
+            # Initialize telemetry
+            telemetry_enabled = self.settings.get("telemetry_enabled", False)
+            telemetry.set_enabled(telemetry_enabled)
+            if telemetry_enabled:
+                # Setup system information
+                sys_info = {
+                    "app_version": VERSION,
+                    "os": platform.system(),
+                    "os_version": platform.version(),
+                    "python_version": platform.python_version()
+                }
+                
+                # Allow device info only if explicitly permitted
+                if self.settings.get("telemetry_device", False):
+                    sys_info.update({
+                        "cpu": platform.processor(),
+                        "architecture": platform.machine()
+                    })
+                
+                telemetry.set_system_info(sys_info)
+                telemetry.record_app_start()
+                logger.info("Telemetry initialized and enabled")
+            else:
+                logger.info("Telemetry initialized but disabled")
+            
+            # Initialize performance monitoring
+            performance_enabled = self.settings.get("performance_monitoring", False)
+            if performance_enabled:
+                performance_monitor.enable()
+                logger.info("Performance monitoring enabled")
+            else:
+                logger.info("Performance monitoring disabled")
             
             logger.info("All components initialized successfully")
         except Exception as e:
@@ -127,6 +169,9 @@ class ApplicationManager(QObject):
             from src.ui.main_window import MainWindow
             self.main_window = MainWindow(self)
             
+            # Integrate new features with main window
+            self._integrate_features_with_main_window()
+            
             # Apply initial style
             self._apply_initial_style()
             
@@ -146,6 +191,19 @@ class ApplicationManager(QObject):
         except Exception as e:
             logger.critical(f"Failed to start application: {e}", exc_info=True)
             return 1
+            
+    def _integrate_features_with_main_window(self):
+        """Integrate new features with the main window."""
+        try:
+            from src.ui.integration_components import FeatureIntegrator
+            
+            # Create integrator and integrate features
+            self.feature_integrator = FeatureIntegrator(self.main_window)
+            self.feature_integrator.integrate_all_features()
+            
+            logger.info("Successfully integrated new features with main window")
+        except Exception as e:
+            logger.error(f"Failed to integrate features with main window: {e}", exc_info=True)
     
     def _apply_initial_style(self):
         """Apply initial application styling."""
@@ -165,22 +223,34 @@ class ApplicationManager(QObject):
             wait: If True, wait for background processes to finish
             timeout: Maximum time to wait for processes
         """
-        logger.info("Application shutdown initiated...")
+        logger.info("Application shutting down...")
         
-        # Save current session
-        if hasattr(self, 'session_manager') and hasattr(self, 'main_window'):
+        # Save session
+        if hasattr(self, 'session_manager'):
             self.session_manager.save_session(self.main_window)
+            logger.info("Session saved")
         
-        # Stop batch processor
+        # Stop batch processing
         if hasattr(self, 'batch_processor'):
-            self.batch_processor.cancel_all(wait=wait, timeout=timeout)
+            # Handle the case where stop might not exist but cancel_batch does
+            if hasattr(self.batch_processor, 'stop'):
+                self.batch_processor.stop(wait=wait, timeout=timeout)
+                logger.info("Batch processor stopped")
+            elif hasattr(self.batch_processor, 'cancel_batch'):
+                self.batch_processor.cancel_batch()
+                logger.info("Batch processor cancelled")
+            else:
+                logger.warning("Unable to stop batch processor - no stop or cancel_batch method found")
         
-        # Clear caches
-        if hasattr(self, 'cache_manager'):
-            self.cache_manager.clear_unused(0)
+        # Record telemetry event for application close
+        from src.utils.telemetry import telemetry
+        if telemetry.enabled:
+            telemetry.record_app_close()
+            logger.info("Recorded app close telemetry event")
         
         # Save settings
         save_settings(self.settings)
+        logger.info("Settings saved")
         
         logger.info("Application shutdown complete")
     
@@ -235,18 +305,42 @@ class ApplicationManager(QObject):
     
     def _apply_settings(self):
         """Apply current settings to application components."""
-        if hasattr(self, 'batch_processor'):
-            self.batch_processor.set_concurrency(self.settings.get("concurrency", 2))
-        
-        if hasattr(self, 'cache_manager'):
-            self.cache_manager.set_max_size(self.settings.get("cache_size_mb", 1000))
-            self.cache_manager.set_ttl(self.settings.get("cache_ttl", 60*60*24*30))
-        
-        # Apply theme if changed
-        theme = self.settings.get("theme", "dark")
         try:
-            from src.ui.styles import StyleManager
-            style_manager = StyleManager()
-            style_manager.apply_theme(self.app, theme)
+            # Update cache manager settings
+            if hasattr(self, 'cache_manager'):
+                self.cache_manager.set_ttl(self.settings.get("cache_ttl", 60*60*24*30))
+                self.cache_manager.set_max_size(self.settings.get("cache_size_mb", 1000))
+            
+            # Update batch processor settings
+            if hasattr(self, 'batch_processor'):
+                self.batch_processor.set_concurrency(self.settings.get("concurrency", 2))
+            
+            # Update recent files manager settings
+            if hasattr(self, 'recent_files_manager'):
+                self.recent_files_manager.set_max_files(self.settings.get("max_recent_files", 20))
+            
+            # Update localization settings
+            from src.utils.localization import localization
+            language = self.settings.get("language", "en")
+            if language != localization.current_language:
+                localization.set_language(language)
+                logger.info(f"Updated localization language to {language}")
+            
+            # Update telemetry settings
+            from src.utils.telemetry import telemetry
+            telemetry_enabled = self.settings.get("telemetry_enabled", False)
+            telemetry.set_enabled(telemetry_enabled)
+            logger.info(f"Updated telemetry enabled status to {telemetry_enabled}")
+            
+            # Update performance monitoring settings
+            from src.utils.performance_monitor import monitor as performance_monitor
+            performance_enabled = self.settings.get("performance_monitoring", False)
+            if performance_enabled:
+                performance_monitor.enable()
+            else:
+                performance_monitor.disable()
+            logger.info(f"Updated performance monitoring enabled status to {performance_enabled}")
+            
+            logger.info("Settings applied to all components")
         except Exception as e:
-            logger.error(f"Failed to apply theme: {e}")
+            logger.error(f"Failed to apply settings: {e}", exc_info=True)

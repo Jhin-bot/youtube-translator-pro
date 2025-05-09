@@ -9,7 +9,12 @@ A professional desktop application for transcribing and translating YouTube vide
 - **Batch Processing**: Queue multiple videos for efficient processing
 - **Export Options**: Export transcriptions and translations in multiple formats (SRT, TXT, VTT, JSON, CSV)
 - **Modern UI**: Clean and intuitive interface built with PyQt6
-- **Advanced Caching**: Efficient resource management for improved performance
+- **Advanced Caching**: Efficient resource management with LRU eviction policy for optimal performance
+- **Robust Error Handling**: Comprehensive exception handling and crash reporting
+- **Internationalization**: Support for multiple languages throughout the application interface
+- **Performance Monitoring**: Tools to analyze application performance and identify bottlenecks
+- **Telemetry**: Optional anonymous usage analytics with strict privacy controls
+- **CI/CD Integration**: Automated testing and deployment pipeline via GitHub Actions
 
 ## Installation
 

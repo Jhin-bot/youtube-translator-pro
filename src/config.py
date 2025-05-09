@@ -15,6 +15,7 @@ from datetime import datetime
 # Application metadata
 APP_NAME = "YouTube Translator Pro"
 APP_VERSION = "1.0.0"
+VERSION = APP_VERSION  # For compatibility with other modules
 APP_AUTHOR = "YouTube Translator Pro Team"
 APP_DESCRIPTION = "Professional application for transcribing and translating YouTube videos"
 APP_WEBSITE = "https://www.youtubetranslatorpro.com"
@@ -106,6 +107,11 @@ def setup_logging(log_level=logging.INFO):
 
 # Initialize logger for this module
 logger = setup_logging()
+
+# Alias for backward compatibility
+def get_settings():
+    """Alias for load_settings for backward compatibility."""
+    return load_settings()
 
 # Application paths
 APP_DIR = Path(__file__).parent
