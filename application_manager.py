@@ -36,9 +36,112 @@ from pathlib import Path
 import traceback # Added for better error logging
 from enum import Enum, auto # Added for enum support
 
-from PyQt6.QtCore import QObject, pyqtSignal, pyqtSlot, QSettings, QTimer, Qt, QStandardPaths
-from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QDialog, QMenu, QSplashScreen, QSystemTrayIcon
-from PyQt6.QtNetwork import QSslSocket # Potentially useful for update checks, etc.
+try:
+    from PyQt6.QtCore import QObject, pyqtSignal as Signal, pyqtSlot as Slot, QSettings, QTimer, Qt, QStandardPaths
+    from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QDialog, QMenu, QSplashScreen, QSystemTrayIcon
+    pyqtSignal = Signal  # For backward compatibility
+    pyqtSlot = Slot      # For backward compatibility
+except ImportError:
+    try:
+        from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QSettings, QTimer, Qt, QStandardPaths
+        from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QDialog, QMenu, QSplashScreen, QSystemTrayIcon
+    except ImportError:
+        # Create mock classes if neither PyQt6 nor PyQt5 is available
+        logging.critical("Neither PyQt6 nor PyQt5 is available. UI functionality will be limited.")
+        
+        class QObject:
+            pass
+            
+        class Signal:
+            def __init__(self, *args):
+                pass
+            def connect(self, func):
+                pass
+            def emit(self, *args):
+                pass
+        
+        pyqtSignal = Signal
+        pyqtSlot = lambda *args, **kwargs: lambda func: func
+        
+        class QWidget(QObject):
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class QMainWindow(QWidget):
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class QDialog(QWidget):
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class QMenu(QWidget):
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class QSystemTrayIcon(QObject):
+            def __init__(self, *args, **kwargs):
+                pass
+                
+            # Define enum for ActivationReason
+            class ActivationReason(Enum):
+                Trigger = 0
+                DoubleClick = 1
+                MiddleClick = 2
+                Context = 3
+                Unknown = 4
+                
+        class QSplashScreen(QWidget):
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class QMessageBox:
+            @staticmethod
+            def information(*args, **kwargs):
+                pass
+            @staticmethod
+            def warning(*args, **kwargs):
+                pass
+            @staticmethod
+            def critical(*args, **kwargs):
+                pass
+                
+        class QSettings:
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class QTimer(QObject):
+            def __init__(self, *args, **kwargs):
+                pass
+            def start(self, interval=None):
+                pass
+            def stop(self):
+                pass
+                
+        class Qt:
+            ApplicationFlags = 0
+                
+        class QStandardPaths:
+            @staticmethod
+            def writableLocation(*args):
+                return ""
+                
+        class QApplication:
+            @staticmethod
+            def instance():
+                return None
+            def exec_(self):
+                pass
+            exec = exec_
+try:
+    from PyQt6.QtNetwork import QSslSocket # Potentially useful for update checks, etc.
+except ImportError:
+    try:
+        from PyQt5.QtNetwork import QSslSocket
+    except ImportError:
+        # Create a mock class if needed
+        class QSslSocket:
+            pass
 
 # Import other application modules
 # Ensure these imports match your file structure and availability

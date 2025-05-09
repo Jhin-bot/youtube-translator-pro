@@ -4,12 +4,26 @@ Requests user permission for collecting anonymous usage data.
 """
 
 import logging
-from PyQt6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QCheckBox, QGroupBox, QDialogButtonBox, QTextBrowser
-)
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QFont
+try:
+    from PyQt6.QtWidgets import (
+        QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QCheckBox, QGroupBox, QDialogButtonBox, QTextBrowser
+    )
+except ImportError:
+    from PyQt5.QtWidgets import (
+        QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QCheckBox, QGroupBox, QDialogButtonBox, QTextBrowser
+    )
+
+try:
+    from PyQt6.QtCore import Qt, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSignal
+
+try:
+    from PyQt6.QtGui import QFont
+except ImportError:
+    from PyQt5.QtGui import QFont
 
 from src.utils.localization import get_string
 from src.utils.telemetry import telemetry

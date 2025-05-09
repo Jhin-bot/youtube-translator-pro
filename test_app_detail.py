@@ -1,15 +1,15 @@
-"""
+""""
 Detailed test script for application_manager with line-by-line import
-"""
+""""
 import sys
 import traceback
 import importlib.util
 import os
 
 def debug_import_module_line_by_line(module_path, start_line=0, end_line=None):
-    """
+    """"
     Import a module line by line to find where exactly the error occurs
-    """
+    """"
     with open(module_path, 'r') as f:
         lines = f.readlines()
     

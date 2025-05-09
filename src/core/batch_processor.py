@@ -12,7 +12,19 @@ from enum import Enum, auto
 from typing import Dict, List, Any, Optional, Tuple, Callable, Union
 from pathlib import Path
 
-from PyQt6.QtCore import QObject, pyqtSignal
+try:
+    try:
+    try:
+    try:
+    from PyQt6.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
 
 from src.config import DEFAULT_SETTINGS
 from src.utils.youtube_utils import download_youtube_audio

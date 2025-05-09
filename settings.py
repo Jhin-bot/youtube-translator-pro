@@ -145,6 +145,7 @@ def save_settings(settings: Dict[str, Any]) -> bool:
 
 #     # Test loading with a corrupted file (simulate by writing invalid JSON)
 #     # try:
+    pass
 #     #     with SETTINGS_FILE.open('w') as f:
 #     #         f.write("{invalid json")
 #     #     logger.warning("Simulated corrupted settings file.")
@@ -155,6 +156,7 @@ def save_settings(settings: Dict[str, Any]) -> bool:
 
 #     # Clean up the test settings file and directory if needed
 #     # try:
+    pass
 #     #     if SETTINGS_FILE.exists():
 #     #         SETTINGS_FILE.unlink()
 #     #     # Clean up the parent directory if it's the test app data dir

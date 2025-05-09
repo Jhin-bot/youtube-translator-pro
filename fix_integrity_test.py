@@ -38,11 +38,19 @@ sys.modules['QByteArray'] = MockQByteArray()
 # Add QKeySequence to QtGui not QtCore
 try:
     from PyQt6.QtGui import QKeySequence
-    class MockQtCore:
-        pass
-    sys.modules['PyQt6.QtCore.QKeySequence'] = QKeySequence
 except ImportError:
-    pass
+    try:
+        from PyQt5.QtGui import QKeySequence
+    except ImportError:
+        # Create a mock class if neither PyQt6 nor PyQt5 is available
+        class QKeySequence:
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class MockQtCore:
+            pass
+            
+        sys.modules['PyQt6.QtCore.QKeySequence'] = QKeySequence
 
 # Now run the integrity test
 logger.info("Starting modified integrity test with patched modules...")

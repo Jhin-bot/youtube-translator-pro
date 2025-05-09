@@ -7,14 +7,30 @@ import logging
 from typing import Dict, List, Any, Optional, Tuple
 from pathlib import Path
 
-from PyQt6.QtCore import Qt, pyqtSignal, pyqtSlot, QUrl
-from PyQt6.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QPushButton, QProgressBar, QTextEdit, QComboBox,
-    QFileDialog, QMessageBox, QTabWidget, QGroupBox, QLineEdit,
-    QCheckBox, QToolBar, QStatusBar, QSplitter
-)
-from PyQt6.QtGui import QAction, QIcon, QDesktopServices
+try:
+    from PyQt6.QtCore import Qt, pyqtSignal, pyqtSlot, QUrl
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QUrl
+
+try:
+    from PyQt6.QtWidgets import (
+        QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
+        QPushButton, QProgressBar, QTextEdit, QComboBox,
+        QFileDialog, QMessageBox, QTabWidget, QGroupBox, QLineEdit,
+        QCheckBox, QToolBar, QStatusBar, QSplitter
+    )
+except ImportError:
+    from PyQt5.QtWidgets import (
+        QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
+        QPushButton, QProgressBar, QTextEdit, QComboBox,
+        QFileDialog, QMessageBox, QTabWidget, QGroupBox, QLineEdit,
+        QCheckBox, QToolBar, QStatusBar, QSplitter
+    )
+
+try:
+    from PyQt6.QtGui import QAction, QIcon, QDesktopServices
+except ImportError:
+    from PyQt5.QtGui import QAction, QIcon, QDesktopServices
 
 from src.ui.styles import StyleManager
 from src.ui.dialogs import SettingsDialog, AboutDialog, ErrorDialog

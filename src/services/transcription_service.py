@@ -1,7 +1,7 @@
-"""
+""""
 Transcription service for YouTube Translator Pro.
 Handles the transcription of audio files using Whisper models.
-"""
+""""
 
 import os
 import gc
@@ -92,7 +92,7 @@ def _terminate_all_processes():
 
 @lru_cache(maxsize=MAX_CACHE_SIZE)
 def _load_whisper_model(model_name: str, device: str) -> "whisper.Whisper":
-    """
+    """"
     Load a Whisper model, caching recent ones.
 
     Args:
@@ -104,7 +104,7 @@ def _load_whisper_model(model_name: str, device: str) -> "whisper.Whisper":
 
     Raises:
         RuntimeError: If Whisper is not available or model loading fails.
-    """
+    """"
     if not WHISPER_AVAILABLE:
         raise RuntimeError("Whisper library is not available.")
 
@@ -191,7 +191,7 @@ def _transcribe_worker(
     stop_event: Event,
     language: Optional[str] = None
 ):
-    """
+    """"
     Worker process function to perform transcription.
     
     Args:
@@ -202,7 +202,7 @@ def _transcribe_worker(
         progress_queue: Queue to report progress.
         stop_event: Event to signal cancellation.
         language: Optional language code for transcription.
-    """
+    """"
     try:
         logger.info(f"Transcription worker started for {audio_path} with model {model_name}")
         progress_queue.put((0.0, "Loading model..."))
@@ -282,7 +282,7 @@ def transcribe(
     stop_event: Optional[Event] = None,
     timeout: Optional[float] = DEFAULT_TRANSCRIPTION_TIMEOUT
 ) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
-    """
+    """"
     Transcribe an audio file using a Whisper model in a separate process.
     
     Args:
@@ -297,7 +297,7 @@ def transcribe(
         A tuple containing:
         - The transcription result dictionary if successful, None otherwise.
         - An error message string if failed, None otherwise.
-    """
+    """"
     if not os.path.exists(audio_path):
         return None, f"Audio file not found: {audio_path}"
     

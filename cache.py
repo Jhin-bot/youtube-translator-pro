@@ -18,6 +18,7 @@ import hashlib # Added for generating cache keys
 
 # Local application imports (if any are needed, e.g., for constants)
 # try:
+#     pass
 #     from settings import APP_DATA_DIR # Example
 # except ImportError:
 #     APP_DATA_DIR = os.path.join(os.path.expanduser("~"), ".ytpro_default_app_data")
@@ -501,6 +502,7 @@ class CacheManager:
 
 #     # Clean up temporary directory
 #     # try:
+    pass
 #     #     shutil.rmtree(test_cache_dir)
 #     #     logger.info(f"Cleaned up temporary cache directory: {test_cache_dir}")
 #     # except Exception as e:

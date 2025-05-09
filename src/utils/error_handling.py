@@ -16,7 +16,13 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
-from PyQt6.QtWidgets import QMessageBox, QApplication
+try:
+    try:
+    from PyQt6.QtWidgets import QMessageBox, QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QMessageBox, QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QMessageBox, QApplication
 
 from src.config import APP_NAME, setup_logging, LOG_DIR
 

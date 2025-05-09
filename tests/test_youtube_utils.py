@@ -1,6 +1,6 @@
-"""
+""""
 Tests for YouTube utility functions.
-"""
+""""
 
 import unittest
 import os
@@ -56,7 +56,7 @@ class TestYouTubeUtils:
     
     def test_download_youtube_audio_success(self, temp_dir):
         """Test the YouTube audio download function preparation logic."""
-        # In this test, we'll just validate the URL parsing and video ID extraction
+        # In this test, we'll just validate the URL parsing and video ID extraction'
         # without actually downloading anything, since the ffmpeg conversion is external
         from src.utils.youtube_utils import extract_video_id, is_valid_youtube_url
         

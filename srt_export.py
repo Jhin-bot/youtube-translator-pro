@@ -294,6 +294,7 @@ def export_vtt(
 #         logger.info(f"SRT Export successful: {srt_file_path}")
 #         # Optionally read and print the content
 #         # try:
+    pass
 #         #      with open(srt_file_path, 'r', encoding='utf-8') as f:
 #         #           print("--- SRT Content ---")
 #         #           print(f.read())
@@ -312,6 +313,7 @@ def export_vtt(
 #         logger.info(f"JSON Export successful: {json_file_path}")
 #         # Optionally read and print the content
 #         # try:
+    pass
 #         #      with open(json_file_path, 'r', encoding='utf-8') as f:
 #         #           print("--- JSON Content ---")
 #         #           print(f.read())
@@ -330,6 +332,7 @@ def export_vtt(
 #         logger.info(f"VTT Export successful: {vtt_file_path}")
 #         # Optionally read and print the content
 #         # try:
+    pass
 #         #      with open(vtt_file_path, 'r', encoding='utf-8') as f:
 #         #           print("--- VTT Content ---")
 #         #           print(f.read())
@@ -340,6 +343,7 @@ def export_vtt(
 
 #     # Clean up the temporary output directory
 #     try:
+    pass
 #         shutil.rmtree(test_output_dir)
 #         logger.info(f"Cleaned up temporary output directory: {test_output_dir}")
 #     except Exception as e:

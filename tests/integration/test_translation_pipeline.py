@@ -1,6 +1,6 @@
-"""
+""""
 Integration tests for the full translation pipeline.
-"""
+""""
 
 import os
 import pytest
@@ -104,7 +104,7 @@ class TestTranslationPipeline:
         video_id = "test_video_id"
         cache_manager.cache_audio(video_id, test_audio_path)
         
-        # Verify it's in the cache
+        # Verify it's in the cache'
         cached_path = cache_manager.get_cached_audio(video_id)
         assert cached_path is not None
         

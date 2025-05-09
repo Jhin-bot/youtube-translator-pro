@@ -4,8 +4,15 @@ Provides a dropdown for selecting the application language.
 """
 
 import logging
-from PyQt6.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
-from PyQt6.QtCore import pyqtSignal
+try:
+    from PyQt6.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
+except ImportError:
+    from PyQt5.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
+
+try:
+    from PyQt6.QtCore import pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import pyqtSignal
 
 from src.utils.localization import localization, get_string
 

@@ -7,9 +7,20 @@ import logging
 from typing import Dict, Callable, Any, List, Optional, Tuple, Set
 from enum import Enum
 
-from PyQt6.QtCore import Qt, QObject, pyqtSignal
-from PyQt6.QtGui import QKeySequence, QShortcut, QKeyEvent
-from PyQt6.QtWidgets import QWidget, QApplication
+try:
+    from PyQt6.QtCore import Qt, QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import Qt, QObject, pyqtSignal
+
+try:
+    from PyQt6.QtGui import QKeySequence, QShortcut, QKeyEvent
+except ImportError:
+    from PyQt5.QtGui import QKeySequence, QShortcut, QKeyEvent
+
+try:
+    from PyQt6.QtWidgets import QWidget, QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QWidget, QApplication
 
 from src.utils.localization import get_string
 

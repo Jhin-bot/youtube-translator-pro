@@ -1,0 +1,1767 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>YouTube Translator Pro Integrity Test Report</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            h1 { color: #333; }
+            .summary { background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+            .success { color: green; }
+            .failure { color: red; }
+            .warning { color: orange; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; }
+            tr:nth-child(even) { background-color: #f9f9f9; }
+            .details { margin-top: 5px; font-family: monospace; white-space: pre-wrap; background-color: #f8f8f8; padding: 10px; border-radius: 3px; border: 1px solid #ddd; }
+            .toggleBtn { background-color: #4CAF50; color: white; border: none; padding: 5px 10px; text-align: center; text-decoration: none; display: inline-block; cursor: pointer; border-radius: 3px; }
+        </style>
+        <script>
+            function toggleDetails(id) {
+                var element = document.getElementById(id);
+                if (element.style.display === "none") {
+                    element.style.display = "block";
+                } else {
+                    element.style.display = "none";
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h1>YouTube Translator Pro Integrity Test Report</h1>
+        <div class="summary">
+            <h2>Summary</h2>
+            <p>Date: 2025-05-09 23:28:52</p>
+            <p>Total Files Tested: 70</p>
+            <p>Successful: <span class="success">30</span></p>
+            <p>Failed: <span class="failure">40</span></p>
+            <p>Success Rate: <span class="failure">42.86%</span></p>
+        </div>
+        
+        <h2>Detailed Results</h2>
+        <table>
+            <tr>
+                <th>File</th>
+                <th>Status</th>
+                <th>Duration (s)</th>
+                <th>Details</th>
+            </tr>
+    
+            <tr>
+                <td>batch.py</td>
+                <td class="failure">failed</td>
+                <td>0.198</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_0')">Show/Hide Details</button>
+                    <div id="details_0" class="details" style="display: none;">
+                        Error: name 'pyqtSlot' is not defined
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\batch.py", line 223, in <module>
+    class BatchProcessor(QObject):
+    ...<1329 lines>...
+            })
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\batch.py", line 282, in BatchProcessor
+    @pyqtSlot()
+     ^^^^^^^^
+NameError: name 'pyqtSlot' is not defined
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>fix_syntax_errors.py</td>
+                <td class="failure">failed</td>
+                <td>0.033</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_1')">Show/Hide Details</button>
+                    <div id="details_1" class="details" style="display: none;">
+                        Error: unterminated string literal (detected at line 8) (fix_syntax_errors.py, line 8)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\fix_syntax_errors.py", line 8
+    """"
+       ^
+SyntaxError: unterminated string literal (detected at line 8)
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>fix_type_annotations.py</td>
+                <td class="failure">failed</td>
+                <td>0.033</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_2')">Show/Hide Details</button>
+                    <div id="details_2" class="details" style="display: none;">
+                        Error: unterminated string literal (detected at line 3) (fix_type_annotations.py, line 3)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\fix_type_annotations.py", line 3
+    """"
+       ^
+SyntaxError: unterminated string literal (detected at line 3)
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>main.py</td>
+                <td class="failure">failed</td>
+                <td>0.073</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_3')">Show/Hide Details</button>
+                    <div id="details_3" class="details" style="display: none;">
+                        Error: cannot import name 'ApplicationManager' from 'src.core.application_manager' (C:\Users\Home\Desktop\Youtube Translator Pro\src\core\application_manager.py)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\main.py", line 24, in <module>
+    from src.core.application_manager import ApplicationManager
+ImportError: cannot import name 'ApplicationManager' from 'src.core.application_manager' (C:\Users\Home\Desktop\Youtube Translator Pro\src\core\application_manager.py)
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\__main__.py</td>
+                <td class="failure">failed</td>
+                <td>0.004</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_4')">Show/Hide Details</button>
+                    <div id="details_4" class="details" style="display: none;">
+                        Error: expected an indented block after 'try' statement on line 29 (__main__.py, line 30)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\__main__.py", line 30
+    try:
+    ^^^
+IndentationError: expected an indented block after 'try' statement on line 29
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\core\application_manager.py</td>
+                <td class="failure">failed</td>
+                <td>0.026</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_5')">Show/Hide Details</button>
+                    <div id="details_5" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\core\application_manager.py", line 15, in <module>
+    from PyQt6.QtCore import QObject, pyqtSignal, QSettings, QTimer
+ImportError: cannot import name 'pyqtSignal' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\core\application_manager.py", line 17, in <module>
+    from PyQt5.QtCore import QObject, pyqtSignal, QSettings, QTimer
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\core\batch_processor.py</td>
+                <td class="failure">failed</td>
+                <td>0.003</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_6')">Show/Hide Details</button>
+                    <div id="details_6" class="details" style="display: none;">
+                        Error: expected an indented block after 'try' statement on line 16 (batch_processor.py, line 17)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\core\batch_processor.py", line 17
+    try:
+    ^^^
+IndentationError: expected an indented block after 'try' statement on line 16
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\core\cache_manager.py</td>
+                <td class="failure">failed</td>
+                <td>0.093</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_7')">Show/Hide Details</button>
+                    <div id="details_7" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\core\cache_manager.py", line 16, in <module>
+    from PyQt6.QtCore import QObject, pyqtSignal
+ImportError: cannot import name 'pyqtSignal' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\core\cache_manager.py", line 18, in <module>
+    from PyQt5.QtCore import QObject, pyqtSignal
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\core\error_handler.py</td>
+                <td class="failure">failed</td>
+                <td>0.006</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_8')">Show/Hide Details</button>
+                    <div id="details_8" class="details" style="display: none;">
+                        Error: expected an indented block after 'try' statement on line 18 (error_handler.py, line 19)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\core\error_handler.py", line 19
+    try:
+    ^^^
+IndentationError: expected an indented block after 'try' statement on line 18
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\core\fixed_cache_manager.py</td>
+                <td class="failure">failed</td>
+                <td>0.095</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_9')">Show/Hide Details</button>
+                    <div id="details_9" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\core\fixed_cache_manager.py", line 16, in <module>
+    from PyQt6.QtCore import QObject, pyqtSignal
+ImportError: cannot import name 'pyqtSignal' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\core\fixed_cache_manager.py", line 18, in <module>
+    from PyQt5.QtCore import QObject, pyqtSignal
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\core\pipeline.py</td>
+                <td class="failure">failed</td>
+                <td>0.007</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_10')">Show/Hide Details</button>
+                    <div id="details_10" class="details" style="display: none;">
+                        Error: unterminated string literal (detected at line 3) (pipeline.py, line 3)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\core\pipeline.py", line 3
+    """"
+       ^
+SyntaxError: unterminated string literal (detected at line 3)
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\core\session_manager.py</td>
+                <td class="failure">failed</td>
+                <td>0.003</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_11')">Show/Hide Details</button>
+                    <div id="details_11" class="details" style="display: none;">
+                        Error: expected an indented block after 'try' statement on line 13 (session_manager.py, line 14)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\core\session_manager.py", line 14
+    try:
+    ^^^
+IndentationError: expected an indented block after 'try' statement on line 13
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\services\__init__.py</td>
+                <td class="failure">failed</td>
+                <td>0.004</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_12')">Show/Hide Details</button>
+                    <div id="details_12" class="details" style="display: none;">
+                        Error: unterminated string literal (detected at line 4) (__init__.py, line 4)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\services\__init__.py", line 4
+    """"
+       ^
+SyntaxError: unterminated string literal (detected at line 4)
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\services\transcription_service.py</td>
+                <td class="failure">failed</td>
+                <td>0.003</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_13')">Show/Hide Details</button>
+                    <div id="details_13" class="details" style="display: none;">
+                        Error: unterminated string literal (detected at line 4) (transcription_service.py, line 4)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\services\transcription_service.py", line 4
+    """"
+       ^
+SyntaxError: unterminated string literal (detected at line 4)
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\services\translation_service.py</td>
+                <td class="failure">failed</td>
+                <td>0.003</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_14')">Show/Hide Details</button>
+                    <div id="details_14" class="details" style="display: none;">
+                        Error: unterminated string literal (detected at line 4) (translation_service.py, line 4)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\services\translation_service.py", line 4
+    """"
+       ^
+SyntaxError: unterminated string literal (detected at line 4)
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\batch_status_widget.py</td>
+                <td class="failure">failed</td>
+                <td>0.020</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_15')">Show/Hide Details</button>
+                    <div id="details_15" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\batch_status_widget.py", line 10, in <module>
+    from PyQt6.QtCore import Qt, pyqtSlot
+ImportError: cannot import name 'Qt' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\batch_status_widget.py", line 12, in <module>
+    from PyQt5.QtCore import Qt, pyqtSlot
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\control_panel_widget.py</td>
+                <td class="failure">failed</td>
+                <td>0.014</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_16')">Show/Hide Details</button>
+                    <div id="details_16" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\control_panel_widget.py", line 11, in <module>
+    from PyQt6.QtCore import Qt, pyqtSignal
+ImportError: cannot import name 'Qt' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\control_panel_widget.py", line 13, in <module>
+    from PyQt5.QtCore import Qt, pyqtSignal
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\dialogs.py</td>
+                <td class="failure">failed</td>
+                <td>0.044</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_17')">Show/Hide Details</button>
+                    <div id="details_17" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\dialogs.py", line 11, in <module>
+    from PyQt6.QtCore import Qt
+ImportError: cannot import name 'Qt' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\dialogs.py", line 13, in <module>
+    from PyQt5.QtCore import Qt
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\fixed_styles.py</td>
+                <td class="failure">failed</td>
+                <td>0.028</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_18')">Show/Hide Details</button>
+                    <div id="details_18" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\fixed_styles.py", line 10, in <module>
+    from PyQt6.QtCore import Qt
+ImportError: cannot import name 'Qt' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\fixed_styles.py", line 12, in <module>
+    from PyQt5.QtCore import Qt
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\integration_components.py</td>
+                <td class="failure">failed</td>
+                <td>0.008</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_19')">Show/Hide Details</button>
+                    <div id="details_19" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\integration_components.py", line 12, in <module>
+    from PyQt6.QtWidgets import (
+    ...<3 lines>...
+    )
+ImportError: cannot import name 'QToolBar' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\integration_components.py", line 18, in <module>
+    from PyQt5.QtWidgets import (
+    ...<3 lines>...
+    )
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\keyboard_shortcuts.py</td>
+                <td class="failure">failed</td>
+                <td>0.056</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_20')">Show/Hide Details</button>
+                    <div id="details_20" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\keyboard_shortcuts.py", line 11, in <module>
+    from PyQt6.QtCore import Qt, QObject, pyqtSignal
+ImportError: cannot import name 'Qt' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\keyboard_shortcuts.py", line 13, in <module>
+    from PyQt5.QtCore import Qt, QObject, pyqtSignal
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\language_selector.py</td>
+                <td class="failure">failed</td>
+                <td>0.008</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_21')">Show/Hide Details</button>
+                    <div id="details_21" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\language_selector.py", line 8, in <module>
+    from PyQt6.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
+ImportError: cannot import name 'QComboBox' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\language_selector.py", line 10, in <module>
+    from PyQt5.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\main_window.py</td>
+                <td class="failure">failed</td>
+                <td>0.046</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_22')">Show/Hide Details</button>
+                    <div id="details_22" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\main_window.py", line 11, in <module>
+    from PyQt6.QtCore import Qt, pyqtSignal, pyqtSlot, QUrl
+ImportError: cannot import name 'Qt' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\main_window.py", line 13, in <module>
+    from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QUrl
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\performance_monitor_widget.py</td>
+                <td class="failure">failed</td>
+                <td>0.013</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_23')">Show/Hide Details</button>
+                    <div id="details_23" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\performance_monitor_widget.py", line 11, in <module>
+    from PyQt6.QtWidgets import (
+    ...<3 lines>...
+    )
+ImportError: cannot import name 'QVBoxLayout' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\performance_monitor_widget.py", line 17, in <module>
+    from PyQt5.QtWidgets import (
+    ...<3 lines>...
+    )
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\rtl_support.py</td>
+                <td class="failure">failed</td>
+                <td>0.003</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_24')">Show/Hide Details</button>
+                    <div id="details_24" class="details" style="display: none;">
+                        Error: expected an indented block after 'try' statement on line 8 (rtl_support.py, line 9)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\rtl_support.py", line 9
+    from PyQt6.QtWidgets import QWidget, QApplication
+    ^^^^
+IndentationError: expected an indented block after 'try' statement on line 8
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\settings_dialog.py</td>
+                <td class="failure">failed</td>
+                <td>0.017</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_25')">Show/Hide Details</button>
+                    <div id="details_25" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\settings_dialog.py", line 9, in <module>
+    from PyQt6.QtWidgets import (
+    ...<3 lines>...
+    )
+ImportError: cannot import name 'QDialog' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\settings_dialog.py", line 15, in <module>
+    from PyQt5.QtWidgets import (
+    ...<3 lines>...
+    )
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\styles.py</td>
+                <td class="failure">failed</td>
+                <td>0.069</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_26')">Show/Hide Details</button>
+                    <div id="details_26" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\styles.py", line 10, in <module>
+    from PyQt6.QtCore import Qt
+ImportError: cannot import name 'Qt' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\styles.py", line 12, in <module>
+    from PyQt5.QtCore import Qt
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\task_list_widget.py</td>
+                <td class="failure">failed</td>
+                <td>0.053</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_27')">Show/Hide Details</button>
+                    <div id="details_27" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\task_list_widget.py", line 11, in <module>
+    from PyQt6.QtCore import Qt, pyqtSlot
+ImportError: cannot import name 'Qt' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\task_list_widget.py", line 13, in <module>
+    from PyQt5.QtCore import Qt, pyqtSlot
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\telemetry_consent_dialog.py</td>
+                <td class="failure">failed</td>
+                <td>0.020</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_28')">Show/Hide Details</button>
+                    <div id="details_28" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\telemetry_consent_dialog.py", line 8, in <module>
+    from PyQt6.QtWidgets import (
+    ...<2 lines>...
+    )
+ImportError: cannot import name 'QDialog' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\telemetry_consent_dialog.py", line 13, in <module>
+    from PyQt5.QtWidgets import (
+    ...<2 lines>...
+    )
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\url_input_widget.py</td>
+                <td class="failure">failed</td>
+                <td>0.036</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_29')">Show/Hide Details</button>
+                    <div id="details_29" class="details" style="display: none;">
+                        Error: No module named 'PyQt5'
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\url_input_widget.py", line 11, in <module>
+    from PyQt6.QtCore import Qt, pyqtSignal
+ImportError: cannot import name 'Qt' from '<unknown module name>' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\ui\url_input_widget.py", line 13, in <module>
+    from PyQt5.QtCore import Qt, pyqtSignal
+ModuleNotFoundError: No module named 'PyQt5'
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\cache_manager.py</td>
+                <td class="failure">failed</td>
+                <td>0.004</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_30')">Show/Hide Details</button>
+                    <div id="details_30" class="details" style="display: none;">
+                        Error: cannot import name 'CACHE_DIR' from 'src.config' (C:\Users\Home\Desktop\Youtube Translator Pro\src\config.py)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\cache_manager.py", line 18, in <module>
+    from src.config import CACHE_DIR, setup_logging
+ImportError: cannot import name 'CACHE_DIR' from 'src.config' (C:\Users\Home\Desktop\Youtube Translator Pro\src\config.py)
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\error_handling.py</td>
+                <td class="failure">failed</td>
+                <td>0.004</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_31')">Show/Hide Details</button>
+                    <div id="details_31" class="details" style="display: none;">
+                        Error: expected an indented block after 'try' statement on line 20 (error_handling.py, line 21)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\error_handling.py", line 21
+    from PyQt6.QtWidgets import QMessageBox, QApplication
+    ^^^^
+IndentationError: expected an indented block after 'try' statement on line 20
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\lazy_loader.py</td>
+                <td class="failure">failed</td>
+                <td>0.013</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_32')">Show/Hide Details</button>
+                    <div id="details_32" class="details" style="display: none;">
+                        Error: cannot import name 'measure_performance' from 'src.utils.performance_monitor' (C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\performance_monitor.py)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\lazy_loader.py", line 13, in <module>
+    from src.utils.performance_monitor import measure_performance
+ImportError: cannot import name 'measure_performance' from 'src.utils.performance_monitor' (C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\performance_monitor.py)
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\recent_files.py</td>
+                <td class="failure">failed</td>
+                <td>0.003</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_33')">Show/Hide Details</button>
+                    <div id="details_33" class="details" style="display: none;">
+                        Error: unterminated string literal (detected at line 4) (recent_files.py, line 4)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\recent_files.py", line 4
+    """"
+       ^
+SyntaxError: unterminated string literal (detected at line 4)
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\thread_pool.py</td>
+                <td class="failure">failed</td>
+                <td>0.003</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_34')">Show/Hide Details</button>
+                    <div id="details_34" class="details" style="display: none;">
+                        Error: invalid syntax (thread_pool.py, line 24)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\thread_pool.py", line 24
+    pass, measure_performance
+        ^
+SyntaxError: invalid syntax
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\update_manager.py</td>
+                <td class="failure">failed</td>
+                <td>0.002</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_35')">Show/Hide Details</button>
+                    <div id="details_35" class="details" style="display: none;">
+                        Error: expected an indented block after 'try' statement on line 24 (update_manager.py, line 25)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\update_manager.py", line 25
+    try:
+    ^^^
+IndentationError: expected an indented block after 'try' statement on line 24
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\youtube_utils.py</td>
+                <td class="failure">failed</td>
+                <td>0.123</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_36')">Show/Hide Details</button>
+                    <div id="details_36" class="details" style="display: none;">
+                        Error: cannot import name 'YoutubeError' from 'src.utils.error_handling' (C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\error_handling.py)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\youtube_utils.py", line 25, in <module>
+    from src.utils.error_handling import YoutubeError, try_except_decorator
+ImportError: cannot import name 'YoutubeError' from 'src.utils.error_handling' (C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\error_handling.py)
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>styles.py</td>
+                <td class="failure">failed</td>
+                <td>0.013</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_37')">Show/Hide Details</button>
+                    <div id="details_37" class="details" style="display: none;">
+                        Error: expected an indented block after 'try' statement on line 13 (styles.py, line 14)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\styles.py", line 14
+    from PyQt6.QtCore import (
+    ^^^^
+IndentationError: expected an indented block after 'try' statement on line 13
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>transcribe.py</td>
+                <td class="failure">failed</td>
+                <td>0.100</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_38')">Show/Hide Details</button>
+                    <div id="details_38" class="details" style="display: none;">
+                        Error: cannot import name 'Queue' from '<unknown module name>' (unknown location)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\transcribe.py", line 18, in <module>
+    from multiprocessing import Process, Queue, Event, Value, cpu_count
+ImportError: cannot import name 'Queue' from '<unknown module name>' (unknown location)
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>ui.py</td>
+                <td class="failure">failed</td>
+                <td>0.017</td>
+                <td>
+        
+                    <button class="toggleBtn" onclick="toggleDetails('details_39')">Show/Hide Details</button>
+                    <div id="details_39" class="details" style="display: none;">
+                        Error: expected an indented block after 'try' statement on line 42 (ui.py, line 43)
+                        
+                        Traceback (most recent call last):
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\complete_integrity_test.py", line 157, in test_single_file
+    spec.loader.exec_module(module)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Home\Desktop\Youtube Translator Pro\ui.py", line 43
+    try:
+IndentationError: expected an indented block after 'try' statement on line 42
+
+                    </div>
+            
+                </td>
+            </tr>
+        
+            <tr>
+                <td>add_missing_imports.py</td>
+                <td class="success">success</td>
+                <td>0.002</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>advanced_features.py</td>
+                <td class="success">success</td>
+                <td>0.221</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>application_manager.py</td>
+                <td class="success">success</td>
+                <td>0.088</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>audio_utils.py</td>
+                <td class="success">success</td>
+                <td>0.448</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>cache.py</td>
+                <td class="success">success</td>
+                <td>0.121</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>complete_integrity_test.py</td>
+                <td class="success">success</td>
+                <td>0.004</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>debug_import.py</td>
+                <td class="success">success</td>
+                <td>0.004</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>enhanced_integrity_test.py</td>
+                <td class="success">success</td>
+                <td>0.003</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>fix_integrity_test.py</td>
+                <td class="success">success</td>
+                <td>1.042</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>fix_pyqt_imports.py</td>
+                <td class="success">success</td>
+                <td>0.027</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>fix_remaining_annotations.py</td>
+                <td class="success">success</td>
+                <td>0.034</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>fix_string_literals.py</td>
+                <td class="success">success</td>
+                <td>0.033</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>fix_styles.py</td>
+                <td class="success">success</td>
+                <td>0.034</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>fix_ui_module.py</td>
+                <td class="success">success</td>
+                <td>0.080</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>integrity_test.py</td>
+                <td class="success">success</td>
+                <td>0.066</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>settings.py</td>
+                <td class="success">success</td>
+                <td>0.058</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>simple_app_test.py</td>
+                <td class="success">success</td>
+                <td>0.003</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\__init__.py</td>
+                <td class="success">success</td>
+                <td>0.006</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\config.py</td>
+                <td class="success">success</td>
+                <td>0.325</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\core\__init__.py</td>
+                <td class="success">success</td>
+                <td>0.001</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\core\batch_processor_stop.py</td>
+                <td class="success">success</td>
+                <td>0.001</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\ui\__init__.py</td>
+                <td class="success">success</td>
+                <td>0.001</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\__init__.py</td>
+                <td class="success">success</td>
+                <td>0.002</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\export_utils.py</td>
+                <td class="success">success</td>
+                <td>0.024</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\fixed_localization.py</td>
+                <td class="success">success</td>
+                <td>0.096</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\localization.py</td>
+                <td class="success">success</td>
+                <td>0.086</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\performance_monitor.py</td>
+                <td class="success">success</td>
+                <td>0.017</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>src\utils\telemetry.py</td>
+                <td class="success">success</td>
+                <td>0.070</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>srt_export.py</td>
+                <td class="success">success</td>
+                <td>0.035</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+            <tr>
+                <td>translate.py</td>
+                <td class="success">success</td>
+                <td>0.031</td>
+                <td>
+        
+                </td>
+            </tr>
+        
+        </table>
+        
+        <h2>Error Summary</h2>
+        <ul>
+    
+            <li>
+                <strong>unterminated string literal (detected at line 8) (fix_syntax_errors.py, line 8)</strong>
+                <ul>
+        
+                    <li>fix_syntax_errors.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>unterminated string literal (detected at line 3) (fix_type_annotations.py, line 3)</strong>
+                <ul>
+        
+                    <li>fix_type_annotations.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>expected an indented block after 'try' statement on line 13 (styles.py, line 14)</strong>
+                <ul>
+        
+                    <li>styles.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>expected an indented block after 'try' statement on line 42 (ui.py, line 43)</strong>
+                <ul>
+        
+                    <li>ui.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>expected an indented block after 'try' statement on line 29 (__main__.py, line 30)</strong>
+                <ul>
+        
+                    <li>src\__main__.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>expected an indented block after 'try' statement on line 16 (batch_processor.py, line 17)</strong>
+                <ul>
+        
+                    <li>src\core\batch_processor.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>expected an indented block after 'try' statement on line 18 (error_handler.py, line 19)</strong>
+                <ul>
+        
+                    <li>src\core\error_handler.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>unterminated string literal (detected at line 3) (pipeline.py, line 3)</strong>
+                <ul>
+        
+                    <li>src\core\pipeline.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>expected an indented block after 'try' statement on line 13 (session_manager.py, line 14)</strong>
+                <ul>
+        
+                    <li>src\core\session_manager.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>unterminated string literal (detected at line 4) (transcription_service.py, line 4)</strong>
+                <ul>
+        
+                    <li>src\services\transcription_service.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>cannot import name 'ApplicationManager' from 'src.core.application_manager' (C:\Users\Home\Desktop\Youtube Translator Pro\src\core\application_manager.py)</strong>
+                <ul>
+        
+                    <li>main.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>unterminated string literal (detected at line 4) (translation_service.py, line 4)</strong>
+                <ul>
+        
+                    <li>src\services\translation_service.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>unterminated string literal (detected at line 4) (__init__.py, line 4)</strong>
+                <ul>
+        
+                    <li>src\services\__init__.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>No module named 'PyQt5'</strong>
+                <ul>
+        
+                    <li>src\core\application_manager.py</li>
+            
+                    <li>src\ui\integration_components.py</li>
+            
+                    <li>src\ui\control_panel_widget.py</li>
+            
+                    <li>src\ui\language_selector.py</li>
+            
+                    <li>src\ui\batch_status_widget.py</li>
+            
+                    <li>src\ui\performance_monitor_widget.py</li>
+            
+                    <li>src\ui\fixed_styles.py</li>
+            
+                    <li>src\ui\settings_dialog.py</li>
+            
+                    <li>src\ui\dialogs.py</li>
+            
+                    <li>src\ui\telemetry_consent_dialog.py</li>
+            
+                    <li>src\ui\main_window.py</li>
+            
+                    <li>src\ui\keyboard_shortcuts.py</li>
+            
+                    <li>src\ui\url_input_widget.py</li>
+            
+                    <li>src\core\cache_manager.py</li>
+            
+                    <li>src\ui\task_list_widget.py</li>
+            
+                    <li>src\core\fixed_cache_manager.py</li>
+            
+                    <li>src\ui\styles.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>expected an indented block after 'try' statement on line 8 (rtl_support.py, line 9)</strong>
+                <ul>
+        
+                    <li>src\ui\rtl_support.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>cannot import name 'CACHE_DIR' from 'src.config' (C:\Users\Home\Desktop\Youtube Translator Pro\src\config.py)</strong>
+                <ul>
+        
+                    <li>src\utils\cache_manager.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>expected an indented block after 'try' statement on line 20 (error_handling.py, line 21)</strong>
+                <ul>
+        
+                    <li>src\utils\error_handling.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>cannot import name 'Queue' from '<unknown module name>' (unknown location)</strong>
+                <ul>
+        
+                    <li>transcribe.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>cannot import name 'measure_performance' from 'src.utils.performance_monitor' (C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\performance_monitor.py)</strong>
+                <ul>
+        
+                    <li>src\utils\lazy_loader.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>unterminated string literal (detected at line 4) (recent_files.py, line 4)</strong>
+                <ul>
+        
+                    <li>src\utils\recent_files.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>invalid syntax (thread_pool.py, line 24)</strong>
+                <ul>
+        
+                    <li>src\utils\thread_pool.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>expected an indented block after 'try' statement on line 24 (update_manager.py, line 25)</strong>
+                <ul>
+        
+                    <li>src\utils\update_manager.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>name 'pyqtSlot' is not defined</strong>
+                <ul>
+        
+                    <li>batch.py</li>
+            
+                </ul>
+            </li>
+        
+            <li>
+                <strong>cannot import name 'YoutubeError' from 'src.utils.error_handling' (C:\Users\Home\Desktop\Youtube Translator Pro\src\utils\error_handling.py)</strong>
+                <ul>
+        
+                    <li>src\utils\youtube_utils.py</li>
+            
+                </ul>
+            </li>
+        
+        </ul>
+    </body>
+    </html>
+    

@@ -7,13 +7,28 @@ import logging
 import time
 from datetime import datetime, timedelta
 
-from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QTableWidget, QTableWidgetItem, QHeaderView, QGroupBox,
-    QProgressBar, QSplitter, QDialog, QTabWidget
-)
-from PyQt6.QtCore import Qt, QTimer, pyqtSignal
-from PyQt6.QtGui import QColor, QBrush, QFont
+try:
+    from PyQt6.QtWidgets import (
+        QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QTableWidget, QTableWidgetItem, QHeaderView, QGroupBox,
+        QProgressBar, QSplitter, QDialog, QTabWidget
+    )
+except ImportError:
+    from PyQt5.QtWidgets import (
+        QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QTableWidget, QTableWidgetItem, QHeaderView, QGroupBox,
+        QProgressBar, QSplitter, QDialog, QTabWidget
+    )
+
+try:
+    from PyQt6.QtCore import Qt, QTimer, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import Qt, QTimer, pyqtSignal
+
+try:
+    from PyQt6.QtGui import QColor, QBrush, QFont
+except ImportError:
+    from PyQt5.QtGui import QColor, QBrush, QFont
 
 from src.utils.performance_monitor import monitor as performance_monitor
 from src.utils.localization import get_string

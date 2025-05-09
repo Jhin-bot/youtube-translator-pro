@@ -117,6 +117,37 @@ except ImportError as e:
 # Setup logger
 logger = logging.getLogger(__name__)
 
+# PyQt imports with fallback mechanism
+try:
+    # First try PyQt6
+    from PyQt6.QtCore import QObject, pyqtSignal
+    logger.info("Using PyQt6 for UI components")
+except ImportError:
+    try:
+        # Then try PyQt5
+        from PyQt5.QtCore import QObject, pyqtSignal
+        logger.info("Using PyQt5 for UI components")
+    except ImportError:
+        # If neither PyQt6 nor PyQt5 is available, create mock classes
+        logger.warning("Neither PyQt6 nor PyQt5 is available. Creating mock classes.")
+        
+        # Mock QObject class
+        class QObject:
+            def __init__(self, *args, **kwargs):
+                pass
+        
+        # Mock Signal class
+        class Signal:
+            def __init__(self, *args):
+                pass
+            def connect(self, func):
+                pass
+            def emit(self, *args):
+                pass
+        
+        # Set up alias
+        pyqtSignal = Signal
+
 # Global constants (moved from transcribe for better organization)
 DEFAULT_RETRY_COUNT = 3
 DEFAULT_RETRY_DELAY = 5  # seconds

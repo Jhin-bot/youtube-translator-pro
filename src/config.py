@@ -218,3 +218,7 @@ def save_settings(settings: Dict[str, Any]) -> bool:
     except Exception as e:
         logger.error(f"Error saving settings: {e}")
         return False
+
+# Added by config fixer
+DEBUG = False
+LOG_LEVEL = logging.INFO

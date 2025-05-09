@@ -19,6 +19,7 @@ from typing import Callable, Optional, List, Dict, Any, Tuple
 from datetime import datetime, timedelta
 
 import yt_dlp
+import requests
 from tenacity import retry, stop_after_attempt, wait_fixed, wait_exponential, retry_if_exception_type
 
 # Setup logger
@@ -617,6 +618,7 @@ def cleanup_temp_files(*file_paths: str):
 #     converted_file: Optional[str] = None
 
 #     try:
+    pass
 #         # --- Test Audio Download ---
 #         logger.info(f"Attempting to download audio from: {test_url}")
 
@@ -667,6 +669,7 @@ def cleanup_temp_files(*file_paths: str):
 
 #         # Clean up the temporary directory itself
 #         try:
+    pass
 #             shutil.rmtree(temp_dir)
 #             logger.info(f"Cleaned up temporary directory: {temp_dir}")
 #         except Exception as e:

@@ -7,7 +7,13 @@ import sys
 import os
 import logging
 from pathlib import Path
-from PyQt6.QtWidgets import QApplication
+try:
+    from PyQt6.QtWidgets import QApplication
+except ImportError:
+    try:
+        from PyQt5.QtWidgets import QApplication
+    except ImportError:
+        raise ImportError("Could not import QApplication from either PyQt6 or PyQt5")
 
 # Add the project root directory to Python path if needed
 project_root = Path(__file__).parent

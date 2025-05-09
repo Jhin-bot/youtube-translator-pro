@@ -5,12 +5,23 @@ Allows configuration of application settings, including localization and telemet
 
 import os
 import logging
-from PyQt6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QTabWidget, QWidget, QCheckBox, QComboBox, QSpinBox,
-    QFileDialog, QMessageBox, QGroupBox, QFormLayout, QLineEdit
-)
-from PyQt6.QtCore import Qt, pyqtSignal
+try:
+    from PyQt6.QtWidgets import (
+        QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QTabWidget, QWidget, QCheckBox, QComboBox, QSpinBox,
+        QFileDialog, QMessageBox, QGroupBox, QFormLayout, QLineEdit
+    )
+except ImportError:
+    from PyQt5.QtWidgets import (
+        QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QTabWidget, QWidget, QCheckBox, QComboBox, QSpinBox,
+        QFileDialog, QMessageBox, QGroupBox, QFormLayout, QLineEdit
+    )
+
+try:
+    from PyQt6.QtCore import Qt, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSignal
 
 from src.utils.localization import localization, get_string
 from src.utils.telemetry import telemetry

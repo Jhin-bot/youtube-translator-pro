@@ -1,6 +1,6 @@
-"""
+""""
 Core translation pipeline module that integrates all components of the translator.
-"""
+""""
 
 import os
 import logging
@@ -24,7 +24,7 @@ def translate_youtube_video(
     use_cache: bool = True,
     progress_callback: Optional[callable] = None
 ) -> Dict[str, Any]:
-    """
+    """"
     The main pipeline that processes a YouTube video through download, 
     transcription and translation.
     
@@ -39,7 +39,7 @@ def translate_youtube_video(
     
     Returns:
         Dictionary with video info, transcription, and translation
-    """
+    """"
     try:
         video_id = extract_video_id(url)
         

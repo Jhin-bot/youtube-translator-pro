@@ -11,8 +11,15 @@ import platform
 from typing import Dict, Any, Optional, List, Tuple
 from pathlib import Path
 
-from PyQt6.QtCore import QObject, pyqtSignal, QSettings, QTimer
-from PyQt6.QtWidgets import QApplication
+try:
+    from PyQt6.QtCore import QObject, pyqtSignal, QSettings, QTimer
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal, QSettings, QTimer
+
+try:
+    from PyQt6.QtWidgets import QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QApplication
 
 # Import configuration and settings
 from src.config import load_settings, save_settings, DEFAULT_SETTINGS, VERSION
@@ -141,7 +148,7 @@ class ApplicationManager(QObject):
             logger.info("All components initialized successfully")
         except Exception as e:
             logger.critical(f"Failed to initialize components: {e}", exc_info=True)
-            # We'll continue with limited functionality if some components fail
+            # We'll continue with limited functionality if some components fail'
     
     def _connect_signals(self):
         """Connect signals between components."""
@@ -216,7 +223,7 @@ class ApplicationManager(QObject):
             logger.error(f"Failed to apply initial style: {e}")
     
     def shutdown(self, wait=True, timeout=10.0):
-        """
+        """"
         Perform graceful application shutdown.
         
         Args:

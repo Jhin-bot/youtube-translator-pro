@@ -1,7 +1,7 @@
-"""
+""""
 Translation service for YouTube Translator Pro.
 Handles the translation of transcription results into different languages.
-"""
+""""
 
 import time
 import logging
@@ -24,19 +24,19 @@ class TranslationEngine(Enum):
 
 
 class TranslationService:
-    """
+    """"
     Service for translating transcription results.
     Supports multiple translation engines and provides a unified interface.
-    """
+    """"
     
     def __init__(self, engine: TranslationEngine = TranslationEngine.MOCK, api_key: Optional[str] = None):
-        """
+        """"
         Initialize the translation service.
         
         Args:
             engine: The translation engine to use
             api_key: Optional API key for the selected engine
-        """
+        """"
         self.engine = engine
         self.api_key = api_key
         self._initialize_engine()
@@ -57,12 +57,12 @@ class TranslationService:
             self.translator = MockTranslator()
     
     def get_available_languages(self) -> Dict[str, str]:
-        """
+        """"
         Get the available translation languages.
         
         Returns:
             Dictionary mapping language codes to language names
-        """
+        """"
         return TRANSLATION_LANGUAGES.copy()
     
     def translate(
@@ -73,7 +73,7 @@ class TranslationService:
         stop_event: Optional[threading.Event] = None,
         timeout: Optional[float] = DEFAULT_TRANSLATION_TIMEOUT
     ) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
-        """
+        """"
         Translate a transcription result into a target language.
         
         Args:
@@ -87,7 +87,7 @@ class TranslationService:
             A tuple containing:
             - The translated transcription result dictionary if successful, None otherwise
             - An error message string if failed, None otherwise
-        """
+        """"
         if not transcription_result or "segments" not in transcription_result:
             return None, "Invalid transcription result provided for translation."
         
@@ -195,7 +195,7 @@ class BaseTranslator:
         target_language: str,
         stop_event: Optional[threading.Event] = None
     ) -> Tuple[Optional[str], Optional[str]]:
-        """
+        """"
         Translate text to the target language.
         
         Args:
@@ -207,7 +207,7 @@ class BaseTranslator:
             A tuple containing:
             - The translated text if successful, None otherwise
             - An error message string if failed, None otherwise
-        """
+        """"
         raise NotImplementedError("Subclasses must implement translate_text")
 
 
@@ -314,7 +314,7 @@ class DeepLTranslator(BaseTranslator):
             deepl_target_language = target_language.upper()
             if len(target_language) == 2:
                 # Convert ISO 639-1 codes to DeepL format
-                # This mapping may need to be expanded based on DeepL's supported languages
+                # This mapping may need to be expanded based on DeepL's supported languages'
                 mapping = {
                     "en": "EN-US",  # Default to US English
                     "de": "DE",

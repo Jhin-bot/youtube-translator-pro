@@ -11,7 +11,17 @@ import multiprocessing
 import os
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-from src.utils.performance_monitor import PerformanceMonitor, measure_performance
+try:
+    from src.utils.performance_monitor import PerformanceMonitor
+except ImportError:
+    # Mock PerformanceMonitor if not available
+    class PerformanceMonitor:
+        def __init__(self, *args, **kwargs):
+            pass
+        def start(self, *args, **kwargs):
+            pass
+        def stop(self, *args, **kwargs):
+            pass, measure_performance
 
 # Set up logging
 logger = logging.getLogger(__name__)

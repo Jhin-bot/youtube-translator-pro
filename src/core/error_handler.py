@@ -14,7 +14,19 @@ from typing import Dict, Any, Optional, List, Tuple
 from datetime import datetime
 from enum import Enum, auto
 
-from PyQt6.QtCore import QObject, pyqtSignal
+try:
+    try:
+    try:
+    try:
+    from PyQt6.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
 
 # Logger setup
 logger = logging.getLogger(__name__)

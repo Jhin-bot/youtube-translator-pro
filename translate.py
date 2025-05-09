@@ -54,7 +54,7 @@ _AVAILABLE_LANGUAGES: Dict[str, str] = {
 }
 
 def get_available_languages() -> Dict[str, str]:
-    """
+    """"
     Get a dictionary of available translation languages.
 
     Returns:
@@ -145,7 +145,7 @@ def translate(
     stop_event: Optional[threading.Event] = None,
     timeout: Optional[float] = DEFAULT_TRANSLATION_TIMEOUT
 ) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
-    """
+    """"
     Translate a transcription result into a target language.
 
     Args:
@@ -248,7 +248,7 @@ def translate(
                 error_message = f"Failed to translate segment {i+1}: {translate_err}"
                 logger.error(error_message)
                 # Decide whether to fail the whole task or continue with partial translation
-                # For now, let's fail the whole task on segment translation error.
+                # For now, let's fail the whole task on segment translation error.'
                 return None, error_message
 
             # Create a new segment dictionary with translated text

@@ -499,6 +499,7 @@ def transcribe(
 #     # Create a dummy audio file for testing
 #     dummy_audio_path = Path(tempfile.gettempdir()) / "dummy_audio_test.wav"
 #     try:
+    pass
 #          # Create a simple WAV header and some silent data
 #          # This is a minimal valid 16kHz mono WAV file
 #          import wave
@@ -569,6 +570,7 @@ def transcribe(
 #         # Clean up the dummy audio file
 #         if dummy_audio_path.exists():
 #             try:
+    pass
 #                 dummy_audio_path.unlink()
 #                 logger.info(f"Cleaned up dummy audio file: {dummy_audio_path}")
 #             except Exception as e:

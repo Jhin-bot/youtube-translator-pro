@@ -20,7 +20,19 @@ from typing import Dict, Any, Optional, Tuple, List
 from urllib.parse import urlparse
 
 import requests
-from PyQt6.QtCore import QObject, pyqtSignal, QThread
+try:
+    try:
+    try:
+    try:
+    from PyQt6.QtCore import QObject, pyqtSignal, QThread
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal, QThread
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal, QThread
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal, QThread
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
 from src.config import APP_NAME, APP_VERSION, APP_UPDATES_URL, SYSTEM_INFO, setup_logging
 from src.utils.error_handling import NetworkError, try_except_decorator, ErrorHandler

@@ -39,23 +39,47 @@ except ImportError:
     # Create a mock qtawesome for testing purposes
     class QtAwesomeMock:
         def icon(self, *args, **kwargs):
-            from PyQt6.QtGui import QIcon
+            try:
+    try:
+    from PyQt6.QtGui import QIcon
+except ImportError:
+    from PyQt5.QtGui import QIcon
+except ImportError:
+    from PyQt5.QtGui import QIcon
             return QIcon()
         
     qta = QtAwesomeMock()
 
-from PyQt6.QtCore import (
+try:
+    try:
+    from PyQt6.QtCore import (
+except ImportError:
+    from PyQt5.QtCore import (
+except ImportError:
+    from PyQt5.QtCore import (
     Qt, QSize, QUrl, QTimer, QThread, QObject, QSettings, QStandardPaths,
     pyqtSignal, pyqtSlot, QMimeData, QEvent, QPoint, QRect, QPropertyAnimation,
     QAbstractAnimation, QEasingCurve # Added QEasingCurve for animations
 )
-from PyQt6.QtGui import (
+try:
+    try:
+    from PyQt6.QtGui import (
+except ImportError:
+    from PyQt5.QtGui import (
+except ImportError:
+    from PyQt5.QtGui import (
     QIcon, QAction, QFont, QColor, QPalette, QDragEnterEvent, QDropEvent,
     QPixmap, QPainter, QBrush, QPen, QMovie, QLinearGradient, QGradient,
     QFontMetrics, QCloseEvent, QStandardItemModel, QStandardItem, QDesktopServices,
     QValidator, QIntValidator, QDoubleValidator, QShortcut, QKeySequence # Added QKeySequence
 )
-from PyQt6.QtWidgets import (
+try:
+    try:
+    from PyQt6.QtWidgets import (
+except ImportError:
+    from PyQt5.QtWidgets import (
+except ImportError:
+    from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QLabel, QPushButton, QVBoxLayout,
     QHBoxLayout, QLineEdit, QTextEdit, QProgressBar, QFileDialog, QMessageBox,
     QScrollArea, QFrame, QSplitter, QComboBox, QCheckBox, QGroupBox, QTabWidget,

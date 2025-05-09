@@ -4,9 +4,27 @@ Provides helper functions and classes for handling RTL languages.
 """
 
 import logging
-from PyQt6.QtWidgets import QWidget, QApplication
-from PyQt6.QtCore import Qt, QLocale
-from PyQt6.QtGui import QFontDatabase
+try:
+    try:
+    from PyQt6.QtWidgets import QWidget, QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QWidget, QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QWidget, QApplication
+try:
+    from PyQt6.QtCore import Qt, QLocale
+
+except ImportError:
+    from PyQt5.QtCore import Qt, QLocale
+
+    from PyQt5.QtCore import Qt, QLocale
+try:
+    from PyQt6.QtGui import QFontDatabase
+
+except ImportError:
+    from PyQt5.QtGui import QFontDatabase
+
+    from PyQt5.QtGui import QFontDatabase
 
 from src.utils.localization import localization, get_string
 

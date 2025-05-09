@@ -8,12 +8,27 @@ import logging
 import threading
 from functools import partial
 
-from PyQt6.QtWidgets import (
-    QToolBar, QMenu, QStatusBar, QLabel, 
-    QMenuBar, QMainWindow, QMessageBox, QDialog
-)
-from PyQt6.QtGui import QAction, QIcon
-from PyQt6.QtCore import Qt, QSettings, QTimer, pyqtSignal
+try:
+    from PyQt6.QtWidgets import (
+        QToolBar, QMenu, QStatusBar, QLabel,
+        QMenuBar, QMainWindow, QMessageBox, QDialog,
+        QVBoxLayout
+    )
+except ImportError:
+    from PyQt5.QtWidgets import (
+        QToolBar, QMenu, QStatusBar, QLabel,
+        QMenuBar, QMainWindow, QMessageBox, QDialog,
+        QVBoxLayout
+    )
+try:
+    from PyQt6.QtGui import QAction, QIcon
+except ImportError:
+    from PyQt5.QtGui import QAction, QIcon
+
+try:
+    from PyQt6.QtCore import Qt, QSettings, QTimer, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import Qt, QSettings, QTimer, pyqtSignal
 
 from src.utils.localization import localization, get_string
 from src.utils.telemetry import telemetry
@@ -234,7 +249,6 @@ class FeatureIntegrator:
             self.performance_dialog.setMinimumHeight(600)
             
             # Create layout
-            from PyQt6.QtWidgets import QVBoxLayout
             layout = QVBoxLayout(self.performance_dialog)
             
             # Add performance widget

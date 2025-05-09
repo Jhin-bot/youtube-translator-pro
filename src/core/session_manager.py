@@ -9,7 +9,19 @@ import logging
 from typing import Dict, Any, Optional
 from datetime import datetime
 
-from PyQt6.QtCore import QObject, pyqtSignal
+try:
+    try:
+    try:
+    try:
+    from PyQt6.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -116,7 +128,13 @@ class SessionManager(QObject):
                 
             # Restore window geometry
             if "window" in session_data and "geometry" in session_data["window"]:
-                from PyQt6.QtCore import QByteArray
+                try:
+    try:
+    from PyQt6.QtCore import QByteArray
+except ImportError:
+    from PyQt5.QtCore import QByteArray
+except ImportError:
+    from PyQt5.QtCore import QByteArray
                 geometry = QByteArray.fromBase64(session_data["window"]["geometry"].encode('utf-8'))
                 main_window.restoreGeometry(geometry)
                 

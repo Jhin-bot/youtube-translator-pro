@@ -6,11 +6,21 @@ Displays the current status and progress of batch processing.
 import logging
 from typing import Optional
 
-from PyQt6.QtCore import Qt, pyqtSlot
-from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QProgressBar, QGroupBox
-)
+try:
+    from PyQt6.QtCore import Qt, pyqtSlot
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSlot
+
+try:
+    from PyQt6.QtWidgets import (
+        QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QProgressBar, QGroupBox
+    )
+except ImportError:
+    from PyQt5.QtWidgets import (
+        QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QProgressBar, QGroupBox
+    )
 
 from src.ui.styles import StyleManager
 

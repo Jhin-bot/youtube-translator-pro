@@ -26,7 +26,13 @@ def main():
     logger.info(f"Starting {APP_NAME} application...")
     
     # Import Qt modules here to avoid circular imports
+    try:
+    try:
     from PyQt6.QtWidgets import QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QApplication
     
     # Create application instance
     app = QApplication(sys.argv)

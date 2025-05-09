@@ -9,15 +9,33 @@ import platform
 from enum import Enum, auto
 from typing import Dict, Any, Tuple, List, Optional, NamedTuple
 
-from PyQt6.QtCore import (
+try:
+    try:
+    from PyQt6.QtCore import (
+except ImportError:
+    from PyQt5.QtCore import (
+except ImportError:
+    from PyQt5.QtCore import (
     Qt, QSize, QEasingCurve, QPoint, QRect, QPropertyAnimation, QMargins,
     QCoreApplication
 )
-from PyQt6.QtGui import (
+try:
+    try:
+    from PyQt6.QtGui import (
+except ImportError:
+    from PyQt5.QtGui import (
+except ImportError:
+    from PyQt5.QtGui import (
     QColor, QFont, QFontDatabase, QIcon, QPalette, QPixmap, QLinearGradient, QGradient,
     QFontMetrics, QImage
 )
-from PyQt6.QtWidgets import (
+try:
+    try:
+    from PyQt6.QtWidgets import (
+except ImportError:
+    from PyQt5.QtWidgets import (
+except ImportError:
+    from PyQt5.QtWidgets import (
     QApplication, QWidget, QFrame, QPushButton, QLabel, QLineEdit, QComboBox,
     QScrollArea, QScrollBar, QToolTip, QCheckBox, QRadioButton, QProgressBar,
     QSlider, QTabWidget, QTabBar, QToolBar, QMenuBar, QMenu, QListWidget,

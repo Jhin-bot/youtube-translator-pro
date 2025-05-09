@@ -10,6 +10,9 @@ import sys
 import json
 import time
 import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
 import platform
 import traceback
 import tempfile
@@ -26,24 +29,624 @@ from urllib.request import urlopen, Request
 from urllib.error import URLError
 import ssl # Added for SSL context
 
-from PyQt6.QtCore import (
-    Qt, QObject, QSettings, QTimer, QSize, QPoint, QRect, QUrl, QEvent,
-    QStandardPaths, QPropertyAnimation, QEasingCurve, QThread, pyqtSignal,
-    pyqtSlot, QByteArray, QBuffer, QModelIndex, QSortFilterProxyModel,
-    QShortcut
-)
-from PyQt6.QtGui import (
-    QIcon, QAction, QPixmap, QDesktopServices, QFont,
-    QColor, QCloseEvent, QImage, QFontMetrics, QMovie, QStandardItemModel,
-    QStandardItem, QKeySequence
-)
-from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QDialog, QMenu, QSystemTrayIcon, QLabel,
-    QVBoxLayout, QHBoxLayout, QFormLayout, QGridLayout, QListWidget,
-    QListWidgetItem, QDialogButtonBox, QLineEdit, QTableWidget, QTableWidgetItem,
-    QHeaderView, QAbstractItemView, QSizePolicy, QAbstractSpinBox, QSpinBox,
-    QDoubleSpinBox, QComboBox, QCheckBox, QPushButton, QMessageBox
-)
+try:
+    # First try PyQt6
+    from PyQt6.QtCore import (
+        Qt, QObject, QSettings, QTimer, QSize, QPoint, QRect, QUrl, QEvent,
+        QStandardPaths, QPropertyAnimation, QEasingCurve, QThread, pyqtSignal as Signal,
+        pyqtSlot as Slot, QByteArray, QBuffer, QModelIndex, QSortFilterProxyModel,
+        QShortcut
+    )
+    from PyQt6.QtGui import (
+        QIcon, QAction, QPixmap, QDesktopServices, QFont,
+        QColor, QCloseEvent, QImage, QFontMetrics, QMovie, QStandardItemModel,
+        QStandardItem, QKeySequence
+    )
+    from PyQt6.QtWidgets import (
+        QApplication, QMainWindow, QWidget, QDialog, QLabel, QPushButton, QToolButton,
+        QCheckBox, QComboBox, QListWidget, QListWidgetItem, QTreeWidget, QTreeWidgetItem,
+        QTableWidget, QTableWidgetItem, QHeaderView, QLineEdit, QTextEdit, QMenu,
+        QSystemTrayIcon, QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout,
+        QSizePolicy, QSpacerItem, QScrollArea, QFrame, QTabWidget, QGroupBox,
+        QProgressBar, QSlider, QMessageBox, QFileDialog, QDialogButtonBox,
+        QAbstractItemView, QStyle, QStyleOptionButton, QShortcut
+    )
+    # For backward compatibility
+    pyqtSignal = Signal
+    pyqtSlot = Slot
+    USE_PYQT6 = True
+    logger.info("Using PyQt6 for UI components")
+    
+except ImportError:
+    try:
+        # Then try PyQt5
+        from PyQt5.QtCore import (
+            Qt, QObject, QSettings, QTimer, QSize, QPoint, QRect, QUrl, QEvent,
+            QStandardPaths, QPropertyAnimation, QEasingCurve, QThread, pyqtSignal,
+            pyqtSlot, QByteArray, QBuffer, QModelIndex, QSortFilterProxyModel,
+            QShortcut
+        )
+        from PyQt5.QtGui import (
+            QIcon, QAction, QPixmap, QDesktopServices, QFont,
+            QColor, QCloseEvent, QImage, QFontMetrics, QMovie, QStandardItemModel,
+            QStandardItem, QKeySequence
+        )
+        from PyQt5.QtWidgets import (
+            QApplication, QMainWindow, QWidget, QDialog, QLabel, QPushButton, QToolButton,
+            QCheckBox, QComboBox, QListWidget, QListWidgetItem, QTreeWidget, QTreeWidgetItem,
+            QTableWidget, QTableWidgetItem, QHeaderView, QLineEdit, QTextEdit, QMenu,
+            QSystemTrayIcon, QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout,
+            QSizePolicy, QSpacerItem, QScrollArea, QFrame, QTabWidget, QGroupBox,
+            QProgressBar, QSlider, QMessageBox, QFileDialog, QDialogButtonBox,
+            QAbstractItemView, QStyle, QStyleOptionButton, QShortcut
+        )
+        USE_PYQT6 = False
+        logger.info("Using PyQt5 for UI components")
+    except ImportError:
+        # If neither PyQt6 nor PyQt5 is available, create mock classes
+        logger.warning("Neither PyQt6 nor PyQt5 is available. Creating mock classes.")
+        USE_PYQT6 = False
+        
+        # Base mock classes
+        class QObject:
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class Signal:
+            def __init__(self, *args):
+                pass
+            def connect(self, func):
+                pass
+            def emit(self, *args):
+                pass
+        
+        # Set up aliases
+        pyqtSignal = Signal
+        pyqtSlot = lambda *args, **kwargs: lambda func: func
+        
+        # Qt enums/flags
+        class Qt:
+            AlignCenter = 0
+            AlignLeft = 0
+            AlignRight = 0
+            AlignTop = 0
+            AlignBottom = 0
+            Horizontal = 0
+            Vertical = 0
+            ApplicationFlags = 0
+            WindowFlags = 0
+            ScrollBarAlwaysOff = 0
+            ScrollBarAsNeeded = 0
+            ScrollBarPolicy = type('ScrollBarPolicy', (), {'ScrollBarAlwaysOff': 0, 'ScrollBarAsNeeded': 0})
+            
+        # Other mock classes needed for the module
+        class QSettings:
+            def __init__(self, *args, **kwargs):
+                pass
+            def setValue(self, key, value):
+                pass
+            def value(self, key, default=None):
+                return default
+                
+        class QSize:
+            def __init__(self, width=0, height=0):
+                self.width = width
+                self.height = height
+                
+        class QPoint:
+            def __init__(self, x=0, y=0):
+                self.x = x
+                self.y = y
+                
+        class QRect:
+            def __init__(self, *args):
+                pass
+                
+        class QUrl:
+            def __init__(self, url=""):
+                self.url = url
+            @staticmethod
+            def fromLocalFile(path):
+                return QUrl(path)
+                
+        class QEvent:
+            def __init__(self, *args):
+                pass
+                
+        class QStandardPaths:
+            @staticmethod
+            def writableLocation(location):
+                return ""
+                
+        class QPropertyAnimation(QObject):
+            def __init__(self, *args):
+                super().__init__()
+                
+        class QEasingCurve:
+            Linear = type('Linear', (), {})
+            Type = type('Type', (), {'Linear': 0})
+            
+        class QThread(QObject):
+            def __init__(self, *args):
+                super().__init__()
+            def start(self):
+                pass
+            def wait(self):
+                pass
+                
+        class QByteArray:
+            def __init__(self, *args):
+                pass
+                
+        class QBuffer:
+            def __init__(self, *args):
+                pass
+            def open(self, *args):
+                return True
+            def close(self):
+                pass
+                
+        class QModelIndex:
+            def __init__(self):
+                pass
+            def isValid(self):
+                return False
+                
+        class QSortFilterProxyModel(QObject):
+            def __init__(self, *args):
+                super().__init__()
+                
+        class QShortcut(QObject):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def activated(self):
+                return Signal()
+                
+        # GUI mock classes
+        class QIcon:
+            def __init__(self, *args):
+                pass
+            def pixmap(self, *args):
+                return QPixmap()
+                
+        class QAction(QObject):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def triggered(self):
+                return Signal()
+            def setEnabled(self, enabled):
+                pass
+                
+        class QPixmap:
+            def __init__(self, *args):
+                pass
+            def width(self):
+                return 0
+            def height(self):
+                return 0
+                
+        class QDesktopServices:
+            @staticmethod
+            def openUrl(url):
+                return True
+                
+        class QFont:
+            def __init__(self, *args, **kwargs):
+                pass
+            def setPointSize(self, size):
+                pass
+            def setBold(self, bold):
+                pass
+                
+        class QColor:
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class QCloseEvent:
+            def __init__(self):
+                pass
+            def accept(self):
+                pass
+            def ignore(self):
+                pass
+                
+        class QImage:
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class QFontMetrics:
+            def __init__(self, *args):
+                pass
+            def horizontalAdvance(self, text):
+                return len(text) * 8
+                
+        class QMovie(QObject):
+            def __init__(self, *args):
+                super().__init__()
+                
+        class QStandardItemModel(QObject):
+            def __init__(self, *args):
+                super().__init__()
+                
+        class QStandardItem:
+            def __init__(self, *args):
+                pass
+            def setData(self, *args):
+                pass
+                
+        class QKeySequence:
+            def __init__(self, *args):
+                pass
+                
+        # Widget mock classes
+        class QWidget(QObject):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def setLayout(self, layout):
+                pass
+            def show(self):
+                pass
+            def hide(self):
+                pass
+            def setWindowTitle(self, title):
+                pass
+            def setMinimumSize(self, *args):
+                pass
+            def setMaximumSize(self, *args):
+                pass
+            def setSizePolicy(self, *args):
+                pass
+                
+        class QMainWindow(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def setCentralWidget(self, widget):
+                pass
+            def statusBar(self):
+                return QStatusBar()
+            def menuBar(self):
+                return QMenuBar()
+                
+        class QDialog(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def exec(self):
+                return 0
+                
+        class QLabel(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def setText(self, text):
+                pass
+            def setPixmap(self, pixmap):
+                pass
+                
+        class QPushButton(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def clicked(self):
+                return Signal()
+            def setText(self, text):
+                pass
+                
+        class QToolButton(QPushButton):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+                
+        class QCheckBox(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def isChecked(self):
+                return False
+            def setChecked(self, checked):
+                pass
+            def stateChanged(self):
+                return Signal(int)
+                
+        class QComboBox(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def addItem(self, text):
+                pass
+            def currentText(self):
+                return ""
+            def currentIndex(self):
+                return 0
+            def setCurrentIndex(self, index):
+                pass
+                
+        class QListWidget(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def addItem(self, text):
+                pass
+            def clear(self):
+                pass
+                
+        class QListWidgetItem:
+            def __init__(self, *args):
+                pass
+            def setText(self, text):
+                pass
+                
+        class QTreeWidget(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+                
+        class QTreeWidgetItem:
+            def __init__(self, *args):
+                pass
+                
+        class QTableWidget(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def setColumnCount(self, count):
+                pass
+            def setRowCount(self, count):
+                pass
+            def setHorizontalHeaderLabels(self, labels):
+                pass
+            def horizontalHeader(self):
+                return QHeaderView()
+            def setSelectionBehavior(self, behavior):
+                pass
+            def setSelectionMode(self, mode):
+                pass
+            def setVerticalScrollMode(self, mode):
+                pass
+            def setHorizontalScrollBarPolicy(self, policy):
+                pass
+                
+        class QTableWidgetItem:
+            def __init__(self, *args):
+                pass
+            def setText(self, text):
+                pass
+                
+        class QHeaderView(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def setSectionResizeMode(self, *args):
+                pass
+            
+            class ResizeMode:
+                Stretch = 0
+                ResizeToContents = 1
+                
+        class QLineEdit(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def text(self):
+                return ""
+            def setText(self, text):
+                pass
+                
+        class QTextEdit(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def toPlainText(self):
+                return ""
+            def setText(self, text):
+                pass
+                
+        class QMenu(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def addAction(self, action):
+                pass
+            def addMenu(self, menu):
+                pass
+            def addSeparator(self):
+                pass
+            def aboutToShow(self):
+                return Signal()
+                
+        class QSystemTrayIcon(QObject):
+            def __init__(self, *args):
+                super().__init__()
+            def setIcon(self, icon):
+                pass
+            def setToolTip(self, text):
+                pass
+            def setContextMenu(self, menu):
+                pass
+            def activated(self):
+                return Signal(int)
+            def messageClicked(self):
+                return Signal()
+            def show(self):
+                pass
+            def showMessage(self, title, message, icon=None, duration=0):
+                pass
+                
+            class ActivationReason(Enum):
+                Trigger = 0
+                DoubleClick = 1
+                MiddleClick = 2
+                Context = 3
+                Unknown = 4
+            
+            @staticmethod
+            def isSystemTrayAvailable():
+                return False
+                
+        class QLayout:
+            def __init__(self, *args):
+                pass
+            def addWidget(self, widget):
+                pass
+            def addLayout(self, layout):
+                pass
+            def addStretch(self, stretch=0):
+                pass
+            def setContentsMargins(self, *args):
+                pass
+            def setSpacing(self, spacing):
+                pass
+                
+        class QVBoxLayout(QLayout):
+            def __init__(self, *args):
+                super().__init__()
+                
+        class QHBoxLayout(QLayout):
+            def __init__(self, *args):
+                super().__init__()
+                
+        class QGridLayout(QLayout):
+            def __init__(self, *args):
+                super().__init__()
+            def addWidget(self, widget, row, col, rowSpan=1, colSpan=1):
+                pass
+                
+        class QFormLayout(QLayout):
+            def __init__(self, *args):
+                super().__init__()
+            def addRow(self, label, widget):
+                pass
+                
+        class QSizePolicy:
+            Fixed = 0
+            Minimum = 1
+            Maximum = 2
+            Preferred = 3
+            Expanding = 4
+            MinimumExpanding = 5
+            Ignored = 6
+            
+        class QSpacerItem:
+            def __init__(self, *args):
+                pass
+                
+        class QScrollArea(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def setWidget(self, widget):
+                pass
+            def setWidgetResizable(self, resizable):
+                pass
+                
+        class QFrame(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def setFrameShape(self, shape):
+                pass
+            def setFrameShadow(self, shadow):
+                pass
+                
+        class QTabWidget(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def addTab(self, widget, label):
+                pass
+                
+        class QGroupBox(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+                
+        class QProgressBar(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def setValue(self, value):
+                pass
+            def maximum(self):
+                return 100
+            def setMaximum(self, maximum):
+                pass
+                
+        class QSlider(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def setValue(self, value):
+                pass
+            def value(self):
+                return 0
+                
+        class QMessageBox:
+            @staticmethod
+            def information(*args, **kwargs):
+                return 0
+            @staticmethod
+            def warning(*args, **kwargs):
+                return 0
+            @staticmethod
+            def critical(*args, **kwargs):
+                return 0
+            @staticmethod
+            def question(*args, **kwargs):
+                return 0
+                
+        class QFileDialog:
+            @staticmethod
+            def getOpenFileName(*args, **kwargs):
+                return ("", "")
+            @staticmethod
+            def getSaveFileName(*args, **kwargs):
+                return ("", "")
+            @staticmethod
+            def getExistingDirectory(*args, **kwargs):
+                return ""
+                
+        class QDialogButtonBox(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def accepted(self):
+                return Signal()
+            def rejected(self):
+                return Signal()
+                
+            class StandardButton:
+                Ok = 0
+                Cancel = 1
+                RestoreDefaults = 2
+                
+            def button(self, button):
+                return QPushButton()
+                
+        class QAbstractItemView:
+            class SelectionBehavior:
+                SelectRows = 0
+                SelectItems = 1
+                
+            class SelectionMode:
+                SingleSelection = 0
+                ExtendedSelection = 1
+                
+            class ScrollMode:
+                ScrollPerPixel = 0
+                ScrollPerItem = 1
+                
+        class QStyle:
+            def __init__(self):
+                pass
+                
+        class QStyleOptionButton:
+            def __init__(self):
+                pass
+                
+        class QStatusBar(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def showMessage(self, message, timeout=0):
+                pass
+                
+        class QMenuBar(QWidget):
+            def __init__(self, *args, **kwargs):
+                super().__init__()
+            def addMenu(self, menu):
+                return QMenu()
+                
+        class QApplication:
+            @staticmethod
+            def instance():
+                return None
+            @staticmethod
+            def processEvents():
+                pass
+            def exec_(self):
+                pass
+            exec = exec_
+# We already imported QtWidgets classes in the main import section above
+# All necessary Qt widgets are now included in our comprehensive import structure
 
 # Local application imports
 # Ensure these imports match your file structure
@@ -1626,6 +2229,7 @@ class CrashHandler(QObject):
 #     # sys.excepthook = ch.handle_exception
 #     # Simulate a crash:
 #     # try:
+    pass
 #     #      raise RuntimeError("Simulated crash for testing CrashHandler")
 #     # except Exception:
 #     #      # Call the handler directly if the hook isn't catching it as expected

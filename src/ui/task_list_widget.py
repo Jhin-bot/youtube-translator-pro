@@ -7,13 +7,29 @@ import logging
 from typing import Dict, Any, List, Optional
 from enum import Enum, auto
 
-from PyQt6.QtCore import Qt, pyqtSlot
-from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QTableWidget, QTableWidgetItem, QHeaderView, QGroupBox,
-    QMenu, QAbstractItemView
-)
-from PyQt6.QtGui import QAction, QColor, QIcon
+try:
+    from PyQt6.QtCore import Qt, pyqtSlot
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSlot
+
+try:
+    from PyQt6.QtWidgets import (
+        QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QTableWidget, QTableWidgetItem, QHeaderView, QGroupBox,
+        QMenu, QAbstractItemView
+    )
+except ImportError:
+    from PyQt5.QtWidgets import (
+        QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QTableWidget, QTableWidgetItem, QHeaderView, QGroupBox,
+        QMenu, QAbstractItemView
+    )
+try:
+    from PyQt6.QtGui import QAction, QColor, QIcon, QDesktopServices
+    from PyQt6.QtCore import QUrl
+except ImportError:
+    from PyQt5.QtGui import QAction, QColor, QIcon, QDesktopServices
+    from PyQt5.QtCore import QUrl
 
 from src.ui.styles import StyleManager
 
@@ -335,7 +351,7 @@ class TaskListWidget(QWidget):
         Args:
             url: URL of the task to remove
         """
-        # First make sure it's cancelled if running
+        # First make sure it's cancelled if running'
         if url in self.tasks:
             status = self.tasks[url].get("status", "PENDING")
             if status in ["RUNNING", "PENDING", "PAUSED", "RETRYING"]:
@@ -353,8 +369,12 @@ class TaskListWidget(QWidget):
         Args:
             output_file: Path to the output file
         """
-        from PyQt6.QtGui import QDesktopServices
-        from PyQt6.QtCore import QUrl
+        try:
+            QDesktopServices.openUrl(QUrl.fromLocalFile(output_file))
+        except Exception as e:
+            logger.error(f"Failed to open output file: {e}")
+            self.app_manager.show_error("Open Failed", f"Could not open the output file: {output_file}\n\nError: {e}")
+
         from pathlib import Path
         
         try:

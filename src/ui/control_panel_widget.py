@@ -7,12 +7,23 @@ import logging
 from typing import List, Optional
 from pathlib import Path
 
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QComboBox, QGroupBox, QFormLayout, QLineEdit, QFileDialog,
-    QCheckBox, QListWidget, QListWidgetItem
-)
+try:
+    from PyQt6.QtCore import Qt, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSignal
+
+try:
+    from PyQt6.QtWidgets import (
+        QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QComboBox, QGroupBox, QFormLayout, QLineEdit, QFileDialog,
+        QCheckBox, QListWidget, QListWidgetItem
+    )
+except ImportError:
+    from PyQt5.QtWidgets import (
+        QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QComboBox, QGroupBox, QFormLayout, QLineEdit, QFileDialog,
+        QCheckBox, QListWidget, QListWidgetItem
+    )
 
 from src.ui.styles import StyleManager
 from src.config import TRANSCRIPTION_MODELS, TRANSLATION_LANGUAGES

@@ -7,12 +7,25 @@ import logging
 from typing import List
 import re
 
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QTextEdit, QGroupBox, QCheckBox
-)
-from PyQt6.QtGui import QClipboard, QKeySequence
+try:
+    from PyQt6.QtCore import Qt, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSignal
+    from PyQt5.QtCore import Qt, pyqtSignal
+try:
+    from PyQt6.QtWidgets import (
+        QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QTextEdit, QGroupBox, QCheckBox
+    )
+except ImportError:
+    from PyQt5.QtWidgets import (
+        QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+        QTextEdit, QGroupBox, QCheckBox
+    )
+try:
+    from PyQt6.QtGui import QClipboard, QKeySequence
+except ImportError:
+    from PyQt5.QtGui import QClipboard, QKeySequence
 
 from src.ui.styles import StyleManager
 
