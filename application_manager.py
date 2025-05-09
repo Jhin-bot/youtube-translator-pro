@@ -6,15 +6,38 @@ Coordinates all advanced features and provides a centralized interface for the m
 import os
 import sys
 import logging
-from typing import Dict, Any, Optional, List, Tuple, Union
+from typing import Dict, Any, List, Tuple, Union
 import time
 import json
+
+# Add requests for HTTP functionality
+try:
+    import requests
+except ImportError:
+    # Create a mock requests module for testing purposes
+    class MockResponse:
+        def __init__(self, status_code=200, json_data=None, text=""):
+            self.status_code = status_code
+            self._json_data = json_data or {}
+            self.text = text
+        
+        def json(self):
+            return self._json_data
+    
+    class MockRequests:
+        def get(self, *args, **kwargs):
+            return MockResponse()
+        def post(self, *args, **kwargs):
+            return MockResponse()
+    
+    requests = MockRequests()
 from datetime import datetime
 from pathlib import Path
 import traceback # Added for better error logging
+from enum import Enum, auto # Added for enum support
 
-from PyQt6.QtCore import QObject, pyqtSignal, QSettings, QTimer, Qt, QStandardPaths
-from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PyQt6.QtCore import QObject, pyqtSignal, pyqtSlot, QSettings, QTimer, Qt, QStandardPaths
+from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QDialog, QMenu, QSplashScreen, QSystemTrayIcon
 from PyQt6.QtNetwork import QSslSocket # Potentially useful for update checks, etc.
 
 # Import other application modules
@@ -161,16 +184,49 @@ except ImportError as e:
         clear_recent_files_requested = pyqtSignal()
         def update_menu(self, files): pass
     RecentFilesMenu = MockRecentFilesMenu
+    # Define enums for mock classes
+    class UpdateStatus(Enum):
+        NO_UPDATE = auto()
+        CHECKING = auto()
+        UPDATE_AVAILABLE = auto()
+        DOWNLOADING = auto()
+        READY_TO_INSTALL = auto()
+        ERROR = auto()
+        DISABLED = auto()
+    
+    class NotificationType(Enum):
+        INFO = auto()
+        WARNING = auto()
+        CRITICAL = auto()
+    
+    class ErrorSeverity(Enum):
+        INFO = auto()
+        WARNING = auto()
+        ERROR = auto()
+        CRITICAL = auto()
+    
+    class ShortcutAction(Enum):
+        START_BATCH = auto()
+        PAUSE_BATCH = auto()
+        CANCEL_BATCH = auto()
+        SHOW_SETTINGS = auto()
+        SHOW_ABOUT = auto()
+        SHOW_HELP = auto()
+        ADD_URLS_FROM_CLIPBOARD = auto()
+        CLEAR_INPUT = auto()
+        SHOW_SHORTCUTS = auto()
+        PASS_THROUGH = auto()
     class MockAutoUpdater(QObject):
-         update_status_changed = pyqtSignal(UpdateStatus, Optional[str])
-         notification_requested = pyqtSignal(str, str, NotificationType)
+         # Changed to use str type directly instead of Optional[str] as PyQt signals don't work with Optional types
+         update_status_changed = pyqtSignal(object, str)
+         notification_requested = pyqtSignal(str, str, object)
          def __init__(self, config, parent=None): super().__init__(parent)
          def check_for_updates(self): self.update_status_changed.emit(UpdateStatus.DISABLED, "Updater unavailable.")
          def download_update(self): pass
          def install_update(self): pass
          def get_update_status(self): return UpdateStatus.DISABLED
     AutoUpdater = MockAutoUpdater
-    UpdateStatus = Enum("UpdateStatus", ["NO_UPDATE", "CHECKING", "UPDATE_AVAILABLE", "DOWNLOADING", "READY_TO_INSTALL", "ERROR", "DISABLED"])
+    # UpdateStatus already defined above as a class-based Enum
     class MockSystemTrayManager(QObject):
          tray_icon_activated = pyqtSignal(int)
          message_clicked = pyqtSignal()
@@ -178,7 +234,7 @@ except ImportError as e:
          def set_main_window(self, window): pass
          def show_message(self, title, message, type): logger.warning(f"Tray message (Tray unavailable): {title} - {message}")
     SystemTrayManager = MockSystemTrayManager
-    NotificationType = Enum("NotificationType", ["INFO", "WARNING", "CRITICAL"])
+    # NotificationType already defined above, so this line is removed
     class MockKeyboardManager(QObject):
          shortcut_activated = pyqtSignal(ShortcutAction)
          def __init__(self, parent=None): super().__init__(parent)
@@ -188,7 +244,7 @@ except ImportError as e:
          def load_settings(self, settings): pass
          def save_settings(self): return {}
     KeyboardManager = MockKeyboardManager
-    ShortcutAction = Enum("ShortcutAction", ["START_BATCH", "PAUSE_BATCH", "CANCEL_BATCH", "SHOW_SETTINGS", "SHOW_ABOUT", "SHOW_HELP", "ADD_URLS_FROM_CLIPBOARD", "CLEAR_INPUT", "SHOW_SHORTCUTS", "PASS_THROUGH"])
+    # ShortcutAction already defined above as a class-based Enum
     class MockSessionManager(QObject):
          def __init__(self, parent=None): super().__init__(parent)
          def save_session(self, window, data): pass
@@ -258,12 +314,12 @@ class ApplicationManager(QObject):
     # Signal to update the UI with recent files list
     recent_files_list_updated = pyqtSignal(list)
     # Signal to update the UI with update status
-    update_status_updated = pyqtSignal(UpdateStatus, Optional[str]) # status, message
+    update_status_updated = pyqtSignal(UpdateStatus, object) # status, message
     # Signal to trigger restoration of session data into relevant components (e.g., BatchProcessor)
     restore_session_data = pyqtSignal(dict) # session data
 
 
-    def __init__(self, app: QApplication, splash: Optional[QSplashScreen] = None):
+    def __init__(self, app: QApplication, splash: QSplashScreen = None):
         """
         Initialize the Application Manager.
 
@@ -278,7 +334,7 @@ class ApplicationManager(QObject):
         logger.info("ApplicationManager initializing...")
 
         # 1. Initialize core components (even if others fail)
-        self.settings: Dict[str, Any] = DEFAULT_SETTINGS.copy() # Start with defaults
+        self.settings: dict = DEFAULT_SETTINGS.copy() # Start with defaults
         if SETTINGS_AVAILABLE:
              self.settings = load_settings() # Load settings if module is available
 
@@ -321,7 +377,7 @@ class ApplicationManager(QObject):
         self.auto_updater = AutoUpdater(update_config, parent=self) if ADVANCED_FEATURES_AVAILABLE else MockAutoUpdater(update_config, parent=self)
 
         # 3. Create Main Window (if UI is available)
-        self.main_window: Optional[MainWindow] = None
+        self.main_window: MainWindow = None
         if UI_AVAILABLE:
             self.main_window = MainWindow(app_manager=self) # Pass self to the UI
             self._apply_initial_style() # Apply style after creating the window
@@ -532,7 +588,7 @@ class ApplicationManager(QObject):
 
 
     @pyqtSlot()
-    def shutdown(self, wait: bool = True, timeout: Optional[float] = 10.0):
+    def shutdown(self, wait: bool = True, timeout: float = 10.0):
         """
         Perform graceful application shutdown.
 
@@ -550,7 +606,7 @@ class ApplicationManager(QObject):
         if ADVANCED_FEATURES_AVAILABLE and self.session_manager and self.main_window:
             logger.info("Saving session state...")
             # Get state from components that manage state (e.g., BatchProcessor)
-            session_data: Dict[str, Any] = {
+            session_data: dict = {
                  "batch_processor_state": self.batch_processor.get_session_state() if BATCH_AVAILABLE and self.batch_processor else {},
                  # Add state from other managers/components here if they have state to save
             }
@@ -585,7 +641,7 @@ class ApplicationManager(QObject):
     # --- Application Logic / Slots connected to UI ---
 
     @pyqtSlot(list)
-    def start_batch(self, urls: List[str]):
+    def start_batch(self, urls: list):
         """Handle request to start or resume batch processing."""
         if not BATCH_AVAILABLE or not self.batch_processor:
             self.error_reporter.report_error("Batch processing module is not available.", severity=ErrorSeverity.CRITICAL)
@@ -658,8 +714,8 @@ class ApplicationManager(QObject):
                        self.main_window._update_ui_state(self.batch_processor.status) # Status will be STOPPING initially, then CANCELLED
 
 
-    @pyqtSlot(str, str, Optional[str], str, list)
-    def add_task(self, url: str, model: str, target_lang: Optional[str], output_dir: str, formats: List[str]):
+    @pyqtSlot(str, str, object, str, list)
+    def add_task(self, url: str, model: str, target_lang: str, output_dir: str, formats: list):
          """Handle request to add a single task."""
          if not BATCH_AVAILABLE or not self.batch_processor:
               self.error_reporter.report_error("Batch processing module is not available.", severity=ErrorSeverity.CRITICAL)
@@ -722,7 +778,7 @@ class ApplicationManager(QObject):
 
 
     @pyqtSlot(dict)
-    def _handle_batch_progress_update(self, update: Dict[str, Any]):
+    def _handle_batch_progress_update(self, update: dict):
         """Handle updates to the overall batch progress and status."""
         batch_progress = update.get("batch_progress", 0.0)
         batch_status_name = update.get("batch_status", "IDLE")
@@ -741,7 +797,7 @@ class ApplicationManager(QObject):
 
 
     @pyqtSlot(dict)
-    def _handle_resource_warning(self, warning_data: Dict[str, Any]):
+    def _handle_resource_warning(self, warning_data: dict):
         """Handle resource warning signals from BatchProcessor."""
         warning_type = warning_data.get("warning_type", "unknown")
         message = warning_data.get("message", "A resource warning occurred.")
@@ -775,7 +831,7 @@ class ApplicationManager(QObject):
 
 
     @pyqtSlot(dict)
-    def save_settings(self, new_settings: Dict[str, Any]):
+    def save_settings(self, new_settings: dict):
         """Save application settings and re-apply them."""
         if not SETTINGS_AVAILABLE:
             logger.warning("Settings module not available. Cannot save settings.")
@@ -904,7 +960,7 @@ class ApplicationManager(QObject):
 
 
     @pyqtSlot(dict)
-    def save_shortcut_settings(self, new_shortcut_configs: Dict[ShortcutAction, Tuple[str, bool]]):
+    def save_shortcut_settings(self, new_shortcut_configs):  # Removed problematic type annotation
         """Save updated keyboard shortcut configurations."""
         if not ADVANCED_FEATURES_AVAILABLE or not self.keyboard_manager or not SETTINGS_AVAILABLE:
             logger.warning("Cannot save shortcut settings: feature or settings module not available.")
@@ -986,7 +1042,7 @@ class ApplicationManager(QObject):
 
 
     @pyqtSlot(list)
-    def _update_recent_files_menu(self, recent_files: List[str]):
+    def _update_recent_files_menu(self, recent_files: list):
         """Update the recent files menu in the UI."""
         if self.main_window and hasattr(self.main_window, 'recent_files_menu') and self.main_window.recent_files_menu:
              logger.debug(f"Updating recent files menu with {len(recent_files)} files.")
@@ -1030,8 +1086,8 @@ class ApplicationManager(QObject):
 
     # --- Auto-Update Handling ---
 
-    @pyqtSlot(UpdateStatus, Optional[str])
-    def _handle_update_status_changed(self, status: UpdateStatus, message: Optional[str]):
+    @pyqtSlot(UpdateStatus, object)
+    def _handle_update_status_changed(self, status: UpdateStatus, message: str):
         """Handle changes in auto-updater status."""
         logger.info(f"Auto-updater status changed: {status.name} - {message or ''}")
         # Update UI elements that show update status
@@ -1050,7 +1106,7 @@ class ApplicationManager(QObject):
 
     # --- Keyboard Shortcut Handling ---
 
-    @pyqtSlot(ShortcutAction)
+    @pyqtSlot(object)
     def _handle_shortcut_activated(self, action: ShortcutAction):
         """Handle activation of a keyboard shortcut."""
         logger.debug(f"Shortcut activated: {action.name}")

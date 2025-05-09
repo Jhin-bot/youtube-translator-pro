@@ -18,32 +18,10 @@ from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, Future, as_completed
 from dataclasses import dataclass, field
 from enum import Enum, auto
-# threading.local is a class in the threading module, not a separate module
+import threading.local
 from typing import List, Dict, Any, Optional, Callable, Union, Tuple, Set
 from urllib.parse import urlparse
 from heapq import heappush, heappop
-
-# Add requests for HTTP functionality
-try:
-    import requests
-except ImportError:
-    # Create a mock requests module
-    class MockResponse:
-        def __init__(self, status_code=200, json_data=None, text=""):
-            self.status_code = status_code
-            self._json_data = json_data or {}
-            self.text = text
-        
-        def json(self):
-            return self._json_data
-    
-    class MockRequests:
-        def get(self, *args, **kwargs):
-            return MockResponse()
-        def post(self, *args, **kwargs):
-            return MockResponse()
-    
-    requests = MockRequests()
 
 # Local application imports
 # Ensure these imports match your file structure
@@ -543,7 +521,7 @@ class BatchProcessor(QObject):
                                              completed_task.retries += 1
                                              retry_delay = (self.parent().settings.get("retry_delay", DEFAULT_RETRY_DELAY) if hasattr(self.parent(), 'settings') else DEFAULT_RETRY_DELAY) * (2 ** (completed_task.retries - 1)) # Exponential backoff
                                              retry_delay = min(retry_delay, (self.parent().settings.get("max_retry_delay", DEFAULT_MAX_RETRY_DELAY) if hasattr(self.parent(), 'settings') else DEFAULT_MAX_RETRY_DELAY)) # Cap retry delay
-                                             logger.warning(f"Retrying task {completed_task.url} (Attempt {completed_task.retries}/{self.parent().settings.get('max_retries', DEFAULT_RETRY_COUNT) if hasattr(self.parent(), 'settings') else DEFAULT_RETRY_COUNT}) in {retry_delay:.1f} seconds")
+                                             logger.warning(f"Retrying task {completed_task.url} (Attempt {completed_task.retries}/{self.parent().settings.get('max_retries', DEFAULT_RETRY_COUNT) if hasattr(self.parent(), 'settings') else DEFAULT_RETRY_COUNT}) in {retry_delay:.1f} seconds.")
                                              completed_task.status = TaskStatus.RETRYING # Mark as retrying
                                              completed_task.last_attempt_time = time.time() + retry_delay # Schedule next attempt
                                              # Add back to the priority queue with updated priority (based on retry count)
@@ -566,11 +544,12 @@ class BatchProcessor(QObject):
                                          completed_task.status = TaskStatus.FAILED
                                          completed_task.error = "Unexpected result format from worker."
                                          logger.error(f"Task {completed_task.url} failed due to unexpected worker result.")
-                                         # No retry for unexpected format errors
+                                     # No retry for unexpected format errors
 
                             except Exception as e:
                                 # Handle exceptions raised by the worker thread
                                 completed_task.status = TaskStatus.FAILED
+{{ ... }}
                                 completed_task.error = f"Worker exception: {e}"
                                 logger.error(f"Task {completed_task.url} failed with worker exception: {e}", exc_info=True)
                                 # No retry for worker exceptions (assume unrecoverable)
@@ -1442,7 +1421,7 @@ class BatchProcessor(QObject):
                             last_attempt_time=task_data.get("last_attempt_time"),
                             start_time=task_data.get("start_time"),
                             end_time=task_data.get("end_time"),
-                            # output_dir is already specified above
+                            output_dir=task_data.get("output_dir"), # Ensure output_dir is loaded
                             output_files=task_data.get("output_files", {}), # Load output files if saved
                             temp_files=task_data.get("temp_files", []) # Load temp files for cleanup
                         )

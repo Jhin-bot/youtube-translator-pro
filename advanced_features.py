@@ -30,12 +30,12 @@ from PyQt6.QtCore import (
     Qt, QObject, QSettings, QTimer, QSize, QPoint, QRect, QUrl, QEvent,
     QStandardPaths, QPropertyAnimation, QEasingCurve, QThread, pyqtSignal,
     pyqtSlot, QByteArray, QBuffer, QModelIndex, QSortFilterProxyModel,
-    QKeySequence, QShortcut
+    QShortcut
 )
 from PyQt6.QtGui import (
     QIcon, QAction, QPixmap, QDesktopServices, QFont,
     QColor, QCloseEvent, QImage, QFontMetrics, QMovie, QStandardItemModel,
-    QStandardItem
+    QStandardItem, QKeySequence
 )
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QDialog, QMenu, QSystemTrayIcon, QLabel,
@@ -93,13 +93,38 @@ except ImportError as e:
         def apply_scrollable_style(self, widget): pass
         def apply_task_item_style(self, widget): pass
         def get_icon(self, name): return QIcon()
-        class typography: @staticmethod\ndef get_font(*args, **kwargs): return QFont()
-        class FontWeight: THIN, EXTRA_LIGHT, LIGHT, NORMAL, MEDIUM, DEMI_BOLD, BOLD, EXTRA_BOLD, BLACK = 0,1,2,3,4,5,6,7,8
+        
+        class typography:
+            @staticmethod
+            def get_font(*args, **kwargs): 
+                return QFont()
+        
+        class FontWeight:
+            THIN, EXTRA_LIGHT, LIGHT, NORMAL, MEDIUM, DEMI_BOLD, BOLD, EXTRA_BOLD, BLACK = 0,1,2,3,4,5,6,7,8
+    
     style_manager = MockStyleManager()
-    class MockSpacing: XXS, XS, S, M, L, XL, XXL = 2, 4, 8, 12, 16, 24, 32
-    class MockDimensions: ICON_SIZE_SMALL, ICON_SIZE_MEDIUM, ICON_SIZE_LARGE = QSize(16,16), QSize(24,24), QSize(32,32); DIALOG_MIN_WIDTH, DIALOG_MIN_HEIGHT = 400, 300
-    class MockIconSet: ICON_ADD, ICON_REMOVE, ICON_EDIT, ICON_SAVE, ICON_OPEN, ICON_SETTINGS, ICON_REFRESH, ICON_CANCEL, ICON_BROWSE, ICON_CLIPBOARD = [""]*10; @staticmethod\ndef get_icon(name): return QIcon()
-    class MockAnimationPresets: DURATION_M = 250; @staticmethod\ndef fade_in(widget, duration): return None; @staticmethod\ndef fade_out(widget, duration): return None; EASE_OUT, EASE_IN = QEasingCurve.Type.Linear, QEasingCurve.Type.Linear
+    
+    class MockSpacing: 
+        XXS, XS, S, M, L, XL, XXL = 2, 4, 8, 12, 16, 24, 32
+    
+    class MockDimensions: 
+        ICON_SIZE_SMALL, ICON_SIZE_MEDIUM, ICON_SIZE_LARGE = QSize(16,16), QSize(24,24), QSize(32,32)
+        DIALOG_MIN_WIDTH, DIALOG_MIN_HEIGHT = 400, 300
+    
+    class MockIconSet:
+        ICON_ADD, ICON_REMOVE, ICON_EDIT, ICON_SAVE, ICON_OPEN, ICON_SETTINGS, ICON_REFRESH, ICON_CANCEL, ICON_BROWSE, ICON_CLIPBOARD = [""] * 10
+        
+        @staticmethod
+        def get_icon(name): return QIcon()
+    
+    class MockAnimationPresets: 
+        DURATION_M = 250
+        @staticmethod
+        def fade_in(widget, duration): return None
+        @staticmethod
+        def fade_out(widget, duration): return None
+        EASE_OUT, EASE_IN = QEasingCurve.Type.Linear, QEasingCurve.Type.Linear
+    
     Spacing = MockSpacing()
     Dimensions = MockDimensions()
     IconSet = MockIconSet()

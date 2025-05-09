@@ -5,20 +5,55 @@ import logging
 import platform
 from enum import Enum, auto
 from typing import Dict, List, Any, Optional, Set, Tuple
+
+# Add requests for HTTP functionality
+try:
+    import requests
+except ImportError:
+    # Create a mock requests module for testing purposes
+    class MockResponse:
+        def __init__(self, status_code=200, json_data=None, text=""):
+            self.status_code = status_code
+            self._json_data = json_data or {}
+            self.text = text
+        
+        def json(self):
+            return self._json_data
+    
+    class MockRequests:
+        def get(self, *args, **kwargs):
+            return MockResponse()
+        def post(self, *args, **kwargs):
+            return MockResponse()
+    
+    requests = MockRequests()
 from pathlib import Path
 import webbrowser # Added for opening URLs or files
-import qtawesome as qta # Added for icons
+
+# Try to import qtawesome, but provide a fallback if it's not available
+try:
+    import qtawesome as qta
+    QTA_AVAILABLE = True
+except ImportError:
+    QTA_AVAILABLE = False
+    # Create a mock qtawesome for testing purposes
+    class QtAwesomeMock:
+        def icon(self, *args, **kwargs):
+            from PyQt6.QtGui import QIcon
+            return QIcon()
+        
+    qta = QtAwesomeMock()
 
 from PyQt6.QtCore import (
     Qt, QSize, QUrl, QTimer, QThread, QObject, QSettings, QStandardPaths,
     pyqtSignal, pyqtSlot, QMimeData, QEvent, QPoint, QRect, QPropertyAnimation,
-    QAbstractAnimation, QKeySequence # Added QKeySequence for shortcuts
+    QAbstractAnimation, QEasingCurve # Added QEasingCurve for animations
 )
 from PyQt6.QtGui import (
     QIcon, QAction, QFont, QColor, QPalette, QDragEnterEvent, QDropEvent,
     QPixmap, QPainter, QBrush, QPen, QMovie, QLinearGradient, QGradient,
     QFontMetrics, QCloseEvent, QStandardItemModel, QStandardItem, QDesktopServices,
-    QValidator, QIntValidator, QDoubleValidator, QShortcut # Added QShortcut
+    QValidator, QIntValidator, QDoubleValidator, QShortcut, QKeySequence # Added QKeySequence
 )
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QLabel, QPushButton, QVBoxLayout,
@@ -92,8 +127,32 @@ except ImportError as e:
     # Provide fallback constants
     class MockSpacing: XXS, XS, S, M, L, XL, XXL = 2, 4, 8, 12, 16, 24, 32
     class MockDimensions: BUTTON_HEIGHT, INPUT_HEIGHT = 30, 30; ICON_SIZE_SMALL, ICON_SIZE_MEDIUM, ICON_SIZE_LARGE, ICON_SIZE_XL = QSize(16,16), QSize(24,24), QSize(32,32), QSize(48,48); BORDER_RADIUS_S, BORDER_RADIUS_M, BORDER_RADIUS_L = 4, 8, 12; DIALOG_MIN_WIDTH, DIALOG_MIN_HEIGHT, MAIN_WINDOW_MIN_WIDTH, MAIN_WINDOW_MIN_HEIGHT = 400, 300, 600, 400 # Add dialog/window sizes
-    class MockIconSet: APP_ICON, SPLASH_ICON = "", ""; ICON_ADD, ICON_REMOVE, ICON_EDIT, ICON_SAVE, ICON_OPEN, ICON_SETTINGS, ICON_SEARCH, ICON_DOWNLOAD, ICON_UPLOAD, ICON_PLAY, ICON_PAUSE, ICON_STOP, ICON_CANCEL, ICON_REFRESH, ICON_INFO, ICON_WARNING, ICON_ERROR, ICON_SUCCESS, ICON_BROWSE, ICON_CLIPBOARD = [""]*20; ICON_FILE, ICON_FOLDER, ICON_AUDIO, ICON_VIDEO, ICON_TEXT, ICON_SRT, ICON_JSON, ICON_VTT = [""]*8; @staticmethod\ndef get_icon(name): return QIcon(); @staticmethod\ndef get_pixmap(name, size): return QPixmap(size)
-    class MockAnimationPresets: DURATION_M = 250; @staticmethod\ndef fade_in(widget, duration): return None; @staticmethod\ndef fade_out(widget, duration): return None; EASE_OUT, EASE_IN = QEasingCurve.Type.Linear, QEasingCurve.Type.Linear # Add easing curves
+    class MockIconSet:
+        APP_ICON, SPLASH_ICON = "", ""
+        ICON_ADD, ICON_REMOVE, ICON_EDIT, ICON_SAVE, ICON_OPEN, ICON_SETTINGS, ICON_SEARCH, ICON_DOWNLOAD, ICON_UPLOAD = [""]*9
+        ICON_PLAY, ICON_PAUSE, ICON_STOP, ICON_CANCEL, ICON_REFRESH, ICON_INFO, ICON_WARNING, ICON_ERROR = [""]*8
+        ICON_SUCCESS, ICON_BROWSE, ICON_CLIPBOARD = [""]*3
+        ICON_FILE, ICON_FOLDER, ICON_AUDIO, ICON_VIDEO, ICON_TEXT, ICON_SRT, ICON_JSON, ICON_VTT = [""]*8
+        
+        @staticmethod
+        def get_icon(name):
+            return QIcon()
+        
+        @staticmethod
+        def get_pixmap(name, size):
+            return QPixmap(size)
+    class MockAnimationPresets:
+        DURATION_M = 250
+        EASE_OUT = QEasingCurve.Type.Linear
+        EASE_IN = QEasingCurve.Type.Linear
+        
+        @staticmethod
+        def fade_in(widget, duration):
+            return None
+            
+        @staticmethod
+        def fade_out(widget, duration):
+            return None
     Spacing = MockSpacing()
     Dimensions = MockDimensions()
     IconSet = MockIconSet()
@@ -121,6 +180,11 @@ try:
 except ImportError as e:
     logging.error(f"Could not import advanced_features module: {e}. Advanced features disabled.")
     ADVANCED_FEATURES_AVAILABLE = False
+    # Define enums for mock classes when advanced_features is not available
+    UpdateStatus = Enum("UpdateStatus", ["NO_UPDATE", "CHECKING", "UPDATE_AVAILABLE", "DOWNLOADING", "READY_TO_INSTALL", "ERROR", "DISABLED"])
+    NotificationType = Enum("NotificationType", ["INFO", "WARNING", "CRITICAL"])
+    ShortcutAction = Enum("ShortcutAction", ["START_BATCH", "PAUSE_BATCH", "CANCEL_BATCH", "SHOW_SETTINGS", "SHOW_ABOUT", "SHOW_HELP", "ADD_URLS_FROM_CLIPBOARD", "CLEAR_INPUT", "SHOW_SHORTCUTS", "PASS_THROUGH"])
+    ErrorSeverity = Enum("ErrorSeverity", ["INFO", "WARNING", "ERROR", "CRITICAL"])
     # Mock classes if import fails
     class RecentFilesManager(QObject): # Inherit from QObject
         def __init__(self, *args, **kwargs): super().__init__(); pass
@@ -142,8 +206,9 @@ except ImportError as e:
         def download_update(self): pass
         def install_update(self): pass
         def get_update_status(self): return UpdateStatus.NO_UPDATE if 'UpdateStatus' in locals() else None
-        update_status_changed = pyqtSignal(UpdateStatus, Optional[str]) # Mock signal
-        notification_requested = pyqtSignal(str, str, NotificationType) # Mock signal
+        # Using object instead of enum types and removing Optional to avoid pyqtSignal type issues
+        update_status_changed = pyqtSignal(object, str) # Mock signal
+        notification_requested = pyqtSignal(str, str, object) # Mock signal
         def _start_update_timer(self): pass # Mock method
 
 
@@ -1067,7 +1132,8 @@ class MainWindow(QMainWindow):
     """Main application window for YouTube Transcriber Pro."""
 
     # Define signals for interacting with the ApplicationManager/BatchProcessor
-    start_batch_requested = pyqtSignal(list, str, Optional[str], Optional[str], Optional[List[str]])
+    # Modified to avoid Optional type issues with pyqtSignal
+    start_batch_requested = pyqtSignal(list, str, object, object, object)
     pause_batch_requested = pyqtSignal()
     resume_batch_requested = pyqtSignal()
     cancel_batch_requested = pyqtSignal()
@@ -1740,8 +1806,8 @@ class MainWindow(QMainWindow):
              QMessageBox.critical(self, f"{APP_NAME} - Error", f"An error occurred:\n{message}")
 
 
-    @pyqtSlot(UpdateStatus, Optional[str])
-    def _handle_update_ui_status(self, status: UpdateStatus, message: Optional[str]):
+    @pyqtSlot(object, str)
+    def _handle_update_ui_status(self, status: UpdateStatus, message: str):
         """Slot to handle update status changes and update UI elements."""
         logger.debug(f"UI received update status change: {status.name if status else 'N/A'}, message: {message}")
         # Update UI elements related to updates (e.g., show status in status bar, enable/disable update buttons)
