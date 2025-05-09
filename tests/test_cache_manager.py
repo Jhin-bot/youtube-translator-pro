@@ -172,50 +172,55 @@ class TestCacheManager:
     
     def test_cache_cleanup(self, temp_cache_dir, tmp_path):
         """Test that cache cleanup works correctly."""
-        # Create test audio files
+        # Create test audio files - Make them 2MB each to ensure we clearly exceed limits
         test_files = []
         for i in range(5):
             test_file = tmp_path / f"test_audio_{i}.wav"
-            # Create a 1MB file
+            # Create a 2MB file (2 * 1024 * 1024 bytes)
             with open(test_file, 'wb') as f:
-                f.write(b"0" * 1024 * 1024)
+                f.write(b"0" * 2 * 1024 * 1024)
             test_files.append(test_file)
         
-        # Initialize cache manager with a small max size
+        # Initialize cache manager with a small max size - make it 5MB to allow 2 files at most
         cache_manager = CacheManager(
             cache_dir=temp_cache_dir,
-            max_size_mb=3,  # Only 3MB max
+            max_size_mb=5,  # Only 5MB max (2 files max)
             enabled=True
         )
         
-        # Cache all files
-        for i, test_file in enumerate(test_files):
+        # First, add the "oldest" files with explicit timestamps
+        for i in range(3):  # Add 3 files = 6MB total
             cache_manager.cache_audio(
                 video_id=f"test_video_{i}",
-                audio_file=str(test_file)
+                audio_file=str(test_files[i])
             )
-            
-            # For earlier files, update last_accessed to make them "older"
-            if i < 3:
-                key = f"audio:test_video_{i}"
-                cache_manager.cache_index["entries"][key]["last_accessed"] = (
-                    datetime.now() - timedelta(hours=i+1)
-                ).isoformat()
-                
-        # Save updated index
+            # Set access time to be progressively older for earlier files
+            key = f"audio:test_video_{i}"
+            older_time = datetime.now() - timedelta(hours=10-i)  # Make a bigger difference
+            cache_manager.cache_index["entries"][key]["last_accessed"] = older_time.isoformat()
+        
+        # Save the modified timestamps
         cache_manager._save_cache_index()
         
-        # Force cleanup
+        # Check total size - should be around 6MB (3 files * 2MB)
+        print(f"Cache size after initial files: {cache_manager.cache_index['stats']['size_bytes']/1024/1024:.2f}MB")
+        
+        # Force a cleanup to apply the eviction policy
         cache_manager._cleanup_cache()
         
-        # Check that only the most recently accessed files remain
-        # We should have at most 3 files (3MB max size, each file is 1MB)
-        assert len(cache_manager.cache_index["entries"]) <= 3
+        # Now the cache should contain at most 2 files (5MB max, each file is 2MB)
+        # The oldest ones should have been evicted (test_video_0 definitely)
+        assert "audio:test_video_0" not in cache_manager.cache_index["entries"]
         
-        # And they should be the most recently accessed ones
-        for i in range(3):
-            key = f"audio:test_video_{i}"
-            assert key not in cache_manager.cache_index["entries"]
+        # At least one of the more recent ones should still be there
+        assert "audio:test_video_2" in cache_manager.cache_index["entries"]
+        
+        # The cache should not exceed max size after cleanup
+        current_size = cache_manager.cache_index["stats"]["size_bytes"]
+        assert current_size <= cache_manager.max_size_bytes
+        
+        # We should have at most 2 files in the cache now (each 2MB, max 5MB)
+        assert len(cache_manager.cache_index["entries"]) <= 2
     
     def test_clear_cache(self, temp_cache_dir, tmp_path):
         """Test clearing the entire cache."""

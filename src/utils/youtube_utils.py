@@ -12,11 +12,13 @@ import os
 import re
 import time
 import logging
+import tempfile
 from pathlib import Path
-from typing import Optional, Tuple, Dict, Any, Union, List
+from typing import Optional, Tuple, Dict, Any, Union, List, Callable
 from urllib.parse import parse_qs, urlparse
 
 import pytube
+import ffmpeg
 from pytube.exceptions import RegexMatchError, VideoUnavailable
 
 from src.config import setup_logging
@@ -150,22 +152,33 @@ def download_youtube_audio(
             # Prepare output filename
             output_filename = f"{downloaded_path.stem}.{format}"
             output_file = temp_path / output_filename
-            
-            # Use ffmpeg to convert
-            (
-                ffmpeg
-                .input(str(downloaded_path))
-                .output(str(output_file), format=format, acodec='pcm_s16le' if format == 'wav' else 'libmp3lame', 
-                       ar=sample_rate, ac=1)
-                .global_args('-y')  # Overwrite if exists
-                .global_args('-loglevel', 'error')
-                .run(capture_stdout=True, capture_stderr=True)
-            )
-            
-            logger.info(f"Converted audio to: {output_file}")
+
+            try:
+                # Use ffmpeg to convert
+                (
+                    ffmpeg
+                    .input(str(downloaded_path))
+                    .output(str(output_file), format=format, acodec='pcm_s16le' if format == 'wav' else 'libmp3lame',
+                           ar=sample_rate, ac=1)
+                    .global_args('-y')  # Overwrite if exists
+                    .global_args('-loglevel', 'error')
+                    .run(capture_stdout=True, capture_stderr=True)
+                )
+                
+                logger.info(f"Converted audio to: {output_file}")
+                
+            except ffmpeg.Error as e:
+                logger.error(f"FFmpeg error: {e.stderr.decode() if hasattr(e, 'stderr') else str(e)}")
+                raise RuntimeError(f"FFmpeg error: {e.stderr.decode() if hasattr(e, 'stderr') else str(e)}")
             
             # Delete the original downloaded file if conversion successful
-            downloaded_path.unlink()
+            if downloaded_path.exists():
+                try:
+                    downloaded_path.unlink()
+                except Exception as e:
+                    # Just log this error but don't fail the whole process
+                    logger.warning(f"Could not delete temporary file {downloaded_path}: {e}")
+                    # Continue processing anyway
             
         except Exception as e:
             logger.error(f"Error converting audio: {e}")

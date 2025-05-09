@@ -31,7 +31,21 @@ class CacheManager:
     _instance = None
     
     def __new__(cls, *args, **kwargs):
-        """Implement singleton pattern for cache manager."""
+        """Implement singleton pattern for cache manager.
+        
+        Note: In test environments, passing a different cache_dir will create a new instance
+        to avoid test interference.
+        """
+        cache_dir = kwargs.get('cache_dir', None) or (args[0] if args else None)
+        
+        # For testing: Create a new instance if a different cache_dir is provided
+        if cache_dir and cls._instance and hasattr(cls._instance, 'cache_dir') and \
+           str(Path(cache_dir)) != str(cls._instance.cache_dir):
+            new_instance = super(CacheManager, cls).__new__(cls)
+            new_instance._initialized = False
+            return new_instance
+            
+        # Standard singleton pattern
         if cls._instance is None:
             cls._instance = super(CacheManager, cls).__new__(cls)
             cls._instance._initialized = False
@@ -78,10 +92,10 @@ class CacheManager:
     def _ensure_cache_dirs(self) -> None:
         """Ensure all cache directories exist."""
         self.cache_dir.mkdir(parents=True, exist_ok=True)
-        self.audio_cache_dir.mkdir(exist_ok=True)
-        self.transcription_cache_dir.mkdir(exist_ok=True)
-        self.translation_cache_dir.mkdir(exist_ok=True)
-        self.metadata_cache_dir.mkdir(exist_ok=True)
+        self.audio_cache_dir.mkdir(parents=True, exist_ok=True)
+        self.transcription_cache_dir.mkdir(parents=True, exist_ok=True)
+        self.translation_cache_dir.mkdir(parents=True, exist_ok=True)
+        self.metadata_cache_dir.mkdir(parents=True, exist_ok=True)
     
     def _load_cache_index(self) -> Dict[str, Any]:
         """Load the cache index from disk."""
@@ -426,6 +440,11 @@ class CacheManager:
             
         logger.info("Starting cache cleanup")
         
+        # Calculate current cache size for logging
+        current_size_mb = self.cache_index["stats"]["size_bytes"] / (1024 * 1024)
+        max_size_mb = self.max_size_bytes / (1024 * 1024)
+        logger.debug(f"Current cache size before cleanup: {current_size_mb:.2f}MB / {max_size_mb:.2f}MB")
+        
         # Remove expired entries
         expired_keys = []
         for key, entry in list(self.cache_index.get("entries", {}).items()):
@@ -435,16 +454,28 @@ class CacheManager:
         # Remove expired entries from cache
         for key in expired_keys:
             self._remove_cache_entry(key)
-            
-        # If cache still exceeds max size, apply LRU eviction policy
+        
+        # Calculate cache size after removing expired entries
+        post_expire_size_mb = self.cache_index["stats"]["size_bytes"] / (1024 * 1024)
+        logger.debug(f"Cache size after removing expired entries: {post_expire_size_mb:.2f}MB / {max_size_mb:.2f}MB")
+        
+        # Always apply LRU eviction policy if cache exceeds max size
         if self.cache_index["stats"]["size_bytes"] > self.max_size_bytes:
+            logger.debug(f"Cache exceeds maximum size, applying LRU eviction policy")
             self._apply_eviction_policy()
+            
+            # Verify size after eviction
+            post_eviction_size_mb = self.cache_index["stats"]["size_bytes"] / (1024 * 1024)
+            logger.debug(f"Cache size after eviction: {post_eviction_size_mb:.2f}MB / {max_size_mb:.2f}MB")
             
         # Update last_cleaned timestamp
         self.cache_index["last_cleaned"] = datetime.now().isoformat()
         self._save_cache_index()
         
+        # Log summary
         logger.info(f"Cache cleanup completed. Removed {len(expired_keys)} expired entries.")
+        if self.cache_index["stats"]["size_bytes"] > self.max_size_bytes:
+            logger.warning(f"Cache still exceeds maximum size after cleanup: {self.cache_index['stats']['size_bytes'] / (1024 * 1024):.2f}MB > {self.max_size_bytes / (1024 * 1024):.2f}MB")
     
     def _remove_cache_entry(self, cache_key: str) -> None:
         """Remove a cache entry and its associated file."""
@@ -474,16 +505,37 @@ class CacheManager:
         Apply Least Recently Used (LRU) cache eviction policy.
         Removes least recently used entries until cache size is below max size.
         """
-        # Sort entries by last_accessed time
+        # Sort entries by last_accessed time (oldest first)
         entries = list(self.cache_index["entries"].items())
-        entries.sort(key=lambda x: x[1].get("last_accessed", ""))
+        
+        # Convert ISO strings to datetime for proper comparison
+        def get_access_time(entry):
+            try:
+                return datetime.fromisoformat(entry[1].get("last_accessed", ""))
+            except (ValueError, TypeError):
+                # Return minimum datetime if parsing fails
+                return datetime.min
+                
+        # Sort by access time (oldest first)
+        entries.sort(key=get_access_time)
+        
+        # Log the eviction process for debugging
+        logger.debug(f"Applying LRU eviction policy. Current size: {self.cache_index['stats']['size_bytes']/1024/1024:.2f}MB, Max size: {self.max_size_bytes/1024/1024:.2f}MB")
+        logger.debug(f"Entries before eviction: {len(entries)}")
         
         # Remove entries until we're under the size limit
-        for key, _ in entries:
+        removed_count = 0
+        for key, entry in entries:
+            # Log entry being considered for eviction
+            logger.debug(f"Considering for eviction: {key}, last accessed: {entry.get('last_accessed', '')}")
+            
+            # Remove the entry
             self._remove_cache_entry(key)
+            removed_count += 1
             
             # Check if we're now under the limit
             if self.cache_index["stats"]["size_bytes"] <= self.max_size_bytes:
+                logger.debug(f"Eviction complete. Removed {removed_count} entries.")
                 break
     
     def get_cache_stats(self) -> Dict[str, Any]:

@@ -32,6 +32,20 @@ SYSTEM_INFO = {
     "processor": platform.processor(),
 }
 
+# Application paths
+APP_DIR = Path(__file__).parent
+ROOT_DIR = APP_DIR.parent
+RESOURCES_DIR = ROOT_DIR / "resources"
+DATA_DIR = Path(os.path.join(Path.home(), f".{APP_NAME.replace(' ', '_').lower()}"))
+CACHE_DIR = DATA_DIR / "cache"
+LOG_DIR = DATA_DIR / "logs"
+SETTINGS_FILE = DATA_DIR / "settings.json"
+
+# Ensure necessary directories exist
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
 # Advanced logging configuration
 def setup_logging(log_level=logging.INFO):
     """Configure advanced logging with file rotation and console output.
@@ -44,9 +58,6 @@ def setup_logging(log_level=logging.INFO):
     """
     from logging.handlers import RotatingFileHandler
     import inspect
-    
-    # Ensure log directory exists
-    LOG_DIR.mkdir(parents=True, exist_ok=True)
     
     # Generate timestamp for log filename
     timestamp = datetime.now().strftime("%Y%m%d")
