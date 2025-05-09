@@ -1,0 +1,19 @@
+# Core dependencies
+PyQt6>=6.4.0
+PyQt6-Qt6>=6.4.0
+PyQt6-sip>=13.4.0
+
+# Audio processing
+ffmpeg-python>=0.2.0
+numpy>=1.23.0
+torch>=2.0.0
+
+# Transcription
+openai-whisper>=20230314
+
+# YouTube download
+pytube>=12.1.0
+
+# Utility packages
+psutil>=5.9.0
+requests>=2.28.0
