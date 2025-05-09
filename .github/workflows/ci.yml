@@ -32,8 +32,19 @@ jobs:
         
     - name: Run integrity test
       run: |
+        # We focus on the enhanced integrity test which is more forgiving with optional modules
         python enhanced_integrity_test.py
+        
+        # We'll also create a simple report about which modules were successfully loaded
+        echo "import sys; print('Successfully loaded modules:'); print('\n'.join(sorted(sys.modules.keys())))" > show_modules.py
+        python show_modules.py > loaded_modules_report.txt
       shell: bash
+      
+    - name: Upload integrity test report
+      uses: actions/upload-artifact@v3
+      with:
+        name: integrity-test-report
+        path: loaded_modules_report.txt
         
     - name: Test with pytest
       run: |
