@@ -7,25 +7,114 @@ import logging
 from typing import List
 import re
 
+# Set up logging
+logger = logging.getLogger(__name__)
+
 try:
+    # First try PyQt6
     from PyQt6.QtCore import Qt, pyqtSignal
-except ImportError:
-    from PyQt5.QtCore import Qt, pyqtSignal
-    from PyQt5.QtCore import Qt, pyqtSignal
-try:
     from PyQt6.QtWidgets import (
         QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QTextEdit, QGroupBox, QCheckBox
     )
-except ImportError:
-    from PyQt5.QtWidgets import (
-        QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-        QTextEdit, QGroupBox, QCheckBox
-    )
-try:
     from PyQt6.QtGui import QClipboard, QKeySequence
+    USE_PYQT6 = True
+    logger.info("Using PyQt6 for URL input widget")
 except ImportError:
-    from PyQt5.QtGui import QClipboard, QKeySequence
+    try:
+        # Then try PyQt5
+        from PyQt5.QtCore import Qt, pyqtSignal
+        from PyQt5.QtWidgets import (
+            QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+            QTextEdit, QGroupBox, QCheckBox
+        )
+        from PyQt5.QtGui import QClipboard, QKeySequence
+        USE_PYQT6 = False
+        logger.info("Using PyQt5 for URL input widget")
+    except ImportError:
+        # If neither PyQt6 nor PyQt5 is available, create mock classes
+        logger.warning("Neither PyQt6 nor PyQt5 is available. Creating mock classes for URL input widget.")
+        USE_PYQT6 = False
+        
+        # Mock implementations for Qt components
+        class Qt:
+            AlignCenter = 0
+            AlignLeft = 0
+            AlignRight = 0
+            KeyboardModifiers = 0
+            ControlModifier = 0
+            
+        class Signal:
+            def __init__(self, *args):
+                pass
+            def connect(self, func):
+                pass
+            def emit(self, *args):
+                pass
+        
+        # Alias for signals
+        pyqtSignal = lambda *args, **kwargs: Signal()
+        
+        # Mock widgets
+        class QWidget:
+            def __init__(self, *args, **kwargs):
+                pass
+        
+        class QVBoxLayout:
+            def __init__(self, *args, **kwargs):
+                pass
+            def addWidget(self, *args, **kwargs):
+                pass
+            def addLayout(self, *args, **kwargs):
+                pass
+                
+        class QHBoxLayout:
+            def __init__(self, *args, **kwargs):
+                pass
+            def addWidget(self, *args, **kwargs):
+                pass
+            def addLayout(self, *args, **kwargs):
+                pass
+                
+        class QLabel:
+            def __init__(self, *args, **kwargs):
+                pass
+            
+        class QPushButton:
+            def __init__(self, *args, **kwargs):
+                pass
+            def clicked(self):
+                return Signal()
+            
+        class QTextEdit:
+            def __init__(self, *args, **kwargs):
+                pass
+            def setPlainText(self, *args, **kwargs):
+                pass
+            def toPlainText(self):
+                return ""
+                
+        class QGroupBox:
+            def __init__(self, *args, **kwargs):
+                pass
+            def setLayout(self, *args, **kwargs):
+                pass
+                
+        class QCheckBox:
+            def __init__(self, *args, **kwargs):
+                pass
+            def isChecked(self):
+                return False
+                
+        class QClipboard:
+            def __init__(self, *args, **kwargs):
+                pass
+            def text(self):
+                return ""
+                
+        class QKeySequence:
+            def __init__(self, *args, **kwargs):
+                pass
 
 from src.ui.styles import StyleManager
 

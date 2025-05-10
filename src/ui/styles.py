@@ -7,19 +7,102 @@ import logging
 
 # PyQt imports with fallbacks
 try:
+    # First try PyQt6
     from PyQt6.QtCore import Qt
-except ImportError:
-    from PyQt5.QtCore import Qt
-
-try:
     from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton
-except ImportError:
-    from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton
-
-try:
     from PyQt6.QtGui import QPalette, QColor, QFont
+    USE_PYQT6 = True
+    logger = logging.getLogger(__name__)
+    logger.info("Using PyQt6 for styles")
 except ImportError:
-    from PyQt5.QtGui import QPalette, QColor, QFont
+    try:
+        # Then try PyQt5
+        from PyQt5.QtCore import Qt
+        from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton
+        from PyQt5.QtGui import QPalette, QColor, QFont
+        USE_PYQT6 = False
+        logger = logging.getLogger(__name__)
+        logger.info("Using PyQt5 for styles")
+    except ImportError:
+        # If neither PyQt6 nor PyQt5 is available, create mock classes
+        logger = logging.getLogger(__name__)
+        logger.warning("Neither PyQt6 nor PyQt5 is available. Creating mock classes for styles.")
+        USE_PYQT6 = False
+        
+        # Mock implementations for Qt components
+        class Qt:
+            AlignCenter = 0
+            AlignLeft = 0
+            AlignRight = 0
+            black = 0
+            white = 0
+            darkGray = 0
+            gray = 0
+            lightGray = 0
+            red = 0
+            green = 0
+            blue = 0
+            cyan = 0
+            magenta = 0
+            yellow = 0
+            darkRed = 0
+            darkGreen = 0
+            darkBlue = 0
+        
+        # Mock widgets
+        class QApplication:
+            @staticmethod
+            def palette():
+                return QPalette()
+            @staticmethod
+            def setPalette(palette):
+                pass
+                
+        class QWidget:
+            def __init__(self, *args, **kwargs):
+                pass
+            def setStyleSheet(self, *args, **kwargs):
+                pass
+                
+        class QLabel:
+            def __init__(self, *args, **kwargs):
+                pass
+            def setStyleSheet(self, *args, **kwargs):
+                pass
+                
+        class QPushButton:
+            def __init__(self, *args, **kwargs):
+                pass
+            def setStyleSheet(self, *args, **kwargs):
+                pass
+                
+        class QPalette:
+            def __init__(self, *args, **kwargs):
+                self.Window = 0
+                self.WindowText = 1
+                self.Base = 2
+                self.AlternateBase = 3
+                self.ToolTipBase = 4
+                self.ToolTipText = 5
+                self.Text = 6
+                self.Button = 7
+                self.ButtonText = 8
+                self.BrightText = 9
+                self.Link = 10
+                self.Highlight = 11
+                self.HighlightedText = 12
+            def setColor(self, *args, **kwargs):
+                pass
+                
+        class QColor:
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class QFont:
+            def __init__(self, *args, **kwargs):
+                pass
+            def setPointSize(self, *args, **kwargs):
+                pass
 
 # Logger setup
 logger = logging.getLogger(__name__)

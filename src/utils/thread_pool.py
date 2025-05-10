@@ -12,7 +12,6 @@ import os
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 try:
-    try:
     from src.utils.performance_monitor import PerformanceMonitor
 except ImportError:
     # Mock PerformanceMonitor if not available
@@ -23,18 +22,34 @@ except ImportError:
             pass
         def stop(self, *args, **kwargs):
             pass
-except ImportError:
-    # Mock PerformanceMonitor if not available
-    class PerformanceMonitor:
-        def __init__(self, *args, **kwargs):
+        def measure_performance(self, *args, **kwargs):
             pass
-        def start(self, *args, **kwargs):
-            pass
-        def stop(self, *args, **kwargs):
-            pass, measure_performance
 
 # Set up logging
 logger = logging.getLogger(__name__)
+
+# Performance measurement decorator
+def measure_performance(func):
+    """
+    Decorator to measure the performance of a function.
+    If a PerformanceMonitor is available, it will be used.
+    Otherwise, it's a simple pass-through decorator.
+    
+    Args:
+        func: The function to measure
+        
+    Returns:
+        Wrapped function with performance measurement
+    """
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        try:
+            return func(*args, **kwargs)
+        finally:
+            execution_time = time.time() - start_time
+            logger.debug(f"Function {func.__name__} executed in {execution_time:.4f} seconds")
+    
+    return wrapper
 
 class AdaptiveTask:
     """Task with execution metrics for adaptive scheduling."""

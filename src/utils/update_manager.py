@@ -21,18 +21,54 @@ from urllib.parse import urlparse
 
 import requests
 try:
+    # First try PyQt6
+    from PyQt6.QtCore import QObject, QThread
+    # Alias for signal compatibility
+    from PyQt6.QtCore import pyqtSignal
+    USE_PYQT6 = True
+    logger = logging.getLogger(__name__)
+    logger.info("Using PyQt6 for update manager")
+except ImportError:
     try:
-    from PyQt6.QtCore import QObject, pyqtSignal, QThread
-except ImportError:
-    from PyQt5.QtCore import QObject, pyqtSignal, QThread
-except ImportError:
-    from PyQt5.QtCore import QObject, pyqtSignal, QThread
-except ImportError:
-    from PyQt5.QtCore import QObject, pyqtSignal, QThread
-except ImportError:
-    from PyQt5.QtCore import QObject, pyqtSignal, QThread
+        # Then try PyQt5
+        from PyQt5.QtCore import QObject, QThread
+        # Alias for signal compatibility
+        from PyQt5.QtCore import pyqtSignal
+        USE_PYQT6 = False
+        logger = logging.getLogger(__name__)
+        logger.info("Using PyQt5 for update manager")
+    except ImportError:
+        # If neither PyQt6 nor PyQt5 is available, create mock classes
+        logger = logging.getLogger(__name__)
+        logger.warning("Neither PyQt6 nor PyQt5 is available. Creating mock classes for update manager.")
+        USE_PYQT6 = False
+        
+        # Mock classes for QtCore components
+        class QObject:
+            def __init__(self, *args, **kwargs):
+                pass
+                
+        class QThread:
+            def __init__(self, *args, **kwargs):
+                pass
+            def start(self):
+                pass
+            def quit(self):
+                pass
+                
+        class Signal:
+            def __init__(self, *args):
+                pass
+            def connect(self, func):
+                pass
+            def emit(self, *args):
+                pass
+                
+        # Alias for signal compatibility
+        pyqtSignal = Signal
 
 from src.config import APP_NAME, APP_VERSION, APP_UPDATES_URL, SYSTEM_INFO, setup_logging
+# Ensure SYSTEM_INFO is available without requiring a separate system_info module
 from src.utils.error_handling import NetworkError, try_except_decorator, ErrorHandler
 
 # Initialize logger

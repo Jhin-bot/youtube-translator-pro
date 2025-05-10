@@ -172,28 +172,42 @@ class ApplicationManager(QObject):
     def run(self):
         """Start the application."""
         try:
+            logger.info("Starting application run sequence...")
             # Initialize and show the main window
             from src.ui.main_window import MainWindow
+            logger.info("Importing MainWindow successful")
             self.main_window = MainWindow(self)
+            logger.info("MainWindow instance created successfully")
             
             # Integrate new features with main window
+            logger.info("About to integrate features with main window")
             self._integrate_features_with_main_window()
+            logger.info("Features integrated successfully")
             
             # Apply initial style
+            logger.info("About to apply initial style")
             self._apply_initial_style()
+            logger.info("Initial style applied successfully")
             
             # Restore session if needed
             if hasattr(self, 'session_manager'):
+                logger.info("About to restore session")
                 self.session_manager.restore_session(self.main_window)
+                logger.info("Session restored successfully")
             
             # Hide splash screen if exists
             if self._splash:
+                logger.info("About to hide splash screen")
                 self._splash.finish(self.main_window)
+                logger.info("Splash screen hidden successfully")
             
             # Show main window
+            logger.info("About to show main window")
             self.main_window.show()
+            logger.info("Main window shown successfully")
             
             # Start application event loop
+            logger.info("About to start application event loop (app.exec)")
             return self.app.exec()
         except Exception as e:
             logger.critical(f"Failed to start application: {e}", exc_info=True)
