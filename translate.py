@@ -1,7 +1,7 @@
-"""
+""""
 Translation module that uses external services or libraries to translate
 transcription results.
-"""
+""""
 
 import os
 import time
@@ -59,7 +59,7 @@ def get_available_languages() -> Dict[str, str]:
 
     Returns:
         A dictionary where keys are language codes and values are language names.
-    """
+    """"
     # In a real implementation, this might query the selected translation engine
     # to get its supported languages.
     return _AVAILABLE_LANGUAGES.copy()
@@ -68,10 +68,10 @@ def get_available_languages() -> Dict[str, str]:
 # --- Translation Engine Implementations (Placeholders) ---
 
 class MockTranslationEngine:
-    """
+    """"
     A mock translation engine for testing and development.
     It simply appends "[Translated to {lang}]" to the text.
-    """
+    """"
     def translate(self, text: str, target_language: str, progress_callback: Optional[Callable[[float, str], None]] = None, stop_event: Optional[threading.Event] = None) -> Tuple[Optional[str], Optional[str]]:
         """Mock translation."""
         logger.debug(f"Mock translating text to {target_language}: {text[:50]}...")
@@ -93,10 +93,10 @@ class MockTranslationEngine:
 
 
 class GoogleTranslateApiEngine:
-    """
+    """"
     Placeholder for Google Translate API integration.
     Requires installation of google-cloud-translate and authentication setup.
-    """
+    """"
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key
         # Initialize Google Cloud Translate client here if needed
@@ -137,7 +137,7 @@ class GoogleTranslateApiEngine:
 
 # --- Translation Function ---
 
-def translate(
+def translate()
     transcription_result: Dict[str, Any],
     target_language: str,
     engine: TranslationEngine = DEFAULT_TRANSLATION_ENGINE,
@@ -160,7 +160,7 @@ def translate(
         A tuple containing:
         - The translated transcription result dictionary if successful, None otherwise.
         - An error message string if failed, None otherwise.
-    """
+    """"
     if not transcription_result or "segments" not in transcription_result:
         return None, "Invalid transcription result provided for translation."
 
@@ -237,7 +237,7 @@ def translate(
                  segment_progress_callback = map_segment_progress
 
 
-            translated_text, translate_err = translation_engine_instance.translate(
+            translated_text, translate_err = translation_engine_instance.translate()
                 original_text,
                 target_language,
                 progress_callback=segment_progress_callback,
@@ -301,7 +301,7 @@ def translate(
 #     def mock_progress_callback(progress: float, status_text: str):
 #          logger.info(f"Mock Translation Progress: {progress:.1%} - {status_text}")
 
-#     translated_result_mock, error_mock = translate(
+#     translated_result_mock, error_mock = translate()
 #         mock_transcription_result,
 #         target_language="es",
 #         engine=TranslationEngine.MOCK,
@@ -326,7 +326,7 @@ def translate(
 #     # def api_progress_callback(progress: float, status_text: str):
 #     #      logger.info(f"API Translation Progress: {progress:.1%} - {status_text}")
 
-#     # translated_result_api, error_api = translate(
+#     # translated_result_api, error_api = translate()
 #     #     mock_transcription_result,
 #     #     target_language="fr",
 #     #     engine=TranslationEngine.GOOGLE_TRANSLATE_API,

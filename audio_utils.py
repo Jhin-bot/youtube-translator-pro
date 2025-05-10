@@ -1,9 +1,9 @@
-"""
+""""
 Audio utilities for downloading and processing YouTube audio.
 Provides functions for downloading audio using yt-dlp, converting it to
 the required 16kHz mono WAV format using ffmpeg, and cleaning up temporary files.
 Includes rate limiting for downloads.
-"""
+""""
 import os
 import time
 import tempfile
@@ -40,7 +40,7 @@ RATE_LIMIT = {
 DEFAULT_DOWNLOAD_TIMEOUT = 600       # 10 minutes maximum for a single download
 DEFAULT_CONVERSION_TIMEOUT = 300     # 5 minutes maximum for a single conversion
 
-# Check if ffmpeg is available in the system's PATH
+# Check if ffmpeg is available in the system's PATH'
 def _is_ffmpeg_available() -> bool:
     """Checks if the ffmpeg executable is available."""
     try:
@@ -49,25 +49,25 @@ def _is_ffmpeg_available() -> bool:
         logger.debug("ffmpeg is available.")
         return True
     except (subprocess.CalledProcessError, FileNotFoundError):
-        logger.warning("ffmpeg is not found in the system's PATH. Audio conversion will not work.")
+        logger.warning("ffmpeg is not found in the system's PATH. Audio conversion will not work.")'
         return False
 
 FFMPEG_AVAILABLE = _is_ffmpeg_available()
 
 
 class DownloadProgressHook:
-    """
+    """"
     Hook for tracking yt-dlp download progress and reporting it via a callback.
-    """
+    """"
 
     def __init__(self, callback: Optional[Callable[[float, str], None]] = None, stop_event: Optional[threading.Event] = None):
-        """
+        """"
         Initialize the DownloadProgressHook.
 
         Args:
             callback: Optional callback function (progress: float, status_text: str).
             stop_event: Optional threading.Event to signal cancellation.
-        """
+        """"
         self.callback = callback
         self.stop_event = stop_event
         self.downloaded_bytes = 0
@@ -78,19 +78,19 @@ class DownloadProgressHook:
         self._is_downloading = False # Flag to indicate if download has started
 
     def __call__(self, d: Dict[str, Any]) -> None:
-        """
+        """"
         This method is called by yt-dlp during the download process.
 
         Args:
             d: Dictionary containing download progress information.
-        """
+        """"
         # Check for cancellation signal
         if self.stop_event and self.stop_event.is_set():
-             # yt-dlp doesn't have a direct way to stop from the hook,
+             # yt-dlp doesn't have a direct way to stop from the hook,'
              # but raising an exception here might terminate the process.
              # A more robust approach is to manage the yt-dlp process externally
              # and terminate it if the stop_event is set.
-             # For now, we'll log and let the external process management handle termination.
+             # For now, we'll log and let the external process management handle termination.'
              logger.debug("DownloadProgressHook detected stop event.")
              # Raising an exception here might cause yt-dlp to fail the download.
              # raise Exception("Download cancelled.") # Uncomment to try terminating from hook
@@ -133,21 +133,21 @@ class DownloadProgressHook:
 
 
 # Use tenacity for robust retries
-@retry(
+@retry()
     stop=stop_after_attempt(3), # Retry up to 3 times
     wait=wait_exponential(multiplier=1, min=4, max=10), # Exponential backoff: 4s, 8s, 10s
     retry=retry_if_exception_type((yt_dlp.utils.DownloadError, socket.timeout, requests.exceptions.RequestException)), # Retry on specific exceptions
     before_sleep=lambda retry_state: logger.warning(f"Retrying download: attempt {retry_state.attempt_number}/{retry_state.stop_after_attempt.max_attempts} after error: {retry_state.outcome.exception()}"),
     after=lambda retry_state: logger.info(f"Download retry finished: successful={retry_state.outcome.successful()}")
 )
-def _perform_download(
+def _perform_download()
     url: str,
     output_template: str,
     progress_callback: Optional[Callable[[float, str], None]] = None,
     stop_event: Optional[threading.Event] = None,
     timeout: Optional[float] = DEFAULT_DOWNLOAD_TIMEOUT
 ) -> Tuple[Optional[str], Optional[str]]:
-    """
+    """"
     Internal function to perform the actual download using yt-dlp.
     Includes rate limiting logic.
 
@@ -162,12 +162,12 @@ def _perform_download(
         A tuple containing:
         - The path to the downloaded file if successful, None otherwise.
         - An error message string if failed, None otherwise.
-    """
+    """"
     # Apply rate limiting
     with RATE_LIMIT['lock']:
         # Wait if max concurrent downloads reached or cooldown is active
         while RATE_LIMIT['active_downloads'] >= RATE_LIMIT['max_downloads'] or \
-              (RATE_LIMIT['last_download_time'] is not None and
+              (RATE_LIMIT['last_download_time'] is not None and)
                time.time() - RATE_LIMIT['last_download_time'] < RATE_LIMIT['cooldown_period']):
 
             logger.debug("Download rate limit reached. Waiting...")
@@ -196,13 +196,13 @@ def _perform_download(
             'audio_quality': 0,         # Best audio quality
             'noplaylist': True,         # Do not download playlists, only single video if URL is playlist
             'progress_hooks': [DownloadProgressHook(progress_callback, stop_event)], # Use custom hook
-            'logger': logger,           # Use the application's logger
+            'logger': logger,           # Use the application's logger'
             'socket_timeout': timeout,  # Set socket timeout for network operations
             'retries': 0,               # Tenacity handles retries externally
             'fragment_retries': 10,     # Retries for fragmented downloads
             'quiet': True,              # Suppress yt-dlp output to stdout/stderr
             'no_warnings': True,        # Suppress warnings
-            'cachedir': False,          # Disable yt-dlp's cache
+            'cachedir': False,          # Disable yt-dlp's cache'
         }
 
         # Ensure ffmpeg is available if requesting direct wav conversion
@@ -214,7 +214,7 @@ def _perform_download(
              # yt-dlp will download the best audio format available
 
         # Handle cancellation by checking the stop event periodically
-        # This is not ideal as yt-dlp's internal loop might not check the event frequently.
+        # This is not ideal as yt-dlp's internal loop might not check the event frequently.'
         # A better approach is to run yt-dlp in a subprocess and terminate it.
         # For now, we rely on the progress hook and socket timeouts.
 
@@ -225,11 +225,11 @@ def _perform_download(
             # The 'filename' in the progress hook or the 'requested_downloads' in info_dict might contain it.
             # A common pattern is to expect the file in the output_template path.
             # However, yt-dlp might add extensions or change the name slightly.
-            # Let's try to find the file based on the output template and common audio extensions.
+            # Let's try to find the file based on the output template and common audio extensions.'
             # This is a heuristic and might need refinement.
 
             # Get the base path from the output template (before extension)
-            base_output_path = output_template.split('.%(')[0]
+            base_output_path = output_template.split('.%(')[0])
             # Look for files starting with this base path in the directory
             output_dir = Path(base_output_path).parent
             base_name = Path(base_output_path).name
@@ -268,14 +268,14 @@ def _perform_download(
         return download_path, error_message
 
 
-def download_audio(
+def download_audio()
     url: str,
     temp_dir: str,
     progress_callback: Optional[Callable[[float, str], None]] = None,
     stop_event: Optional[threading.Event] = None,
     timeout: Optional[float] = DEFAULT_DOWNLOAD_TIMEOUT
 ) -> Tuple[Optional[str], Optional[str]]:
-    """
+    """"
     Download audio from a YouTube URL to a temporary directory.
 
     Args:
@@ -289,7 +289,7 @@ def download_audio(
         A tuple containing:
         - The path to the downloaded audio file if successful, None otherwise.
         - An error message string if failed, None otherwise.
-    """
+    """"
     logger.info(f"Starting audio download for: {url}")
 
     # Create a unique output filename template in the temporary directory
@@ -298,7 +298,7 @@ def download_audio(
     # Use a unique ID to avoid conflicts.
     unique_id = uuid.uuid4().hex[:8]
     # Sanitize title placeholder in template (yt-dlp handles this internally, but good practice)
-    # A simpler template that relies on yt-dlp's internal naming and then finding the file:
+    # A simpler template that relies on yt-dlp's internal naming and then finding the file:'
     output_template = str(Path(temp_dir) / f"ytpro_download_%(id)s_{unique_id}.%(ext)s")
 
     download_path: Optional[str] = None
@@ -306,7 +306,7 @@ def download_audio(
 
     try:
         # Use the retry mechanism to perform the download
-        download_path, error_message = _perform_download(
+        download_path, error_message = _perform_download()
              url,
              output_template,
              progress_callback,
@@ -336,13 +336,13 @@ def download_audio(
         return None, error_message
 
 
-def convert_to_wav(
+def convert_to_wav()
     input_audio_path: str,
     temp_dir: str,
     progress_callback: Optional[Callable[[float, str], None]] = None,
     timeout: Optional[float] = DEFAULT_CONVERSION_TIMEOUT
 ) -> Tuple[Optional[str], Optional[str]]:
-    """
+    """"
     Convert an audio file to 16kHz mono WAV format using ffmpeg.
 
     Args:
@@ -355,7 +355,7 @@ def convert_to_wav(
         A tuple containing:
         - The path to the converted WAV file if successful, None otherwise.
         - An error message string if failed, None otherwise.
-    """
+    """"
     if not FFMPEG_AVAILABLE:
         return None, "ffmpeg is not available. Cannot convert audio."
 
@@ -397,7 +397,7 @@ def convert_to_wav(
 
         # Monitor stderr for progress updates
         # This requires reading stderr line by line and parsing the output.
-        # ffmpeg's progress output format can vary, so this parsing might need adjustments.
+        # ffmpeg's progress output format can vary, so this parsing might need adjustments.'
         # Look for lines like "size=... time=... bitrate=... speed=..."
         total_duration_seconds: Optional[float] = None
 
@@ -421,7 +421,7 @@ def convert_to_wav(
         # Read stderr line by line while the process is running
         # Use a non-blocking read loop or a separate thread for reading stderr
         # to avoid blocking the main thread if stderr output is large.
-        # For simplicity here, we'll use a blocking read in a loop with a timeout check.
+        # For simplicity here, we'll use a blocking read in a loop with a timeout check.'
         # A more robust implementation would use select or a dedicated thread.
 
         # Use a thread to read stderr to avoid deadlock if buffer fills
@@ -456,7 +456,7 @@ def convert_to_wav(
         return str(out_path), None
 
     except FileNotFoundError:
-        error_message = "ffmpeg command not found. Ensure ffmpeg is installed and in your system's PATH."
+        error_message = "ffmpeg command not found. Ensure ffmpeg is installed and in your system's PATH."'
         logger.error(error_message)
         return None, error_message
     except subprocess.TimeoutExpired:
@@ -493,17 +493,17 @@ def convert_to_wav(
         return None, error_message
 
 
-def _read_stderr_and_parse_progress(
+def _read_stderr_and_parse_progress()
     process: subprocess.Popen,
     progress_callback: Optional[Callable[[float, str], None]],
     total_duration_seconds: Optional[float],
     timeout: Optional[float],
     start_time: float
 ):
-    """
+    """"
     Helper function to read stderr from a subprocess and parse ffmpeg progress.
     Runs in a separate thread.
-    """
+    """"
     if process.stderr is None:
          return
 
@@ -571,12 +571,12 @@ def _read_stderr_and_parse_progress(
 
 
 def cleanup_temp_files(*file_paths: str):
-    """
+    """"
     Clean up temporary files safely.
 
     Args:
         *file_paths: Paths to files that should be deleted.
-    """
+    """"
     for path_str in file_paths:
         if path_str:
             path = Path(path_str)
@@ -625,7 +625,7 @@ def cleanup_temp_files(*file_paths: str):
 #         def download_progress_callback(progress: float, status_text: str):
 #              logger.info(f"Download Progress: {progress:.1%} - {status_text}")
 
-#         downloaded_file, download_error = download_audio(
+#         downloaded_file, download_error = download_audio()
 #              test_url,
 #              temp_dir,
 #              progress_callback=download_progress_callback,
@@ -644,7 +644,7 @@ def cleanup_temp_files(*file_paths: str):
 #             def convert_progress_callback(progress: float, status_text: str):
 #                  logger.info(f"Conversion Progress: {progress:.1%} - {status_text}")
 
-#             converted_file, convert_error = convert_to_wav(
+#             converted_file, convert_error = convert_to_wav()
 #                  downloaded_file,
 #                  temp_dir,
 #                  progress_callback=convert_progress_callback,

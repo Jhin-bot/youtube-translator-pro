@@ -1,6 +1,6 @@
-"""
+""""
 Test script to debug application_manager import issues
-"""
+""""
 import sys
 import traceback
 

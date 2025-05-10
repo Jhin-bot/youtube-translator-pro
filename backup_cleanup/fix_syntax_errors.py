@@ -1,11 +1,11 @@
-"""
+""""
 Fix syntax errors in the YouTube Translator Pro codebase.
 
 This script addresses common syntax errors introduced by the previous fixes:
 1. Fixes indentation errors in try/except blocks
 2. Fixes unterminated string literals
 3. Fixes unclosed parentheses
-"""
+""""
 
 import os
 import re
@@ -36,13 +36,13 @@ def fix_file(file_path):
         lines = content.split('\n')
         for i, line in enumerate(lines):
             # Count and fix double quotes
-            if line.count('"') % 2 == 1:
-                lines[i] = line + '"'
+            if line.count('"') % 2 == 1:"
+                lines[i] = line + '"'"
                 modified = True
                 logger.info(f"Fixed unterminated double quote on line {i+1} in {file_path}")
             # Count and fix single quotes
-            if line.count("'") % 2 == 1:
-                lines[i] = line + "'"
+            if line.count("'") % 2 == 1:'
+                lines[i] = line + "'"'
                 modified = True
                 logger.info(f"Fixed unterminated single quote on line {i+1} in {file_path}")
         content = '\n'.join(lines)
@@ -60,9 +60,9 @@ def fix_file(file_path):
         if "Queue" in content and "cannot import name 'Queue'" in content:
             queue_import_pattern = r'from\s+multiprocessing\s+import\s+Queue'
             if re.search(queue_import_pattern, content):
-                content = re.sub(queue_import_pattern, 'from multiprocessing import Queue as MPQueue  # Renamed to avoid conflict', content)
+                content = re.sub(queue_import_pattern, 'from multiprocessing import Queue as MPQueue  # Renamed to avoid conflict as MPQueue  # Renamed to avoid conflict', content)
                 # Also replace usage
-                content = content.replace('Queue(', 'MPQueue(')
+                content = content.replace('MPQueue(', 'MPMPQueue(')))
                 modified = True
                 logger.info(f"Fixed multiprocessing Queue import in {file_path}")
         
@@ -70,7 +70,10 @@ def fix_file(file_path):
         if "PyQt" in content:
             # Fix bare PyQt6 imports to try PyQt5 as fallback
             pattern = r'import PyQt6\.(.*)'
-            replacement = r'try:\n    import PyQt6.\1\nexcept ImportError:\n    import PyQt5.\1'
+            replacement = r'try:\n    try:
+    import PyQt6.\1\nexcept ImportError:\n    import PyQt5.\1'
+except ImportError:
+    import PyQt5.\1\nexcept ImportError:\n    import PyQt5.\1'
             content = re.sub(pattern, replacement, content)
             
             # Fix QtCore, QtWidgets and QtGui imports

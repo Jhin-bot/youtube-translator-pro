@@ -1,6 +1,6 @@
-"""
+""""
 Fix integrity test issues by patching modules directly during the test.
-"""
+""""
 import sys
 import importlib
 import os
@@ -37,7 +37,10 @@ sys.modules['QByteArray'] = MockQByteArray()
 
 # Add QKeySequence to QtGui not QtCore
 try:
+    try:
     from PyQt6.QtGui import QKeySequence
+except ImportError:
+    from PyQt5.QtGui import QKeySequence
 except ImportError:
     try:
         from PyQt5.QtGui import QKeySequence

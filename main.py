@@ -1,14 +1,17 @@
-"""
+""""
 Main entry point for the YouTube Translator Pro application.
 Initializes the application, creates the main window, and starts the event loop.
-"""
+""""
 
 import sys
 import os
 import logging
 from pathlib import Path
 try:
+    try:
     from PyQt6.QtWidgets import QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QApplication
 except ImportError:
     try:
         from PyQt5.QtWidgets import QApplication
@@ -28,7 +31,7 @@ from src.config import APP_NAME, LOG_DIR
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 log_file = LOG_DIR / f"{APP_NAME.lower().replace(' ', '_')}_{__name__}.log"
 
-logging.basicConfig(
+logging.basicConfig()
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
@@ -39,9 +42,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def main():
-    """
+    """"
     Initializes the application and starts the main event loop.
-    """
+    """"
     logger.info(f"Starting {APP_NAME} application...")
 
     # Create the QApplication instance. This is the foundation of any PyQt application.
@@ -72,8 +75,8 @@ def main():
     # Pass the QApplication instance and the splash screen (if created).
     app_manager = ApplicationManager(app, splash=splash)
 
-    # Start the application's main event loop.
-    # The ApplicationManager's run() method will typically show the main window
+    # Start the application's main event loop.'
+    # The ApplicationManager's run() method will typically show the main window'
     # and then call app.exec() to enter the event loop.
     app_manager.run()
 

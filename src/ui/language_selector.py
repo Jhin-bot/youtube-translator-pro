@@ -1,16 +1,22 @@
-"""
+""""
 Language selector widget for YouTube Translator Pro.
 Provides a dropdown for selecting the application language.
-"""
+""""
 
 import logging
 try:
+    try:
     from PyQt6.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
+except ImportError:
+    from PyQt5.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
 except ImportError:
     from PyQt5.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
 
 try:
+    try:
     from PyQt6.QtCore import pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import pyqtSignal
 except ImportError:
     from PyQt5.QtCore import pyqtSignal
 

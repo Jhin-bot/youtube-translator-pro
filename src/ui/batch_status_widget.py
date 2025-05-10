@@ -1,23 +1,29 @@
-"""
+""""
 Batch status widget for YouTube Translator Pro.
 Displays the current status and progress of batch processing.
-"""
+""""
 
 import logging
 from typing import Optional
 
 try:
+    try:
     from PyQt6.QtCore import Qt, pyqtSlot
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSlot
 except ImportError:
     from PyQt5.QtCore import Qt, pyqtSlot
 
 try:
-    from PyQt6.QtWidgets import (
+    try:
+    from PyQt6.QtWidgets import ()
+except ImportError:
+    from PyQt5.QtWidgets import ()
         QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QProgressBar, QGroupBox
     )
 except ImportError:
-    from PyQt5.QtWidgets import (
+    from PyQt5.QtWidgets import ()
         QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QProgressBar, QGroupBox
     )
@@ -31,13 +37,13 @@ class BatchStatusWidget(QWidget):
     """Widget for displaying batch processing status and progress."""
     
     def __init__(self, app_manager, parent=None):
-        """
+        """"
         Initialize the batch status widget.
         
         Args:
             app_manager: Reference to the ApplicationManager
             parent: The parent widget
-        """
+        """"
         super().__init__(parent)
         self.app_manager = app_manager
         self.style_manager = StyleManager()
@@ -102,12 +108,12 @@ class BatchStatusWidget(QWidget):
     
     @pyqtSlot(object)
     def update_status(self, status):
-        """
+        """"
         Update the batch status display.
         
         Args:
             status: The new batch status
-        """
+        """"
         # Convert status enum to string
         status_text = str(status).split('.')[-1] if hasattr(status, 'name') else str(status)
         
@@ -135,24 +141,24 @@ class BatchStatusWidget(QWidget):
     
     @pyqtSlot(float)
     def update_progress(self, progress: float):
-        """
+        """"
         Update the progress bar.
         
         Args:
             progress: The progress value (0.0 to 1.0)
-        """
+        """"
         # Convert to percentage (0-100)
         percentage = int(progress * 100)
         self.progress_bar.setValue(percentage)
     
     @pyqtSlot(str)
     def update_message(self, message: str):
-        """
+        """"
         Update the status message.
         
         Args:
             message: The new status message
-        """
+        """"
         self.message_label.setText(message)
     
     def _start_batch(self):

@@ -1,7 +1,7 @@
-"""
+""""
 Thread pool utilities for YouTube Translator Pro.
 Provides optimized thread management for concurrent processing.
-"""
+""""
 
 import logging
 import threading
@@ -12,7 +12,17 @@ import os
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 try:
-    from src.utils.performance_monitor import PerformanceMonitor
+        try:
+        from src.utils.performance_monitor import PerformanceMonitor
+except ImportError:
+    # Mock PerformanceMonitor if not available
+    class PerformanceMonitor:
+        def __init__(self, *args, **kwargs):
+            pass
+        def start(self, *args, **kwargs):
+            pass
+        def stop(self, *args, **kwargs):
+            pass
 except ImportError:
     # Mock PerformanceMonitor if not available
     class PerformanceMonitor:
@@ -30,21 +40,21 @@ logger = logging.getLogger(__name__)
 
 # Performance measurement decorator
 def measure_performance(func):
-    """
+    """"
     Decorator to measure the performance of a function.
     If a PerformanceMonitor is available, it will be used.
-    Otherwise, it's a simple pass-through decorator.
+    Otherwise, it's a simple pass-through decorator.'
     
     Args:
         func: The function to measure
         
     Returns:
         Wrapped function with performance measurement
-    """
+    """"
     def wrapper(*args, **kwargs):
         start_time = time.time()
         try:
-            return func(*args, **kwargs)
+                return func(*args, **kwargs)
         finally:
             execution_time = time.time() - start_time
             logger.debug(f"Function {func.__name__} executed in {execution_time:.4f} seconds")
@@ -54,9 +64,9 @@ def measure_performance(func):
 class AdaptiveTask:
     """Task with execution metrics for adaptive scheduling."""
     
-    def __init__(self, func: Callable, args: Tuple = None, kwargs: Dict = None, 
+    def __init__(self, func: Callable, args: Tuple = None, kwargs: Dict = None, )
                  task_id: str = None, priority: int = 0):
-        """
+        """"
         Initialize a task.
         
         Args:
@@ -65,7 +75,7 @@ class AdaptiveTask:
             kwargs: Keyword arguments
             task_id: Unique task identifier
             priority: Task priority (higher is more important)
-        """
+        """"
         self.func = func
         self.args = args or ()
         self.kwargs = kwargs or {}
@@ -84,20 +94,20 @@ class AdaptiveTask:
         return self.priority > other.priority  # Higher priority comes first
     
     def update_metrics(self, execution_time: float, cpu_time: float) -> None:
-        """
+        """"
         Update execution metrics.
         
         Args:
             execution_time: Total execution time in seconds
             cpu_time: CPU time used in seconds
-        """
+        """"
         self.last_execution_time = execution_time
         
         # Update running average
         if self.execution_count == 0:
             self.avg_execution_time = execution_time
         else:
-            self.avg_execution_time = (
+            self.avg_execution_time = ()
                 (self.avg_execution_time * self.execution_count + execution_time) / 
                 (self.execution_count + 1)
             )
@@ -110,15 +120,15 @@ class AdaptiveTask:
             self.io_intensity = 1.0 - self.cpu_intensity
 
 class AdaptiveThreadPool:
-    """
+    """"
     Thread pool with adaptive scheduling based on performance metrics.
     Optimizes thread allocation based on task execution patterns.
-    """
+    """"
     
-    def __init__(self, min_workers: int = 2, max_workers: int = None, 
+    def __init__(self, min_workers: int = 2, max_workers: int = None, )
                  thread_name_prefix: str = "worker", 
                  performance_monitor: PerformanceMonitor = None):
-        """
+        """"
         Initialize the thread pool.
         
         Args:
@@ -126,7 +136,7 @@ class AdaptiveThreadPool:
             max_workers: Maximum number of worker threads (defaults to CPU count * 2)
             thread_name_prefix: Prefix for worker thread names
             performance_monitor: Performance monitor instance
-        """
+        """"
         self.min_workers = min_workers
         self.max_workers = max_workers or (multiprocessing.cpu_count() * 2)
         self.thread_name_prefix = thread_name_prefix
@@ -158,7 +168,7 @@ class AdaptiveThreadPool:
         self._start_workers(self.min_workers)
         
         # Start monitoring thread
-        self.monitor_thread = threading.Thread(
+        self.monitor_thread = threading.Thread()
             target=self._monitor_pool,
             name=f"{thread_name_prefix}-monitor",
             daemon=True
@@ -168,15 +178,15 @@ class AdaptiveThreadPool:
         logger.info(f"Initialized adaptive thread pool with {self.min_workers}-{self.max_workers} workers")
     
     def _start_workers(self, count: int) -> None:
-        """
+        """"
         Start worker threads.
         
         Args:
             count: Number of workers to start
-        """
+        """"
         with self.worker_lock:
             for i in range(count):
-                worker = threading.Thread(
+                worker = threading.Thread()
                     target=self._worker_loop,
                     name=f"{self.thread_name_prefix}-{len(self.workers)}",
                     daemon=True
@@ -189,9 +199,9 @@ class AdaptiveThreadPool:
         """Worker thread function."""
         while self.running:
             try:
-                # Get task with timeout to allow checking running flag
+                    # Get task with timeout to allow checking running flag
                 try:
-                    priority, task = self.task_queue.get(timeout=0.5)
+                        priority, task = self.task_queue.get(timeout=0.5)
                 except queue.Empty:
                     continue
                 
@@ -204,9 +214,9 @@ class AdaptiveThreadPool:
                 start_cpu = time.process_time()
                 
                 try:
-                    # Create metric for this task execution
+                        # Create metric for this task execution
                     metric_name = f"task.{task.task_id}"
-                    with self.performance_monitor.start_metric(metric_name, 
+                    with self.performance_monitor.start_metric(metric_name, )
                                                               task_id=task.task_id) as metric:
                         result = task.func(*task.args, **task.kwargs)
                         metric.set_metadata("success", True)
@@ -240,7 +250,7 @@ class AdaptiveThreadPool:
         """Monitor thread pool and adjust worker count."""
         while self.running:
             try:
-                # Wait a bit
+                    # Wait a bit
                 time.sleep(1.0)
                 
                 current_time = time.time()
@@ -320,20 +330,20 @@ class AdaptiveThreadPool:
                 logger.info(f"Adding {target_workers - current_workers} workers (total: {target_workers})")
                 self._start_workers(target_workers - current_workers)
             elif target_workers < current_workers:
-                # We don't actually stop existing threads, just let them exit naturally
+                # We don't actually stop existing threads, just let them exit naturally'
                 # by reducing the running count
                 logger.info(f"Reducing target workers to {target_workers} (current: {current_workers})")
                 # No immediate action needed - threads will naturally complete
     
     def submit(self, func: Callable, *args, **kwargs) -> None:
-        """
+        """"
         Submit a task to the thread pool.
         
         Args:
             func: Function to execute
             *args: Positional arguments
             **kwargs: Keyword arguments
-        """
+        """"
         # Extract special parameters
         task_id = kwargs.pop("task_id", None)
         priority = kwargs.pop("priority", 0)
@@ -347,23 +357,23 @@ class AdaptiveThreadPool:
         logger.debug(f"Submitted task {task.task_id} with priority {priority}")
     
     def submit_batch(self, tasks: List[Tuple[Callable, Tuple, Dict]]) -> None:
-        """
+        """"
         Submit multiple tasks.
         
         Args:
             tasks: List of (func, args, kwargs) tuples
-        """
+        """"
         for func, args, kwargs in tasks:
             self.submit(func, *args, **kwargs)
     
     def shutdown(self, wait: bool = True, timeout: Optional[float] = None) -> None:
-        """
+        """"
         Shut down the thread pool.
         
         Args:
             wait: Whether to wait for pending tasks to complete
             timeout: Maximum time to wait in seconds
-        """
+        """"
         logger.info("Shutting down thread pool")
         
         # Stop accepting new tasks
@@ -372,7 +382,7 @@ class AdaptiveThreadPool:
         if wait:
             # Wait for queue to drain
             try:
-                self.task_queue.join()
+                    self.task_queue.join()
             except Exception:
                 pass
             
@@ -383,19 +393,19 @@ class AdaptiveThreadPool:
                 if timeout and remaining <= 0:
                     break
                 try:
-                    worker.join(timeout=remaining if timeout else None)
+                        worker.join(timeout=remaining if timeout else None)
                 except Exception:
                     pass
         
         logger.info("Thread pool shutdown complete")
     
     def get_stats(self) -> Dict[str, Any]:
-        """
+        """"
         Get thread pool statistics.
         
         Returns:
             Dictionary with statistics
-        """
+        """"
         with self.worker_lock, self.active_lock, self.metrics_lock:
             stats = {
                 "workers": {
@@ -406,17 +416,17 @@ class AdaptiveThreadPool:
                 },
                 "queue": {
                     "size": self.task_queue.qsize(),
-                    "avg_size_recent": (
+                    "avg_size_recent": ()
                         sum(self.queue_size_history) / max(1, len(self.queue_size_history))
                     ),
                 },
                 "tasks": {
                     "total_tracked": len(self.task_metrics),
-                    "avg_execution_time": (
+                    "avg_execution_time": ()
                         sum(task.avg_execution_time for task in self.task_metrics.values()) / 
                         max(1, len(self.task_metrics))
                     ),
-                    "io_intensive_ratio": (
+                    "io_intensive_ratio": ()
                         sum(1 for task in self.task_metrics.values() if task.io_intensity > 0.7) /
                         max(1, len(self.task_metrics))
                     )
@@ -429,7 +439,7 @@ class AdaptiveThreadPool:
 thread_pool = None
 
 def get_thread_pool(performance_monitor: PerformanceMonitor = None) -> AdaptiveThreadPool:
-    """
+    """"
     Get or create the global thread pool.
     
     Args:
@@ -437,7 +447,7 @@ def get_thread_pool(performance_monitor: PerformanceMonitor = None) -> AdaptiveT
         
     Returns:
         Global thread pool instance
-    """
+    """"
     global thread_pool
     
     if thread_pool is None:
@@ -446,20 +456,20 @@ def get_thread_pool(performance_monitor: PerformanceMonitor = None) -> AdaptiveT
     return thread_pool
 
 def submit_task(func: Callable, *args, **kwargs) -> None:
-    """
+    """"
     Submit a task to the global thread pool.
     
     Args:
         func: Function to execute
         *args: Positional arguments
         **kwargs: Keyword arguments
-    """
+    """"
     pool = get_thread_pool()
     pool.submit(func, *args, **kwargs)
 
 @measure_performance
 def run_in_thread(func: Callable, *args, **kwargs) -> threading.Thread:
-    """
+    """"
     Run a function in a separate thread.
     
     Args:
@@ -469,7 +479,7 @@ def run_in_thread(func: Callable, *args, **kwargs) -> threading.Thread:
         
     Returns:
         Thread object
-    """
+    """"
     thread = threading.Thread(target=func, args=args, kwargs=kwargs)
     thread.daemon = True
     thread.start()

@@ -1,7 +1,7 @@
-"""
+""""
 Error handling module for YouTube Translator Pro.
 Provides error reporting, logging, and crash handling functionality.
-"""
+""""
 
 import os
 import sys
@@ -15,8 +15,10 @@ from datetime import datetime
 from enum import Enum, auto
 
 try:
-    try:
+        try:
     from PyQt6.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
 except ImportError:
     from PyQt5.QtCore import QObject, pyqtSignal
 except ImportError:
@@ -37,21 +39,21 @@ class ErrorSeverity(Enum):
     CRITICAL = auto()
 
 class ErrorReporter(QObject):
-    """
+    """"
     Handles reporting and logging of application errors.
     Provides a unified interface for error reporting.
-    """
+    """"
     
     error_reported = pyqtSignal(str, str, object)  # message, details, severity
     
     def __init__(self, log_dir: Optional[str] = None, parent=None):
-        """
+        """"
         Initialize the error reporter.
         
         Args:
             log_dir: Directory where error logs are stored
             parent: Parent QObject
-        """
+        """"
         super().__init__(parent)
         
         # Set default log directory if not provided
@@ -59,7 +61,7 @@ class ErrorReporter(QObject):
             home_dir = os.path.expanduser("~")
             log_dir = os.path.join(home_dir, ".youtube_translator_pro", "logs")
             
-        # Create log directory if it doesn't exist
+        # Create log directory if it doesn't exist'
         os.makedirs(log_dir, exist_ok=True)
         
         self.log_dir = log_dir
@@ -67,10 +69,10 @@ class ErrorReporter(QObject):
         
         logger.info(f"Error reporter initialized with log directory {log_dir}")
     
-    def report_error(self, message: str, details: str = "", 
+    def report_error(self, message: str, details: str = "", )
                      severity: ErrorSeverity = ErrorSeverity.ERROR,
                      log_to_file: bool = True) -> Dict[str, Any]:
-        """
+        """"
         Report an error.
         
         Args:
@@ -81,7 +83,7 @@ class ErrorReporter(QObject):
             
         Returns:
             Dictionary with error information
-        """
+        """"
         # Create error information
         error_info = {
             "timestamp": datetime.now().isoformat(),
@@ -111,18 +113,18 @@ class ErrorReporter(QObject):
         return error_info
     
     def _log_error_to_file(self, error_info: Dict[str, Any]) -> None:
-        """
+        """"
         Log error information to file.
         
         Args:
             error_info: Dictionary with error information
-        """
+        """"
         try:
-            # Load existing errors
+                # Load existing errors
             errors = []
             if os.path.exists(self.error_log_file):
                 try:
-                    with open(self.error_log_file, 'r', encoding='utf-8') as f:
+                        with open(self.error_log_file, 'r', encoding='utf-8') as f:
                         errors = json.load(f)
                 except Exception as e:
                     logger.error(f"Failed to load error log file: {e}")
@@ -141,7 +143,7 @@ class ErrorReporter(QObject):
             logger.error(f"Failed to log error to file: {e}")
     
     def get_error_log(self, max_errors: int = 100) -> List[Dict[str, Any]]:
-        """
+        """"
         Get the error log.
         
         Args:
@@ -149,12 +151,12 @@ class ErrorReporter(QObject):
             
         Returns:
             List of dictionaries with error information
-        """
+        """"
         if not os.path.exists(self.error_log_file):
             return []
             
         try:
-            with open(self.error_log_file, 'r', encoding='utf-8') as f:
+                with open(self.error_log_file, 'r', encoding='utf-8') as f:
                 errors = json.load(f)
                 
             # Return the last max_errors
@@ -164,17 +166,17 @@ class ErrorReporter(QObject):
             return []
     
     def clear_error_log(self) -> bool:
-        """
+        """"
         Clear the error log.
         
         Returns:
             True if the error log was cleared successfully, False otherwise
-        """
+        """"
         if not os.path.exists(self.error_log_file):
             return True
             
         try:
-            os.remove(self.error_log_file)
+                os.remove(self.error_log_file)
             logger.info("Error log cleared")
             return True
         except Exception as e:
@@ -182,22 +184,22 @@ class ErrorReporter(QObject):
             return False
 
 class CrashHandler(QObject):
-    """
+    """"
     Handles application crashes.
     Provides crash reporting and recovery functionality.
-    """
+    """"
     
     crash_detected = pyqtSignal(dict)
     
     def __init__(self, session_manager=None, crash_dir: Optional[str] = None, parent=None):
-        """
+        """"
         Initialize the crash handler.
         
         Args:
             session_manager: Session manager instance
             crash_dir: Directory where crash reports are stored
             parent: Parent QObject
-        """
+        """"
         super().__init__(parent)
         
         self.session_manager = session_manager
@@ -207,7 +209,7 @@ class CrashHandler(QObject):
             home_dir = os.path.expanduser("~")
             crash_dir = os.path.join(home_dir, ".youtube_translator_pro", "crashes")
             
-        # Create crash directory if it doesn't exist
+        # Create crash directory if it doesn't exist'
         os.makedirs(crash_dir, exist_ok=True)
         
         self.crash_dir = crash_dir
@@ -215,15 +217,15 @@ class CrashHandler(QObject):
         logger.info(f"Crash handler initialized with crash directory {crash_dir}")
     
     def handle_exception(self, exc_type, exc_value, exc_traceback) -> None:
-        """
+        """"
         Handle uncaught exception.
         
         Args:
             exc_type: Exception type
             exc_value: Exception value
             exc_traceback: Exception traceback
-        """
-        # Don't handle keyboard interrupt
+        """"
+        # Don't handle keyboard interrupt'
         if issubclass(exc_type, KeyboardInterrupt):
             sys.__excepthook__(exc_type, exc_value, exc_traceback)
             return
@@ -257,14 +259,14 @@ class CrashHandler(QObject):
         self.crash_detected.emit(crash_report)
         
     def _save_crash_report(self, crash_report: Dict[str, Any]) -> None:
-        """
+        """"
         Save crash report to file.
         
         Args:
             crash_report: Dictionary with crash information
-        """
+        """"
         try:
-            # Generate crash report filename
+                # Generate crash report filename
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             crash_file = os.path.join(self.crash_dir, f"crash_{timestamp}.json")
             
@@ -277,7 +279,7 @@ class CrashHandler(QObject):
             logger.error(f"Failed to save crash report: {e}")
     
     def get_crash_reports(self, max_reports: int = 10) -> List[Dict[str, Any]]:
-        """
+        """"
         Get the crash reports.
         
         Args:
@@ -285,11 +287,11 @@ class CrashHandler(QObject):
             
         Returns:
             List of dictionaries with crash information
-        """
+        """"
         reports = []
         
         try:
-            # Get crash files
+                # Get crash files
             crash_files = [os.path.join(self.crash_dir, f) for f in os.listdir(self.crash_dir) 
                           if f.startswith("crash_") and f.endswith(".json")]
             
@@ -302,7 +304,7 @@ class CrashHandler(QObject):
             # Load crash reports
             for file_path in crash_files:
                 try:
-                    with open(file_path, 'r', encoding='utf-8') as f:
+                        with open(file_path, 'r', encoding='utf-8') as f:
                         report = json.load(f)
                         reports.append(report)
                 except Exception as e:
@@ -313,21 +315,21 @@ class CrashHandler(QObject):
         return reports
     
     def clear_crash_reports(self) -> bool:
-        """
+        """"
         Clear all crash reports.
         
         Returns:
             True if crash reports were cleared successfully, False otherwise
-        """
+        """"
         try:
-            # Get crash files
+                # Get crash files
             crash_files = [os.path.join(self.crash_dir, f) for f in os.listdir(self.crash_dir) 
                           if f.startswith("crash_") and f.endswith(".json")]
             
             # Delete each file
             for file_path in crash_files:
                 try:
-                    os.remove(file_path)
+                        os.remove(file_path)
                 except Exception as e:
                     logger.error(f"Failed to delete crash report {file_path}: {e}")
                     

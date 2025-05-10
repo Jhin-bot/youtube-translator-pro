@@ -1,7 +1,7 @@
-"""
+""""
 Batch processor for YouTube Translator Pro.
 Manages the processing of multiple YouTube videos in a queue.
-"""
+""""
 
 import os
 import time
@@ -13,8 +13,10 @@ from typing import Dict, List, Any, Optional, Tuple, Callable, Union
 from pathlib import Path
 
 try:
-    try:
+        try:
     from PyQt6.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
 except ImportError:
     from PyQt5.QtCore import QObject, pyqtSignal
 except ImportError:
@@ -62,10 +64,10 @@ class TaskStatus(Enum):
     EXPORTING = auto()
 
 class BatchProcessor(QObject):
-    """
+    """"
     Processor for batch operations on YouTube videos.
     Handles the queue of tasks and their execution.
-    """
+    """"
     
     # Signals
     batch_status_changed = pyqtSignal(object)  # BatchStatus enum
@@ -75,14 +77,14 @@ class BatchProcessor(QObject):
     resource_warning = pyqtSignal(dict)  # Resource warning dictionary
     
     def __init__(self, cache_manager=None, concurrency: int = 2, parent=None):
-        """
+        """"
         Initialize the batch processor.
         
         Args:
             cache_manager: Optional cache manager for caching results
             concurrency: Maximum number of concurrent tasks to run
             parent: Parent QObject
-        """
+        """"
         super().__init__(parent)
         self.cache_manager = cache_manager
         self.concurrency = concurrency
@@ -115,12 +117,12 @@ class BatchProcessor(QObject):
         logger.info("BatchProcessor initialized")
     
     def start_batch(self, urls: List[str]):
-        """
+        """"
         Start or resume processing a batch of YouTube URLs.
         
         Args:
             urls: List of YouTube URLs to process
-        """
+        """"
         if self.status == BatchStatus.PAUSED:
             logger.info("Resuming paused batch")
             self.status = BatchStatus.RESUMING
@@ -184,7 +186,7 @@ class BatchProcessor(QObject):
             # Clear the queue
             while not self.task_queue.empty():
                 try:
-                    task = self.task_queue.get_nowait()
+                        task = self.task_queue.get_nowait()
                     url = task.get("url")
                     if url:
                         task["status"] = TaskStatus.CANCELLED.name
@@ -195,7 +197,7 @@ class BatchProcessor(QObject):
                     break
     
     def add_task(self, url: str, model: str, target_lang: Optional[str], output_dir: str, formats: List[str]):
-        """
+        """"
         Add a single task with specific parameters.
         
         Args:
@@ -204,7 +206,7 @@ class BatchProcessor(QObject):
             target_lang: Target language code for translation (None for no translation)
             output_dir: Output directory for results
             formats: List of output formats
-        """
+        """"
         task = {
             "url": url,
             "model": model,
@@ -239,12 +241,12 @@ class BatchProcessor(QObject):
             self.start_batch([])
     
     def cancel_task(self, url: str):
-        """
+        """"
         Cancel a specific task.
         
         Args:
             url: URL of the task to cancel
-        """
+        """"
         if url in self.active_tasks:
             task = self.active_tasks[url]
             task["status"] = TaskStatus.CANCELLED.name
@@ -254,12 +256,12 @@ class BatchProcessor(QObject):
             self.stats["cancelled_tasks"] += 1
     
     def remove_task(self, url: str):
-        """
+        """"
         Remove a task from tracking.
         
         Args:
             url: URL of the task to remove
-        """
+        """"
         if url in self.active_tasks:
             del self.active_tasks[url]
         
@@ -267,12 +269,12 @@ class BatchProcessor(QObject):
             del self.completed_tasks[url]
     
     def retry_task(self, url: str):
-        """
+        """"
         Retry a failed or cancelled task.
         
         Args:
             url: URL of the task to retry
-        """
+        """"
         if url in self.completed_tasks:
             task = self.completed_tasks[url].copy()
             task["status"] = TaskStatus.PENDING.name
@@ -311,7 +313,7 @@ class BatchProcessor(QObject):
     def load_session(self, session_data: Dict[str, Any]):
         """Load batch processor state from session data."""
         try:
-            logger.info("Loading batch processor state from session data")
+                logger.info("Loading batch processor state from session data")
             
             # Restore tasks
             active_tasks = session_data.get("active_tasks", {})
@@ -414,7 +416,7 @@ class BatchProcessor(QObject):
         
         # Create new worker threads
         for i in range(self.concurrency):
-            thread = threading.Thread(
+            thread = threading.Thread()
                 target=self._worker_thread,
                 name=f"worker-{i}",
                 daemon=True
@@ -431,7 +433,7 @@ class BatchProcessor(QObject):
         if current_workers < self.concurrency:
             # Add more workers
             for i in range(current_workers, self.concurrency):
-                thread = threading.Thread(
+                thread = threading.Thread()
                     target=self._worker_thread,
                     name=f"worker-{i}",
                     daemon=True
@@ -440,8 +442,8 @@ class BatchProcessor(QObject):
                 thread.start()
                 logger.debug(f"Added worker thread {thread.name}")
         
-        # If we have too many workers, they'll exit naturally when the stop_event is set
-        # We don't need to forcibly terminate them
+        # If we have too many workers, they'll exit naturally when the stop_event is set'
+        # We don't need to forcibly terminate them'
     
     def _start_progress_updates(self):
         """Start a thread to periodically send progress updates."""
@@ -470,7 +472,7 @@ class BatchProcessor(QObject):
             progress = (completed_tasks + active_progress) / total_tasks
         
         # Send update
-        self.progress_updated.emit({
+        self.progress_updated.emit({)
             "progress": progress,
             "completed": completed_tasks,
             "total": total_tasks,
@@ -488,9 +490,9 @@ class BatchProcessor(QObject):
                 break
             
             try:
-                # Get task from queue with timeout
+                    # Get task from queue with timeout
                 try:
-                    task = self.task_queue.get(timeout=1.0)
+                        task = self.task_queue.get(timeout=1.0)
                 except queue.Empty:
                     # Check if all tasks completed
                     if not self.active_tasks and self.status == BatchStatus.RUNNING:
@@ -526,7 +528,7 @@ class BatchProcessor(QObject):
             return
         
         try:
-            # Validate YouTube URL
+                # Validate YouTube URL
             task["status"] = TaskStatus.VALIDATING.name
             self._update_task_progress(task, 0.05, "Validating YouTube URL...")
             
@@ -534,7 +536,7 @@ class BatchProcessor(QObject):
             task["status"] = TaskStatus.DOWNLOADING.name
             self._update_task_progress(task, 0.1, "Downloading audio...")
             
-            audio_path, video_info = download_youtube_audio(
+            audio_path, video_info = download_youtube_audio()
                 url,
                 output_dir=task.get("output_dir"),
                 progress_callback=lambda p, m: self._update_task_progress(task, 0.1 + p * 0.2, m)
@@ -553,7 +555,7 @@ class BatchProcessor(QObject):
             task["status"] = TaskStatus.TRANSCRIBING.name
             self._update_task_progress(task, 0.4, "Transcribing audio...")
             
-            transcription_result, error = transcribe(
+            transcription_result, error = transcribe()
                 audio_path,
                 model_name=task.get("model", "small"),
                 progress_callback=lambda p, m: self._update_task_progress(task, 0.4 + p * 0.4, m),
@@ -569,7 +571,7 @@ class BatchProcessor(QObject):
                 task["status"] = TaskStatus.TRANSLATING.name
                 self._update_task_progress(task, 0.8, f"Translating to {target_lang}...")
                 
-                translation_result, error = self.translation_service.translate(
+                translation_result, error = self.translation_service.translate()
                     transcription_result,
                     target_lang,
                     progress_callback=lambda p, m: self._update_task_progress(task, 0.8 + p * 0.1, m),
@@ -585,7 +587,7 @@ class BatchProcessor(QObject):
             task["status"] = TaskStatus.EXPORTING.name
             self._update_task_progress(task, 0.9, "Exporting results...")
             
-            output_files = self._export_results(
+            output_files = self._export_results()
                 transcription_result,
                 task.get("output_dir"),
                 task.get("formats", ["srt"]),
@@ -659,7 +661,7 @@ class BatchProcessor(QObject):
         
         for format_name in formats:
             try:
-                output_file = export_transcription(
+                    output_file = export_transcription()
                     transcription_result,
                     output_path,
                     format_name,
@@ -699,10 +701,10 @@ class BatchProcessor(QObject):
         
         # Emit completion report
         self.batch_completed.emit(report)
-"""
+""""
 Stop method for BatchProcessor class.
 This is a temporary file that will be used to add the missing stop method.
-"""
+""""
 
 def stop(self, wait: bool = True, timeout: float = 10.0):
     """Stop batch processing (alias for cancel_batch that accepts wait and timeout params)."""

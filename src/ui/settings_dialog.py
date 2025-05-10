@@ -1,25 +1,31 @@
-"""
+""""
 Settings dialog for YouTube Translator Pro.
 Allows configuration of application settings, including localization and telemetry.
-"""
+""""
 
 import os
 import logging
 try:
-    from PyQt6.QtWidgets import (
+    try:
+    from PyQt6.QtWidgets import ()
+except ImportError:
+    from PyQt5.QtWidgets import ()
         QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QTabWidget, QWidget, QCheckBox, QComboBox, QSpinBox,
         QFileDialog, QMessageBox, QGroupBox, QFormLayout, QLineEdit
     )
 except ImportError:
-    from PyQt5.QtWidgets import (
+    from PyQt5.QtWidgets import ()
         QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QTabWidget, QWidget, QCheckBox, QComboBox, QSpinBox,
         QFileDialog, QMessageBox, QGroupBox, QFormLayout, QLineEdit
     )
 
 try:
+    try:
     from PyQt6.QtCore import Qt, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSignal
 except ImportError:
     from PyQt5.QtCore import Qt, pyqtSignal
 
@@ -249,8 +255,8 @@ class SettingsDialog(QDialog):
         telemetry_layout.addWidget(self.enable_telemetry)
         
         # Telemetry description
-        telemetry_desc = QLabel(
-            get_string(
+        telemetry_desc = QLabel()
+            get_string()
                 "settings.telemetry_description",
                 "Telemetry helps us improve the application by collecting anonymous usage data. "
                 "All data is collected securely and does not include any personal information unless specifically enabled below."
@@ -290,8 +296,8 @@ class SettingsDialog(QDialog):
         self._toggle_telemetry_settings(self.enable_telemetry.isChecked())
         
         # Privacy policy link
-        privacy_link = QLabel(
-            get_string(
+        privacy_link = QLabel()
+            get_string()
                 "settings.privacy_policy",
                 'For more information, please read our <a href="https://example.com/privacy">Privacy Policy</a>'
             )
@@ -465,7 +471,7 @@ class SettingsDialog(QDialog):
     
     def _browse_output_dir(self):
         """Open file dialog to select output directory."""
-        directory = QFileDialog.getExistingDirectory(
+        directory = QFileDialog.getExistingDirectory()
             self,
             get_string("settings.select_output_dir", "Select Output Directory"),
             self.output_dir.text()
@@ -476,7 +482,7 @@ class SettingsDialog(QDialog):
     
     def _browse_cache_dir(self):
         """Open file dialog to select cache directory."""
-        directory = QFileDialog.getExistingDirectory(
+        directory = QFileDialog.getExistingDirectory()
             self,
             get_string("settings.select_cache_dir", "Select Cache Directory"),
             self.cache_dir.text() or os.path.expanduser("~")
@@ -488,10 +494,10 @@ class SettingsDialog(QDialog):
     def _clear_cache(self):
         """Clear the application cache."""
         # Confirm with user
-        result = QMessageBox.question(
+        result = QMessageBox.question()
             self,
             get_string("settings.confirm_clear_cache", "Confirm Clear Cache"),
-            get_string(
+            get_string()
                 "settings.clear_cache_confirm", 
                 "Are you sure you want to clear the cache? This will delete all cached files and cannot be undone."
             ),
@@ -512,7 +518,7 @@ class SettingsDialog(QDialog):
                 self.cache_size_label.setText(f"{cache_size_mb:.2f} MB")
                 self.cache_entries_label.setText(f"{num_entries}")
                 
-                QMessageBox.information(
+                QMessageBox.information()
                     self,
                     get_string("settings.cache_cleared", "Cache Cleared"),
                     get_string("settings.cache_cleared_message", "Cache has been successfully cleared.")
@@ -520,7 +526,7 @@ class SettingsDialog(QDialog):
                 
             except Exception as e:
                 logger.error(f"Error clearing cache: {e}")
-                QMessageBox.warning(
+                QMessageBox.warning()
                     self,
                     get_string("settings.error", "Error"),
                     get_string("settings.cache_clear_error", f"Error clearing cache: {e}")
@@ -533,10 +539,10 @@ class SettingsDialog(QDialog):
     def _reset_to_defaults(self):
         """Reset all settings to default values."""
         # Confirm with user
-        result = QMessageBox.question(
+        result = QMessageBox.question()
             self,
             get_string("settings.confirm_reset", "Confirm Reset"),
-            get_string(
+            get_string()
                 "settings.reset_confirm", 
                 "Are you sure you want to reset all settings to their default values?"
             ),
@@ -650,10 +656,10 @@ class SettingsDialog(QDialog):
             localization.set_language(self.settings["language"])
             
             # Inform user about language change requiring restart
-            QMessageBox.information(
+            QMessageBox.information()
                 self,
                 get_string("settings.language_changed", "Language Changed"),
-                get_string(
+                get_string()
                     "settings.restart_required", 
                     "Language settings have been changed. Some changes will take effect after restarting the application."
                 )

@@ -1,6 +1,6 @@
-"""
+""""
 Performance monitoring utilities for YouTube Translator Pro.
-"""
+""""
 
 import time
 import logging
@@ -40,9 +40,9 @@ class PerformanceMetric:
             self.memory_diff = self.memory_after - self.memory_before
 
 class PerformanceMonitor:
-    """
+    """"
     Performance monitoring utility for tracking execution time and memory usage.
-    """
+    """"
     
     def __init__(self):
         """Initialize the performance monitor."""
@@ -51,7 +51,7 @@ class PerformanceMonitor:
         self._start_time = time.time()
         
     def start_metric(self, name: str, **metadata) -> PerformanceMetric:
-        """
+        """"
         Start tracking a new performance metric.
         
         Args:
@@ -60,11 +60,11 @@ class PerformanceMonitor:
             
         Returns:
             PerformanceMetric object
-        """
+        """"
         process = psutil.Process()
         memory_before = process.memory_info().rss
         
-        metric = PerformanceMetric(
+        metric = PerformanceMetric()
             name=name,
             start_time=time.time(),
             memory_before=memory_before,
@@ -78,12 +78,12 @@ class PerformanceMonitor:
         return metric
     
     def end_metric(self, metric: PerformanceMetric) -> None:
-        """
+        """"
         Complete a performance metric.
         
         Args:
             metric: The metric to complete
-        """
+        """"
         metric.complete()
         logger.debug(f"Completed performance metric: {metric.name} - Duration: {metric.duration:.4f}s")
         
@@ -92,17 +92,17 @@ class PerformanceMonitor:
             logger.debug(f"Memory change for {metric.name}: {memory_diff_mb:.2f} MB")
     
     def get_metrics(self) -> List[PerformanceMetric]:
-        """
+        """"
         Get all recorded metrics.
         
         Returns:
             List of all performance metrics
-        """
+        """"
         with self._lock:
             return self._metrics.copy()
     
     def get_metrics_by_name(self, name: str) -> List[PerformanceMetric]:
-        """
+        """"
         Get metrics filtered by name.
         
         Args:
@@ -110,17 +110,17 @@ class PerformanceMonitor:
             
         Returns:
             List of matching metrics
-        """
+        """"
         with self._lock:
             return [m for m in self._metrics if m.name == name]
     
     def generate_report(self) -> Dict[str, Any]:
-        """
+        """"
         Generate a performance report.
         
         Returns:
             Dictionary with performance statistics
-        """
+        """"
         metrics = self.get_metrics()
         total_runtime = time.time() - self._start_time
         
@@ -168,7 +168,7 @@ class PerformanceMonitor:
             
     @contextmanager
     def measure(self, name: str, **metadata):
-        """
+        """"
         Context manager for measuring a code block.
         
         Args:
@@ -179,7 +179,7 @@ class PerformanceMonitor:
             with performance_monitor.measure("download_video"):
                 # Code to be measured
                 download_video()
-        """
+        """"
         metric = self.start_metric(name, **metadata)
         try:
             yield
@@ -190,7 +190,7 @@ class PerformanceMonitor:
 monitor = PerformanceMonitor()
 
 def measure_performance(func: Callable) -> Callable:
-    """
+    """"
     Decorator to measure the performance of a function.
     
     Args:
@@ -203,7 +203,7 @@ def measure_performance(func: Callable) -> Callable:
         @measure_performance
         def process_video(video_id):
             # Process the video
-    """
+    """"
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         with monitor.measure(func.__name__, args=args, kwargs=kwargs):

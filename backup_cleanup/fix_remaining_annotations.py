@@ -1,6 +1,6 @@
-"""
+""""
 Script to fix any remaining Optional/Dict/List type annotations in PyQt signal declarations
-"""
+""""
 import re
 import os
 

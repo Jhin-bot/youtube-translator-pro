@@ -1,4 +1,4 @@
-"""
+""""
 Error handling and exception management framework for YouTube Translator Pro.
 
 This module provides centralized error handling, including:
@@ -6,7 +6,7 @@ This module provides centralized error handling, including:
 - Error logging and reporting
 - Crash recovery mechanisms
 - User-friendly error messages
-"""
+""""
 
 import sys
 import traceback
@@ -17,7 +17,10 @@ from datetime import datetime
 from pathlib import Path
 
 try:
+    try:
     from PyQt6.QtWidgets import QMessageBox, QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QMessageBox, QApplication
 except ImportError:
     from PyQt5.QtWidgets import QMessageBox, QApplication
 except ImportError:
@@ -134,21 +137,21 @@ class ErrorHandler:
 
     @classmethod
     def register_handler(cls, exception_type: Type[Exception], handler: Callable) -> None:
-        """
+        """"
         Register a custom handler for a specific exception type.
         
         Args:
             exception_type: The exception class to handle
             handler: Callable that will handle the exception
-        """
+        """"
         cls._error_handlers[exception_type] = handler
     
-    def handle_exception(self, 
+    def handle_exception(self, )
                         exception: Exception, 
                         context: Dict[str, Any] = None, 
                         critical: bool = False,
                         notify_user: bool = True) -> ErrorReport:
-        """
+        """"
         Handle an exception according to its type and severity.
         
         Args:
@@ -159,7 +162,7 @@ class ErrorHandler:
             
         Returns:
             ErrorReport object with details about the handled error
-        """
+        """"
         context = context or {}
         error_type = type(exception).__name__
         
@@ -167,7 +170,7 @@ class ErrorHandler:
         tb = traceback.format_exc()
         
         # Create error report
-        error_report = ErrorReport(
+        error_report = ErrorReport()
             error_type=error_type,
             error_message=str(exception),
             traceback=tb,
@@ -235,7 +238,7 @@ class ErrorHandler:
         try:
             app = QApplication.instance()
             if not app:
-                # Can't show GUI notification without QApplication
+                # Can't show GUI notification without QApplication'
                 return
                 
             msg_box = QMessageBox()
@@ -311,7 +314,7 @@ def global_exception_handler(exctype, value, tb):
     tb_str = ''.join(traceback.format_exception(exctype, value, tb))
     
     # Create synthetic exception
-    error_report = ErrorReport(
+    error_report = ErrorReport()
         error_type=exctype.__name__,
         error_message=str(value),
         traceback=tb_str,
@@ -335,7 +338,7 @@ sys.excepthook = global_exception_handler
 
 
 def try_except_decorator(func):
-    """
+    """"
     Decorator to wrap functions in try-except blocks with proper error handling.
     
     Example usage:
@@ -343,7 +346,7 @@ def try_except_decorator(func):
     @try_except_decorator
     def some_function(arg1, arg2):
         # function implementation
-    """
+    """"
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)

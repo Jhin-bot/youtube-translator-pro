@@ -1,26 +1,32 @@
-"""
+""""
 Main window for YouTube Translator Pro.
 Provides the primary user interface and interaction points.
-"""
+""""
 
 import logging
 from typing import Dict, List, Any, Optional, Tuple
 from pathlib import Path
 
 try:
+    try:
     from PyQt6.QtCore import Qt, pyqtSignal, pyqtSlot, QUrl
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QUrl
 except ImportError:
     from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QUrl
 
 try:
-    from PyQt6.QtWidgets import (
+    try:
+    from PyQt6.QtWidgets import ()
+except ImportError:
+    from PyQt5.QtWidgets import ()
         QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
         QPushButton, QProgressBar, QTextEdit, QComboBox,
         QFileDialog, QMessageBox, QTabWidget, QGroupBox, QLineEdit,
         QCheckBox, QToolBar, QStatusBar, QSplitter
     )
 except ImportError:
-    from PyQt5.QtWidgets import (
+    from PyQt5.QtWidgets import ()
         QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
         QPushButton, QProgressBar, QTextEdit, QComboBox,
         QFileDialog, QMessageBox, QTabWidget, QGroupBox, QLineEdit,
@@ -28,7 +34,10 @@ except ImportError:
     )
 
 try:
+    try:
     from PyQt6.QtGui import QAction, QIcon, QDesktopServices
+except ImportError:
+    from PyQt5.QtGui import QAction, QIcon, QDesktopServices
 except ImportError:
     from PyQt5.QtGui import QAction, QIcon, QDesktopServices
 
@@ -53,12 +62,12 @@ class MainWindow(QMainWindow):
     output_dir_changed = pyqtSignal(str)
     
     def __init__(self, app_manager):
-        """
+        """"
         Initialize the main window.
         
         Args:
             app_manager: Reference to the ApplicationManager
-        """
+        """"
         super().__init__()
         self.app_manager = app_manager
         self.style_manager = StyleManager()
@@ -271,7 +280,7 @@ class MainWindow(QMainWindow):
             QDesktopServices.openUrl(QUrl.fromLocalFile(str(output_path)))
         except Exception as e:
             logger.error(f"Failed to open output directory: {e}")
-            QMessageBox.critical(
+            QMessageBox.critical()
                 self, 
                 "Error Opening Directory",
                 f"Failed to open output directory:\n{output_dir}\nError: {e}"
@@ -300,7 +309,7 @@ class MainWindow(QMainWindow):
         if urls:
             self.app_manager.start_batch(urls)
         else:
-            QMessageBox.warning(
+            QMessageBox.warning()
                 self,
                 "No URLs",
                 "Please enter at least one YouTube URL to process."
@@ -312,7 +321,7 @@ class MainWindow(QMainWindow):
     
     def _cancel_batch(self):
         """Cancel batch processing."""
-        result = QMessageBox.question(
+        result = QMessageBox.question()
             self,
             "Cancel Batch",
             "Are you sure you want to cancel all processing?",
@@ -326,7 +335,7 @@ class MainWindow(QMainWindow):
         """Handle window close event."""
         # Ask for confirmation if batch processing is active
         if hasattr(self.app_manager, 'batch_processor') and self.app_manager.batch_processor.is_running():
-            result = QMessageBox.question(
+            result = QMessageBox.question()
                 self,
                 "Confirm Exit",
                 "Batch processing is still active. Are you sure you want to exit?",

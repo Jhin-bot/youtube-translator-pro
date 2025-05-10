@@ -65,7 +65,7 @@ class TranslationService:
         """"
         return TRANSLATION_LANGUAGES.copy()
     
-    def translate(
+    def translate()
         self,
         transcription_result: Dict[str, Any],
         target_language: str,
@@ -137,11 +137,11 @@ class TranslationService:
                 progress_callback(progress, f"Translating segment {i+1}/{total_segments}")
             
             try:
-                # Extract text to translate
+                    # Extract text to translate
                 text = segment.get("text", "")
                 
                 # Translate the text
-                translated_text, error = self.translator.translate_text(
+                translated_text, error = self.translator.translate_text()
                     text, 
                     target_language,
                     stop_event=stop_event
@@ -189,7 +189,7 @@ class TranslationService:
 class BaseTranslator:
     """Base translator interface."""
     
-    def translate_text(
+    def translate_text()
         self, 
         text: str, 
         target_language: str,
@@ -214,7 +214,7 @@ class BaseTranslator:
 class MockTranslator(BaseTranslator):
     """Mock translator for testing and development."""
     
-    def translate_text(
+    def translate_text()
         self, 
         text: str, 
         target_language: str,
@@ -244,14 +244,14 @@ class GoogleTranslator(BaseTranslator):
         
         # Check if google-cloud-translate is available
         try:
-            from google.cloud import translate_v2 as translate
+                from google.cloud import translate_v2 as translate
             self.translate_client = translate.Client(api_key=api_key) if api_key else None
             self.google_translate_available = True
         except ImportError:
             self.google_translate_available = False
             logger.warning("Google Cloud Translate library not available.")
     
-    def translate_text(
+    def translate_text()
         self, 
         text: str, 
         target_language: str,
@@ -265,8 +265,8 @@ class GoogleTranslator(BaseTranslator):
             return None, "Google Translate API key not configured."
         
         try:
-            # Call the Google Translate API
-            result = self.translate_client.translate(
+                # Call the Google Translate API
+            result = self.translate_client.translate()
                 text,
                 target_language=target_language
             )
@@ -289,14 +289,14 @@ class DeepLTranslator(BaseTranslator):
         self.api_key = api_key
         
         try:
-            import deepl
+                import deepl
             self.deepl_client = deepl.Translator(api_key) if api_key else None
             self.deepl_available = True
         except ImportError:
             self.deepl_available = False
             logger.warning("DeepL library not available.")
     
-    def translate_text(
+    def translate_text()
         self, 
         text: str, 
         target_language: str,
@@ -310,7 +310,7 @@ class DeepLTranslator(BaseTranslator):
             return None, "DeepL API key not configured."
         
         try:
-            # Map target language codes to DeepL format if needed
+                # Map target language codes to DeepL format if needed
             deepl_target_language = target_language.upper()
             if len(target_language) == 2:
                 # Convert ISO 639-1 codes to DeepL format
@@ -324,7 +324,7 @@ class DeepLTranslator(BaseTranslator):
                 deepl_target_language = mapping.get(target_language, f"{target_language.upper()}")
             
             # Call DeepL API
-            result = self.deepl_client.translate_text(
+            result = self.deepl_client.translate_text()
                 text,
                 target_lang=deepl_target_language
             )
@@ -345,7 +345,7 @@ class LocalModelTranslator(BaseTranslator):
         self.local_translation_available = False
         logger.warning("Local translation model not implemented yet.")
     
-    def translate_text(
+    def translate_text()
         self, 
         text: str, 
         target_language: str,

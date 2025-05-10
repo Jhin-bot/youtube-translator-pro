@@ -1,7 +1,7 @@
-"""
+""""
 Modern styling and theming system for the YouTube Transcriber Pro application.
 Provides color schemes, widget styles, icon definitions, animations, and layout constants.
-"""
+""""
 
 import os
 import sys
@@ -10,30 +10,38 @@ from enum import Enum, auto
 from typing import Dict, Any, Tuple, List, Optional, NamedTuple
 
 try:
-    try:
-    from PyQt6.QtCore import (
+        try:
+    from PyQt6.QtCore import ()
 except ImportError:
-    from PyQt5.QtCore import (
+    from PyQt5.QtCore import ()
 except ImportError:
-    from PyQt5.QtCore import (
+    from PyQt5.QtCore import ()
+except ImportError:
+    from PyQt5.QtCore import ()
     Qt, QSize, QEasingCurve, QPoint, QRect, QPropertyAnimation, QMargins,
     QCoreApplication
 )
 try:
-    from PyQt6.QtGui import (
+        try:
+    from PyQt6.QtGui import ()
 except ImportError:
-    from PyQt5.QtGui import (
+    from PyQt5.QtGui import ()
 except ImportError:
-    from PyQt5.QtGui import (
+    from PyQt5.QtGui import ()
+except ImportError:
+    from PyQt5.QtGui import ()
     QColor, QFont, QFontDatabase, QIcon, QPalette, QPixmap, QLinearGradient, QGradient,
     QFontMetrics, QImage
 )
 try:
-    from PyQt6.QtWidgets import (
+        try:
+    from PyQt6.QtWidgets import ()
 except ImportError:
-    from PyQt5.QtWidgets import (
+    from PyQt5.QtWidgets import ()
 except ImportError:
-    from PyQt5.QtWidgets import (
+    from PyQt5.QtWidgets import ()
+except ImportError:
+    from PyQt5.QtWidgets import ()
     QApplication, QWidget, QFrame, QPushButton, QLabel, QLineEdit, QComboBox,
     QScrollArea, QScrollBar, QToolTip, QCheckBox, QRadioButton, QProgressBar,
     QSlider, QTabWidget, QTabBar, QToolBar, QMenuBar, QMenu, QListWidget,
@@ -221,7 +229,7 @@ class Typography:
         pass
 
     def get_font(self, size_scale: str = "M", weight: Optional[int] = None, monospace: bool = False) -> QFont:
-        """
+        """"
         Get a font with specified size scale, weight, and monospace preference.
 
         Args:
@@ -231,7 +239,7 @@ class Typography:
 
         Returns:
             QFont object.
-        """
+        """"
         font = QFont("Segoe UI" if platform.system() == "Windows" else "Roboto" if platform.system() == "Linux" else "Helvetica Neue") # Use common system fonts or preferred
         if monospace:
              font = QFont("Courier New" if platform.system() == "Windows" else "Liberation Mono" if platform.system() == "Linux" else "Menlo") # Use common monospace fonts
@@ -310,12 +318,12 @@ class IconSet:
 
     @staticmethod
     def get_icon(name: str, color: Optional[QColor] = None) -> QIcon:
-        """
+        """"
         Get an icon by name, optionally with a specific color.
         Uses qtawesome for icon rendering.
-        """
+        """"
         try:
-            # qtawesome uses color names or hex codes
+                # qtawesome uses color names or hex codes
             color_str = color.name() if color else None
             return qta.icon(name, color=color_str)
         except Exception as e:
@@ -325,12 +333,12 @@ class IconSet:
 
     @staticmethod
     def get_pixmap(name: str, size: QSize, color: Optional[QColor] = None) -> QPixmap:
-        """
+        """"
         Get an icon as a QPixmap by name, size, and optional color.
         Uses qtawesome for icon rendering.
-        """
+        """"
         try:
-            color_str = color.name() if color else None
+                color_str = color.name() if color else None
             return qta.pixmap(name, options=[{'color': color_str}]) if color_str else qta.pixmap(name)
         except Exception as e:
             logger.warning(f"Failed to load pixmap for icon '{name}': {e}. Returning empty pixmap.")
@@ -370,7 +378,7 @@ class AnimationPresets:
     @staticmethod
     def _create_fade_animation(widget: QWidget, start_value: float, end_value: float, duration: int) -> QPropertyAnimation:
         """Internal helper to create a fade animation."""
-        # Create opacity effect if it doesn't exist
+        # Create opacity effect if it doesn't exist'
         opacity_effect = widget.graphicsEffect()
         if not opacity_effect or not isinstance(opacity_effect, QGraphicsOpacityEffect):
             opacity_effect = QGraphicsOpacityEffect(widget)
@@ -402,17 +410,17 @@ class AnimationPresets:
 # ==============================================================================
 
 class StyleManager:
-    """
-    Manages the application's visual style, themes, and provides style helpers.
-    """
+    """"
+    Manages the application's visual style, themes, and provides style helpers.'
+    """"
 
     def __init__(self, is_dark_theme: bool = True):
-        """
+        """"
         Initialize the Style Manager.
 
         Args:
             is_dark_theme: True for dark theme, False for light theme.
-        """
+        """"
         self._is_dark_theme = is_dark_theme
         self._current_palette = DARK_PALETTE if is_dark_theme else LIGHT_PALETTE
         self._app_stylesheet = "" # Store the generated stylesheet
@@ -466,7 +474,7 @@ class StyleManager:
         spacing_l = Spacing.L
 
 
-        stylesheet = f"""
+        stylesheet = f""""
         /* General Styles */
         QWidget {{
             color: {fg_color};
@@ -848,16 +856,16 @@ class StyleManager:
 
         /* Add more specific styles as needed for other widgets */
 
-        """
+        """"
         self._app_stylesheet = stylesheet
         logger.debug("Generated QSS stylesheet.")
 
 
     def get_app_stylesheet(self, theme_name: Optional[str] = None) -> str:
-        """
+        """"
         Get the generated QSS stylesheet for the current or specified theme.
         If theme_name is provided, regenerates the stylesheet for that theme first.
-        """
+        """"
         if theme_name and theme_name.lower() != ("dark" if self._is_dark_theme else "light"):
              self.set_theme(theme_name) # Regenerate for the specified theme
 
@@ -865,13 +873,13 @@ class StyleManager:
 
 
     def apply_global_style(self, app: QApplication, theme_name: str):
-        """
+        """"
         Apply global styling (stylesheet and palette) to the entire application.
 
         Args:
             app: QApplication instance.
             theme_name: The name of the theme to apply ('dark' or 'light').
-        """
+        """"
         self.set_theme(theme_name) # Set theme and regenerate stylesheet
 
         # Apply stylesheet
@@ -979,7 +987,7 @@ class StyleManager:
 
 
     def create_status_indicator(self, status_type: Enum, parent: Optional[QWidget] = None) -> QLabel:
-        """
+        """"
         Create a QLabel with an icon representing a status.
 
         Args:
@@ -988,7 +996,7 @@ class StyleManager:
 
         Returns:
             QLabel with status icon.
-        """
+        """"
         label = QLabel(parent)
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         label.setFixedSize(Dimensions.ICON_SIZE_MEDIUM) # Fixed size for status icon
@@ -1074,21 +1082,21 @@ class StyleManager:
              if not hasattr(label, '_spinning_animation') or label._spinning_animation is None:
                   # Create a graphics effect for rotation (QGraphicsRotation is in QtWidgets)
                   # Or, use QPropertyAnimation on the 'rotation' property if the widget supports it.
-                  # QLabel doesn't have a 'rotation' property directly.
+                  # QLabel doesn't have a 'rotation' property directly.'
                   # A simpler way is to use QSS animation if the icon is part of the stylesheet.
-                  # If the icon is set via setPixmap, QSS animation on the QLabel won't rotate the pixmap.
-                  # For setPixmap, you'd need to manually update the pixmap with rotation in a timer,
+                  # If the icon is set via setPixmap, QSS animation on the QLabel won't rotate the pixmap.'
+                  # For setPixmap, you'd need to manually update the pixmap with rotation in a timer,'
                   # or use a QGraphicsScene/View, or rely on QSS if the icon is background/content.
 
-                  # Let's stick to QSS animation on the label itself, assuming the icon is
-                  # part of the label's visual representation that QSS can animate (less common for setPixmap).
+                  # Let's stick to QSS animation on the label itself, assuming the icon is'
+                  # part of the label's visual representation that QSS can animate (less common for setPixmap).'
                   # Or, if TaskListItem uses a custom paint method, it could draw the rotated icon.
 
                   # Alternative: Use QMovie for a simple loading spinner GIF (less flexible)
 
-                  # Let's add a placeholder for a QPropertyAnimation approach, though QSS is preferred.
+                  # Let's add a placeholder for a QPropertyAnimation approach, though QSS is preferred.'
                   # Requires a QGraphicsRotation effect or similar.
-                  # For simplicity, let's just rely on the icon change for now and maybe add QSS animation later.
+                  # For simplicity, let's just rely on the icon change for now and maybe add QSS animation later.'
                   pass # Placeholder for animation
 
 
@@ -1120,7 +1128,7 @@ class StyleManager:
     def get_button_style(self, is_primary: bool, is_danger: bool, is_flat: bool) -> str:
         """Get QSS snippet for a button based on properties."""
         # This method is less used now that QSS properties handle variations
-        base_style = f"""
+        base_style = f""""
         QPushButton {{
             border: none;
             padding: {Spacing.S}px {Spacing.M}px;
@@ -1137,17 +1145,17 @@ class StyleManager:
             background-color: {self.get_color(ColorRole.BACKGROUND_ALT).name()};
             color: {self.get_color(ColorRole.FOREGROUND_DISABLED).name()};
         }}
-        """
+        """"
 
         if is_flat:
-             return base_style + f"""
+             return base_style + f""""
              QPushButton {{
                  background-color: transparent;
                  padding: {Spacing.XS}px;
              }}
-             """
+             """"
         elif is_danger:
-             return base_style + f"""
+             return base_style + f""""
              QPushButton {{
                  background-color: {self.get_color(ColorRole.ERROR).name()};
                  color: {self.get_color(ColorRole.HIGHLIGHTED_TEXT).name()};
@@ -1158,9 +1166,9 @@ class StyleManager:
              QPushButton:pressed {{
                  background-color: {self.get_color(ColorRole.ERROR).darker(150).name()};
              }}
-             """
+             """"
         elif is_primary:
-             return base_style + f"""
+             return base_style + f""""
              QPushButton {{
                  background-color: {self.get_color(ColorRole.PRIMARY).name()};
                  color: {self.get_color(ColorRole.HIGHLIGHTED_TEXT).name()};
@@ -1171,9 +1179,9 @@ class StyleManager:
              QPushButton:pressed {{
                  background-color: {self.get_color(ColorRole.PRIMARY).darker(150).name()};
              }}
-             """
+             """"
         else: # Default secondary style
-             return base_style + f"""
+             return base_style + f""""
              QPushButton {{
                  background-color: {self.get_color(ColorRole.SECONDARY).name()};
                  color: {self.get_color(ColorRole.HIGHLIGHTED_TEXT).name()};
@@ -1184,7 +1192,7 @@ class StyleManager:
              QPushButton:pressed {{
                  background-color: {self.get_color(ColorRole.SECONDARY).darker(150).name()};
              }}
-             """
+             """"
 
     # Add other QSS snippet methods as needed (e.g., get_input_style, get_card_style)
 

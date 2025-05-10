@@ -1,7 +1,7 @@
-"""
+""""
 Telemetry service for YouTube Translator Pro.
 Collects anonymized usage statistics with user consent.
-"""
+""""
 
 import os
 import json
@@ -19,18 +19,18 @@ import queue
 logger = logging.getLogger(__name__)
 
 class TelemetryManager:
-    """
+    """"
     Manages collection of anonymized usage telemetry.
     All data collection requires user opt-in and clear disclosure.
-    """
+    """"
     
     def __init__(self, enabled: bool = False):
-        """
+        """"
         Initialize the telemetry manager.
         
         Args:
             enabled: Whether telemetry is enabled by default
-        """
+        """"
         self.enabled = enabled
         self.installation_id = None
         self.session_id = str(uuid.uuid4())
@@ -97,7 +97,7 @@ class TelemetryManager:
         return self._get_config_dir() / "telemetry_events"
     
     def is_opted_in(self, user_id: str) -> bool:
-        """
+        """"
         Check if a user has opted into telemetry.
         
         Args:
@@ -105,19 +105,19 @@ class TelemetryManager:
             
         Returns:
             Whether the user has opted in
-        """
+        """"
         # Hash the user ID for privacy
         hashed_id = self._hash_user_id(user_id)
         return hashed_id in self.opted_in_users
     
     def opt_in(self, user_id: str, privacy_settings: Optional[Dict[str, bool]] = None) -> None:
-        """
+        """"
         Opt a user into telemetry collection.
         
         Args:
             user_id: User identifier (will be hashed for privacy)
             privacy_settings: Optional privacy settings to override defaults
-        """
+        """"
         # Hash the user ID for privacy
         hashed_id = self._hash_user_id(user_id)
         self.opted_in_users.add(hashed_id)
@@ -135,17 +135,17 @@ class TelemetryManager:
             self._start_flush_thread()
         
         # Record opt-in event
-        self.record_event("telemetry_opt_in", {
+        self.record_event("telemetry_opt_in", {)
             "privacy_settings": self.privacy_settings,
         })
     
     def opt_out(self, user_id: str) -> None:
-        """
+        """"
         Opt a user out of telemetry collection.
         
         Args:
             user_id: User identifier (will be hashed for privacy)
-        """
+        """"
         # Hash the user ID for privacy
         hashed_id = self._hash_user_id(user_id)
         if hashed_id in self.opted_in_users:
@@ -162,12 +162,12 @@ class TelemetryManager:
         return hashlib.sha256(user_id.encode()).hexdigest()
     
     def set_enabled(self, enabled: bool) -> None:
-        """
+        """"
         Enable or disable telemetry collection.
         
         Args:
             enabled: Whether to enable telemetry
-        """
+        """"
         if enabled == self.enabled:
             return
             
@@ -187,7 +187,7 @@ class TelemetryManager:
             return
             
         self.stop_event.clear()
-        self.flush_thread = threading.Thread(
+        self.flush_thread = threading.Thread()
             target=self._flush_events_thread,
             name="TelemetryFlushThread",
             daemon=True
@@ -233,7 +233,7 @@ class TelemetryManager:
             if not events:
                 return
                 
-            # Create events directory if it doesn't exist
+            # Create events directory if it doesn't exist'
             events_dir = self._get_events_dir()
             os.makedirs(events_dir, exist_ok=True)
             
@@ -251,13 +251,13 @@ class TelemetryManager:
             logger.error(f"Error flushing telemetry events: {e}")
     
     def record_event(self, event_type: str, data: Dict[str, Any]) -> None:
-        """
+        """"
         Record a telemetry event.
         
         Args:
             event_type: Type of event
             data: Event data
-        """
+        """"
         if not self.enabled or not self.opted_in_users:
             return
             
@@ -274,64 +274,64 @@ class TelemetryManager:
         self.events_queue.put(event)
     
     def record_feature_usage(self, feature_name: str, metadata: Optional[Dict[str, Any]] = None) -> None:
-        """
+        """"
         Record usage of a specific feature.
         
         Args:
             feature_name: Name of the feature
             metadata: Optional metadata about the usage
-        """
+        """"
         if not self.enabled or not self.privacy_settings.get("allow_feature_usage", False):
             return
             
-        self.record_event("feature_usage", {
+        self.record_event("feature_usage", {)
             "feature": feature_name,
             "metadata": metadata or {}
         })
     
     def record_performance_metric(self, metric_name: str, duration_ms: float, metadata: Optional[Dict[str, Any]] = None) -> None:
-        """
+        """"
         Record a performance metric.
         
         Args:
             metric_name: Name of the metric
             duration_ms: Duration in milliseconds
             metadata: Optional metadata about the performance
-        """
+        """"
         if not self.enabled or not self.privacy_settings.get("allow_performance_metrics", False):
             return
             
-        self.record_event("performance", {
+        self.record_event("performance", {)
             "metric": metric_name,
             "duration_ms": duration_ms,
             "metadata": metadata or {}
         })
     
     def record_error(self, error_type: str, message: str, stack_trace: Optional[str] = None) -> None:
-        """
+        """"
         Record an error.
         
         Args:
             error_type: Type of error
             message: Error message
             stack_trace: Optional stack trace (anonymized)
-        """
+        """"
         if not self.enabled or not self.privacy_settings.get("allow_error_reports", False):
             return
             
-        self.record_event("error", {
+        self.record_event("error", {)
             "error_type": error_type,
             "message": message,
             "stack_trace": stack_trace
         })
     
     def get_all_events(self) -> List[Dict[str, Any]]:
-        """
+        """"
         Get all recorded events (for debugging/development only).
         
         Returns:
             List of all events
-        """
+        """"
         events = []
         events_dir = self._get_events_dir()
         

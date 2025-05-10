@@ -1,24 +1,33 @@
-"""
+""""
 Right-to-Left (RTL) support utilities for YouTube Translator Pro.
 Provides helper functions and classes for handling RTL languages.
-"""
+""""
 
 import logging
 try:
+    try:
     from PyQt6.QtWidgets import QWidget, QApplication
 except ImportError:
     from PyQt5.QtWidgets import QWidget, QApplication
 except ImportError:
     from PyQt5.QtWidgets import QWidget, QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QWidget, QApplication
 try:
+    try:
     from PyQt6.QtCore import Qt, QLocale
+except ImportError:
+    from PyQt5.QtCore import Qt, QLocale
 
 except ImportError:
     from PyQt5.QtCore import Qt, QLocale
 
     from PyQt5.QtCore import Qt, QLocale
 try:
+    try:
     from PyQt6.QtGui import QFontDatabase
+except ImportError:
+    from PyQt5.QtGui import QFontDatabase
 
 except ImportError:
     from PyQt5.QtGui import QFontDatabase
@@ -34,7 +43,7 @@ logger = logging.getLogger(__name__)
 RTL_LANGUAGES = ["ar", "he", "fa", "ur"]
 
 def is_rtl_language(language_code: str) -> bool:
-    """
+    """"
     Check if the language is a right-to-left language.
     
     Args:
@@ -42,7 +51,7 @@ def is_rtl_language(language_code: str) -> bool:
         
     Returns:
         True if the language is RTL, False otherwise
-    """
+    """"
     # Check if language is in known RTL languages
     if language_code in RTL_LANGUAGES:
         return True
@@ -55,13 +64,13 @@ def is_rtl_language(language_code: str) -> bool:
         return False
 
 def apply_rtl_to_application(app: QApplication, language_code: str) -> None:
-    """
+    """"
     Apply RTL layout to the entire application if needed.
     
     Args:
         app: QApplication instance
         language_code: Current language code
-    """
+    """"
     if is_rtl_language(language_code):
         logger.info(f"Applying RTL layout for language: {language_code}")
         app.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
@@ -73,13 +82,13 @@ def apply_rtl_to_application(app: QApplication, language_code: str) -> None:
         app.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
 
 def apply_rtl_to_widget(widget: QWidget, language_code: str) -> None:
-    """
+    """"
     Apply RTL layout to a specific widget if needed.
     
     Args:
         widget: Widget to apply RTL layout to
         language_code: Current language code
-    """
+    """"
     if is_rtl_language(language_code):
         widget.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
     else:
@@ -111,18 +120,18 @@ def _load_rtl_fonts() -> None:
         logger.error(f"Error loading RTL fonts: {e}")
         
 class RTLMixin:
-    """
+    """"
     Mixin class for RTL support in widgets.
     Add this to widget classes that need special RTL handling.
-    """
+    """"
     
     def update_layout_direction(self, language_code=None):
-        """
+        """"
         Update the layout direction based on current language.
         
         Args:
             language_code: Language code to use, defaults to current language
-        """
+        """"
         if not language_code:
             language_code = localization.current_language
             
@@ -134,15 +143,15 @@ class RTLMixin:
             self._on_ltr_applied()
     
     def _on_rtl_applied(self):
-        """
+        """"
         Override this method for special RTL handling.
         Called when RTL layout is applied.
-        """
+        """"
         pass
     
     def _on_ltr_applied(self):
-        """
+        """"
         Override this method for special LTR handling.
         Called when LTR layout is applied.
-        """
+        """"
         pass

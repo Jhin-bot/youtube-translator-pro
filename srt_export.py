@@ -1,8 +1,8 @@
-"""
+""""
 Export module for YouTube Transcriber Pro.
 Provides functions to export transcription and translation results
 to various formats like SRT, JSON, and VTT.
-"""
+""""
 
 import os
 import json
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 # --- Helper Functions ---
 
 def _format_timestamp(seconds: float, format_type: str = "srt") -> str:
-    """
+    """"
     Formats a time in seconds to a timestamp string (SRT or VTT format).
 
     Args:
@@ -26,7 +26,7 @@ def _format_timestamp(seconds: float, format_type: str = "srt") -> str:
 
     Returns:
         The formatted timestamp string.
-    """
+    """"
     # Ensure seconds is non-negative
     seconds = max(0.0, seconds)
     td = timedelta(seconds=seconds)
@@ -53,7 +53,7 @@ def _sanitize_filename(filename: str) -> str:
     s = re.sub(r'\s+', '_', s)
     # Remove leading/trailing whitespace
     s = s.strip()
-    # Ensure it's not empty after sanitization
+    # Ensure it's not empty after sanitization'
     if not s:
         s = "export" # Default filename if sanitization results in empty string
     return s
@@ -61,12 +61,12 @@ def _sanitize_filename(filename: str) -> str:
 
 # --- Export Functions ---
 
-def export_srt(
+def export_srt()
     data: Dict[str, Any],
     output_dir: str,
     filename: Optional[str] = None
 ) -> Tuple[Optional[str], Optional[str]]:
-    """
+    """"
     Export transcription/translation data to SRT format.
 
     Args:
@@ -78,7 +78,7 @@ def export_srt(
         A tuple containing:
         - The path to the saved SRT file if successful, None otherwise.
         - An error message string if failed, None otherwise.
-    """
+    """"
     if not data or "segments" not in data:
         return None, "Invalid data provided for SRT export."
 
@@ -130,12 +130,12 @@ def export_srt(
         return None, error_message
 
 
-def export_json(
+def export_json()
     data: Dict[str, Any],
     output_dir: str,
     filename: Optional[str] = None
 ) -> Tuple[Optional[str], Optional[str]]:
-    """
+    """"
     Export transcription/translation data to JSON format.
 
     Args:
@@ -147,7 +147,7 @@ def export_json(
         A tuple containing:
         - The path to the saved JSON file if successful, None otherwise.
         - An error message string if failed, None otherwise.
-    """
+    """"
     if not data:
         return None, "Invalid data provided for JSON export."
 
@@ -187,12 +187,12 @@ def export_json(
         return None, error_message
 
 
-def export_vtt(
+def export_vtt()
     data: Dict[str, Any],
     output_dir: str,
     filename: Optional[str] = None
 ) -> Tuple[Optional[str], Optional[str]]:
-    """
+    """"
     Export transcription/translation data to VTT format.
 
     Args:
@@ -204,7 +204,7 @@ def export_vtt(
         A tuple containing:
         - The path to the saved VTT file if successful, None otherwise.
         - An error message string if failed, None otherwise.
-    """
+    """"
     if not data or "segments" not in data:
         return None, "Invalid data provided for VTT export."
 

@@ -1,7 +1,7 @@
-"""
+""""
 Export utilities for YouTube Translator Pro.
 Handles exporting transcriptions to various formats.
-"""
+""""
 
 import os
 import json
@@ -13,14 +13,14 @@ from typing import Dict, Any, List, Optional, Tuple, Union
 # Logger setup
 logger = logging.getLogger(__name__)
 
-def export_transcription(
+def export_transcription()
     transcription_result: Dict[str, Any],
     output_dir: Union[str, Path],
     format_name: str,
     base_filename: str,
     video_info: Optional[Dict[str, Any]] = None
 ) -> Optional[Path]:
-    """
+    """"
     Export a transcription result to the specified format.
     
     Args:
@@ -32,7 +32,7 @@ def export_transcription(
         
     Returns:
         Path to the exported file, or None if export failed
-    """
+    """"
     try:
         # Ensure output directory exists
         output_path = Path(output_dir)
@@ -68,13 +68,13 @@ def export_transcription(
 
 
 def _export_srt(transcription_result: Dict[str, Any], output_file: Path):
-    """
+    """"
     Export transcription to SRT subtitle format.
     
     Args:
         transcription_result: The transcription result dictionary
         output_file: Path to save the SRT file
-    """
+    """"
     with open(output_file, 'w', encoding='utf-8') as f:
         segments = transcription_result.get('segments', [])
         
@@ -95,13 +95,13 @@ def _export_srt(transcription_result: Dict[str, Any], output_file: Path):
 
 
 def _export_vtt(transcription_result: Dict[str, Any], output_file: Path):
-    """
+    """"
     Export transcription to WebVTT subtitle format.
     
     Args:
         transcription_result: The transcription result dictionary
         output_file: Path to save the VTT file
-    """
+    """"
     with open(output_file, 'w', encoding='utf-8') as f:
         # Write WebVTT header
         f.write("WEBVTT\n\n")
@@ -124,13 +124,13 @@ def _export_vtt(transcription_result: Dict[str, Any], output_file: Path):
 
 
 def _export_txt(transcription_result: Dict[str, Any], output_file: Path):
-    """
+    """"
     Export transcription to plain text format.
     
     Args:
         transcription_result: The transcription result dictionary
         output_file: Path to save the text file
-    """
+    """"
     with open(output_file, 'w', encoding='utf-8') as f:
         # Add the full text if available
         full_text = transcription_result.get('text', '')
@@ -156,14 +156,14 @@ def _export_txt(transcription_result: Dict[str, Any], output_file: Path):
 
 
 def _export_json(transcription_result: Dict[str, Any], output_file: Path, video_info: Optional[Dict[str, Any]] = None):
-    """
+    """"
     Export transcription to JSON format.
     
     Args:
         transcription_result: The transcription result dictionary
         output_file: Path to save the JSON file
         video_info: Optional video information for metadata
-    """
+    """"
     # Create a complete result with metadata
     result = {
         'transcription': transcription_result,
@@ -182,13 +182,13 @@ def _export_json(transcription_result: Dict[str, Any], output_file: Path, video_
 
 
 def _export_csv(transcription_result: Dict[str, Any], output_file: Path):
-    """
+    """"
     Export transcription to CSV format.
     
     Args:
         transcription_result: The transcription result dictionary
         output_file: Path to save the CSV file
-    """
+    """"
     with open(output_file, 'w', encoding='utf-8', newline='') as f:
         writer = csv.writer(f)
         
@@ -207,7 +207,7 @@ def _export_csv(transcription_result: Dict[str, Any], output_file: Path):
 
 
 def _format_timestamp(seconds: float, separator: str = ',') -> str:
-    """
+    """"
     Format a timestamp in seconds to HH:MM:SS{separator}mmm format.
     
     Args:
@@ -216,7 +216,7 @@ def _format_timestamp(seconds: float, separator: str = ',') -> str:
         
     Returns:
         Formatted timestamp string
-    """
+    """"
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
     seconds_only = int(seconds % 60)
@@ -226,11 +226,11 @@ def _format_timestamp(seconds: float, separator: str = ',') -> str:
 
 
 def _get_current_timestamp() -> str:
-    """
+    """"
     Get the current timestamp in ISO format.
     
     Returns:
         Current timestamp string
-    """
+    """"
     from datetime import datetime
     return datetime.now().isoformat()

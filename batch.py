@@ -120,7 +120,10 @@ logger = logging.getLogger(__name__)
 # PyQt imports with fallback mechanism
 try:
     # First try PyQt6
+    try:
     from PyQt6.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
     logger.info("Using PyQt6 for UI components")
 except ImportError:
     try:
@@ -232,14 +235,14 @@ class BatchProcessor(QObject):
 
 
     def __init__(self, cache_manager: Optional[CacheManager] = None, concurrency: int = 2, parent: Optional[QObject] = None):
-        """
+        """"
         Initialize the Batch Processor.
 
         Args:
             cache_manager: An optional CacheManager instance.
             concurrency: Maximum number of concurrent tasks.
             parent: The parent QObject.
-        """
+        """"
         super().__init__(parent)
         self.cache_manager = cache_manager # Store CacheManager instance
         self.concurrency = concurrency
@@ -369,7 +372,7 @@ class BatchProcessor(QObject):
 
 
     def add_task(self, url: str, model: str, target_lang: Optional[str], output_dir: str, formats: List[str]):
-        """
+        """"
         Add a new task to the batch.
 
         Args:
@@ -378,7 +381,7 @@ class BatchProcessor(QObject):
             target_lang: Optional language code for translation (e.g., 'es').
             output_dir: The directory to save output files.
             formats: List of output formats (e.g., ['srt', 'json']).
-        """
+        """"
         # Basic URL validation
         if not url or not (url.startswith("http://") or url.startswith("https://")):
             logger.warning(f"Skipping invalid URL: {url}")
@@ -398,7 +401,7 @@ class BatchProcessor(QObject):
                 return
 
             # Create a new task object
-            new_task = Task(
+            new_task = Task()
                 url=url,
                 model=model,
                 target_lang=target_lang,
@@ -416,12 +419,12 @@ class BatchProcessor(QObject):
 
 
     def process_batch(self, urls: Optional[List[str]] = None, model: str = 'small', target_lang: Optional[str] = None, output_dir: Optional[str] = None, formats: Optional[List[str]] = None):
-        """
+        """"
         Start or resume processing the batch.
 
         If URLs are provided, they are added as new tasks before processing starts.
         If no URLs are provided, the processor attempts to process existing tasks.
-        """
+        """"
         with self._lock:
             # Add new tasks if provided
             if urls:
@@ -437,7 +440,7 @@ class BatchProcessor(QObject):
                  for url in urls:
                       self.add_task(url, model, target_lang, output_dir, formats)
 
-            # Start the processing thread if it's not already running
+            # Start the processing thread if it's not already running'
             if self._processing_thread is None or not self._processing_thread.is_alive():
                 logger.info("Starting batch processing thread.")
                 self._shutdown_event.clear() # Clear shutdown event
@@ -677,13 +680,13 @@ class BatchProcessor(QObject):
 
 
     def _process_single_task(self, task: Task) -> Dict[str, Any]:
-        """
+        """"
         Process a single task (download, transcribe, translate, export).
         This method runs in a worker thread from the ThreadPoolExecutor.
-        """
+        """"
         logger.info(f"Worker started processing task: {task.url}")
         result_data: Dict[str, Any] = {"url": task.url, "status": TaskStatus.FAILED.name, "progress": 0.0, "error": None, "output_dir": None, "output_files": {}, "temp_files": []}
-        temp_files_for_task: List[str] = [] # Track temp files created during this task's execution
+        temp_files_for_task: List[str] = [] # Track temp files created during this task's execution'
 
         try:
             # Check for cancellation before starting
@@ -709,7 +712,7 @@ class BatchProcessor(QObject):
                       result_data["status"] = TaskStatus.CACHED.name # Indicate cache hit
                       self._report_task_progress_worker(task.url, TaskStatus.CACHED, 0.1) # Report cache hit progress
                  else:
-                      cached_audio_path = None # Ensure it's None if not found or invalid
+                      cached_audio_path = None # Ensure it's None if not found or invalid'
 
 
             if cached_audio_path is None: # Only download if not in cache
@@ -727,7 +730,7 @@ class BatchProcessor(QObject):
                            temp_files_for_task.append(file_path)
 
 
-                 download_path, download_error = download_audio(
+                 download_path, download_error = download_audio()
                      task.url,
                      temp_dir=tempfile.gettempdir(), # Use system temp directory for downloads
                      progress_callback=download_progress_callback,
@@ -779,7 +782,7 @@ class BatchProcessor(QObject):
                       temp_files_for_task.append(file_path)
 
 
-            wav_audio_path, convert_error = convert_to_wav(
+            wav_audio_path, convert_error = convert_to_wav()
                  task.audio_path,
                  temp_dir=tempfile.gettempdir(), # Use system temp directory for conversion output
                  progress_callback=convert_progress_callback,
@@ -791,7 +794,7 @@ class BatchProcessor(QObject):
             if not wav_audio_path or not os.path.exists(wav_audio_path):
                 raise RuntimeError("Audio conversion failed: No output file.")
 
-            # The original downloaded file is now temporary if it wasn't from cache
+            # The original downloaded file is now temporary if it wasn't from cache'
             if cached_audio_path is None and task.audio_path and os.path.exists(task.audio_path):
                  temp_files_for_task.append(task.audio_path) # Add original download to temp list
 
@@ -830,7 +833,7 @@ class BatchProcessor(QObject):
                       self._report_task_progress_worker(task.url, TaskStatus.TRANSCRIBING, overall_progress, status_text=status_text)
 
 
-                 transcription_result, transcribe_error = transcribe(
+                 transcription_result, transcribe_error = transcribe()
                      task.audio_path,
                      model_name=task.model,
                      progress_callback=transcribe_progress_callback,
@@ -890,7 +893,7 @@ class BatchProcessor(QObject):
                            self._report_task_progress_worker(task.url, TaskStatus.TRANSLATING, overall_progress, status_text=status_text)
 
 
-                      translation_result, translate_error = translate(
+                      translation_result, translate_error = translate()
                           task.transcription_result,
                           target_language=task.target_lang,
                           progress_callback=translate_progress_callback,
@@ -1003,7 +1006,7 @@ class BatchProcessor(QObject):
         # Get the current batch progress to include in the update
         batch_progress = self._calculate_overall_progress()
 
-        self.task_progress_updated.emit({
+        self.task_progress_updated.emit({)
             "type": "task_progress",
             "url": url,
             "status": status.name,
@@ -1021,7 +1024,7 @@ class BatchProcessor(QObject):
         with self._lock:
              batch_status_name = self.status.name
 
-        self.batch_progress_updated.emit({
+        self.batch_progress_updated.emit({)
             "type": "batch_progress",
             "batch_progress": overall_progress,
             "batch_status": batch_status_name
@@ -1038,7 +1041,7 @@ class BatchProcessor(QObject):
             completed_tasks = sum(1 for task in self.tasks.values() if task.status in [TaskStatus.COMPLETED, TaskStatus.FAILED, TaskStatus.CANCELLED, TaskStatus.SKIPPED])
             running_tasks_progress = sum(task.progress for task in self.tasks.values() if task.status in [TaskStatus.RUNNING, TaskStatus.VALIDATING, TaskStatus.DOWNLOADING, TaskStatus.CONVERTING, TaskStatus.TRANSCRIBING, TaskStatus.TRANSLATING, TaskStatus.EXPORTING, TaskStatus.RETRYING])
 
-            # Simple calculation: (completed tasks + sum of running tasks' progress) / total tasks
+            # Simple calculation: (completed tasks + sum of running tasks' progress) / total tasks'
             # This assumes each task contributes equally to the overall progress.
             # A more complex approach could weight tasks based on estimated duration.
             overall_progress = (completed_tasks + running_tasks_progress) / total_tasks
@@ -1072,7 +1075,7 @@ class BatchProcessor(QObject):
 
     @pyqtSlot()
     def pause(self) -> bool:
-        """
+        """"
         Pause a running batch operation.
 
         Signals running tasks to pause (if they support it) and prevents new tasks
@@ -1080,7 +1083,7 @@ class BatchProcessor(QObject):
 
         Returns:
             True if pause was initiated, False if no batch is running
-        """
+        """"
         with self._lock:
             if self.status not in [BatchStatus.RUNNING, BatchStatus.THROTTLED]:
                 return False
@@ -1101,7 +1104,7 @@ class BatchProcessor(QObject):
 
     @pyqtSlot()
     def resume(self) -> bool:
-        """
+        """"
         Resume a paused batch operation.
 
         This will clear the pause event, allowing the processing thread to continue
@@ -1109,7 +1112,7 @@ class BatchProcessor(QObject):
 
         Returns:
             True if resume was initiated, False if no batch is paused
-        """
+        """"
         with self._lock:
             if self.status != BatchStatus.PAUSED:
                 return False
@@ -1130,7 +1133,7 @@ class BatchProcessor(QObject):
 
     @pyqtSlot()
     def cancel(self) -> bool:
-        """
+        """"
         Cancel the current batch operation.
 
         Signals all running tasks to stop and prevents new tasks from starting.
@@ -1138,7 +1141,7 @@ class BatchProcessor(QObject):
 
         Returns:
             True if cancellation was initiated, False otherwise
-        """
+        """"
         with self._lock:
             if self.status in [BatchStatus.IDLE, BatchStatus.COMPLETED, BatchStatus.FAILED, BatchStatus.CANCELLED, BatchStatus.STOPPING]:
                 return False # Cannot cancel if idle, finished, or already stopping
@@ -1168,7 +1171,7 @@ class BatchProcessor(QObject):
 
     @pyqtSlot(str)
     def cancel_task(self, url: str) -> bool:
-        """
+        """"
         Cancel a specific task in the batch.
 
         Args:
@@ -1176,7 +1179,7 @@ class BatchProcessor(QObject):
 
         Returns:
             True if the task was found and cancellation was initiated, False otherwise.
-        """
+        """"
         with self._lock:
             task = self.tasks.get(url)
             if task is None:
@@ -1227,7 +1230,7 @@ class BatchProcessor(QObject):
 
     @pyqtSlot(str)
     def remove_task(self, url: str) -> bool:
-        """
+        """"
         Remove a task from the batch entirely.
 
         Args:
@@ -1235,7 +1238,7 @@ class BatchProcessor(QObject):
 
         Returns:
             True if the task was found and removed, False otherwise.
-        """
+        """"
         with self._lock:
             task = self.tasks.get(url)
             if task is None:
@@ -1280,7 +1283,7 @@ class BatchProcessor(QObject):
 
     @pyqtSlot(str)
     def retry_task(self, url: str) -> bool:
-        """
+        """"
         Retry a failed task.
 
         Args:
@@ -1288,7 +1291,7 @@ class BatchProcessor(QObject):
 
         Returns:
             True if the task was found and retried, False otherwise.
-        """
+        """"
         with self._lock:
             task = self.tasks.get(url)
             if task is None:
@@ -1327,13 +1330,13 @@ class BatchProcessor(QObject):
 
 
     def shutdown(self, wait: bool = True, timeout: Optional[float] = None):
-        """
+        """"
         Initiate graceful shutdown of the batch processor.
 
         Args:
             wait: If True, wait for currently running tasks to finish.
             timeout: Maximum time to wait for tasks to finish.
-        """
+        """"
         with self._lock:
             if self._shutdown_event.is_set():
                  logger.debug("BatchProcessor already shutting down.")
@@ -1456,11 +1459,11 @@ class BatchProcessor(QObject):
                              logger.warning(f"Task {url} was in progress during last session. Marking as FAILED for retry.")
                              status = TaskStatus.FAILED
                              task_data["error"] = task_data.get("error") or "Task interrupted by unexpected shutdown."
-                             # Increment retry count? Or reset for a fresh start? Let's reset for manual retry.
+                             # Increment retry count? Or reset for a fresh start? Let's reset for manual retry.'
                              task_data["retries"] = 0
 
 
-                        restored_task = Task(
+                        restored_task = Task()
                             url=task_data.get("url", url), # Use URL from key as fallback
                             model=task_data.get("model", "small"),
                             target_lang=task_data.get("target_lang"),
@@ -1506,7 +1509,7 @@ class BatchProcessor(QObject):
                      self._task_queue = restored_task_queue # Use the saved queue
                      logger.debug(f"Restored {len(self._task_queue)} tasks to queue from session.")
                 else:
-                     # If queue wasn't saved, rebuild it from pending/failed tasks
+                     # If queue wasn't saved, rebuild it from pending/failed tasks'
                      self._task_queue = []
                      for task in self.tasks.values():
                           if task.status in [TaskStatus.PENDING, TaskStatus.FAILED]:
@@ -1521,7 +1524,7 @@ class BatchProcessor(QObject):
                 # Add temp files from loaded tasks to the final cleanup list
                 for task in self.tasks.values():
                      self._temp_files_to_cleanup.extend(task.temp_files)
-                     task.temp_files = [] # Clear task's temp list after adding to global list
+                     task.temp_files = [] # Clear task's temp list after adding to global list'
 
 
                 logger.info(f"Batch processor state loaded. {len(self.tasks)} tasks restored.")
@@ -1541,7 +1544,7 @@ class BatchProcessor(QObject):
         """Emit task progress signal (called from main thread)."""
         # This method is called from the main thread (e.g., when adding tasks, cancelling).
         # It emits a signal that the UI listens to.
-        self.task_progress_updated.emit({
+        self.task_progress_updated.emit({)
             "type": "task_progress",
             "url": task.url,
             "status": task.status.name,

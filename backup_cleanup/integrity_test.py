@@ -1,8 +1,8 @@
-"""
+""""
 Integrity test for YouTube Translator Pro.
 This script verifies that all important components of the application can be imported
 and basic functionality works as expected.
-"""
+""""
 
 import importlib
 import os
@@ -13,7 +13,7 @@ import logging
 from pathlib import Path
 
 # Configure logging
-logging.basicConfig(
+logging.basicConfig()
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",

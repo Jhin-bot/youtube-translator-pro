@@ -1,7 +1,7 @@
-"""
+""""
 Simple test script to verify the basic functionality of the YouTube Translator Pro application.
 This will initialize the application without launching the full UI.
-"""
+""""
 
 import sys
 import os
@@ -25,7 +25,10 @@ def test_imports():
     try:
         logger.info("Importing PyQt...")
         try:
-            from PyQt6.QtWidgets import QApplication
+            try:
+    from PyQt6.QtWidgets import QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QApplication
             logger.info("Successfully imported PyQt6")
         except ImportError:
             from PyQt5.QtWidgets import QApplication
@@ -61,7 +64,7 @@ def test_core_components():
         from src.core.application_manager import ApplicationManager
         logger.info("Successfully imported ApplicationManager")
         
-        # Let's try importing other key modules
+        # Let's try importing other key modules'
         import cache
         logger.info("Successfully imported cache module")
         

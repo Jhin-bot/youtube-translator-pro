@@ -1,4 +1,4 @@
-"""
+""""
 YouTube utility functions for downloading and extracting information from YouTube videos.
 
 Provides functionality for:
@@ -6,7 +6,7 @@ Provides functionality for:
 - Downloading audio from YouTube videos
 - Extracting video metadata
 - Managing YouTube API interactions
-"""
+""""
 
 import os
 import re
@@ -27,14 +27,14 @@ from src.utils.error_handling import YoutubeError, try_except_decorator
 # Initialize logger
 logger = setup_logging()
 
-def download_youtube_audio(
+def download_youtube_audio()
     url: str,
     output_dir: Union[str, Path],
     format: str = "wav",
     sample_rate: int = 16000,
     progress_callback: Optional[Callable[[float, str], None]] = None
 ) -> Tuple[str, Dict[str, Any]]:
-    """
+    """"
     Download audio from a YouTube video and convert to the specified format.
     
     Args:
@@ -48,7 +48,7 @@ def download_youtube_audio(
         Tuple containing:
         - Path to the downloaded audio file
         - Dictionary with video information (title, duration, etc.)
-    """
+    """"
     try:
         # Validate if output directory exists
         output_path = Path(output_dir)
@@ -80,7 +80,7 @@ def download_youtube_audio(
         
         # Initialize YouTube object and get video info
         try:
-            yt = YouTube(url, on_progress_callback=lambda stream, chunk, bytes_remaining: _report_download_progress(
+            yt = YouTube(url, on_progress_callback=lambda stream, chunk, bytes_remaining: _report_download_progress())
                 stream, chunk, bytes_remaining, progress_callback
             ))
             
@@ -155,10 +155,10 @@ def download_youtube_audio(
 
             try:
                 # Use ffmpeg to convert
-                (
+                ()
                     ffmpeg
                     .input(str(downloaded_path))
-                    .output(str(output_file), format=format, acodec='pcm_s16le' if format == 'wav' else 'libmp3lame',
+                    .output(str(output_file), format=format, acodec='pcm_s16le' if format == 'wav' else 'libmp3lame',)
                            ar=sample_rate, ac=1)
                     .global_args('-y')  # Overwrite if exists
                     .global_args('-loglevel', 'error')
@@ -176,7 +176,7 @@ def download_youtube_audio(
                 try:
                     downloaded_path.unlink()
                 except Exception as e:
-                    # Just log this error but don't fail the whole process
+                    # Just log this error but don't fail the whole process'
                     logger.warning(f"Could not delete temporary file {downloaded_path}: {e}")
                     # Continue processing anyway
             
@@ -196,7 +196,7 @@ def download_youtube_audio(
 
 
 def _report_download_progress(stream, chunk, bytes_remaining, progress_callback: Optional[Callable[[float, str], None]] = None):
-    """
+    """"
     Progress callback for YouTube downloads.
     
     Args:
@@ -204,7 +204,7 @@ def _report_download_progress(stream, chunk, bytes_remaining, progress_callback:
         chunk: The chunk being downloaded
         bytes_remaining: Number of bytes remaining
         progress_callback: User progress callback function
-    """
+    """"
     if not progress_callback:
         return
     
@@ -232,7 +232,7 @@ def _report_download_progress(stream, chunk, bytes_remaining, progress_callback:
 
 @try_except_decorator
 def extract_video_id(url: str) -> Optional[str]:
-    """
+    """"
     Extract the YouTube video ID from a URL.
     
     Supports all YouTube URL formats including:
@@ -251,7 +251,7 @@ def extract_video_id(url: str) -> Optional[str]:
         
     Raises:
         YoutubeError: If URL parsing fails unexpectedly
-    """
+    """"
     try:
         if not url:
             return None
@@ -280,7 +280,7 @@ def extract_video_id(url: str) -> Optional[str]:
                 return parsed_url.path.split('/')[-1]
         
         # Method 2: Fallback to regex for any remaining formats
-        youtube_regex = r'(?:youtube\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})'
+        youtube_regex = r'(?:youtube\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})'"
         match = re.search(youtube_regex, url)
         
         if match:
@@ -294,7 +294,7 @@ def extract_video_id(url: str) -> Optional[str]:
 
 
 def is_valid_youtube_url(url: str) -> bool:
-    """
+    """"
     Check if the given URL is a valid YouTube URL.
     
     Args:
@@ -302,5 +302,5 @@ def is_valid_youtube_url(url: str) -> bool:
         
     Returns:
         True if the URL is a valid YouTube URL, False otherwise
-    """
+    """"
     return extract_video_id(url) is not None

@@ -1,24 +1,33 @@
-"""
+""""
 Keyboard shortcuts manager for YouTube Translator Pro.
 Provides a centralized system for registering and handling keyboard shortcuts.
-"""
+""""
 
 import logging
 from typing import Dict, Callable, Any, List, Optional, Tuple, Set
 from enum import Enum
 
 try:
+    try:
     from PyQt6.QtCore import Qt, QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import Qt, QObject, pyqtSignal
 except ImportError:
     from PyQt5.QtCore import Qt, QObject, pyqtSignal
 
 try:
+    try:
     from PyQt6.QtGui import QKeySequence, QShortcut, QKeyEvent
+except ImportError:
+    from PyQt5.QtGui import QKeySequence, QShortcut, QKeyEvent
 except ImportError:
     from PyQt5.QtGui import QKeySequence, QShortcut, QKeyEvent
 
 try:
+    try:
     from PyQt6.QtWidgets import QWidget, QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QWidget, QApplication
 except ImportError:
     from PyQt5.QtWidgets import QWidget, QApplication
 
@@ -48,14 +57,14 @@ class ShortcutCategory(Enum):
 class ShortcutAction:
     """Represents a shortcut action that can be triggered."""
     
-    def __init__(self, id: str, 
+    def __init__(self, id: str, )
                  default_keys: List[QKeySequence], 
                  name: str,
                  description: str, 
                  category: ShortcutCategory,
                  scope: ShortcutScope,
                  callback: Callable = None):
-        """
+        """"
         Initialize a shortcut action.
         
         Args:
@@ -66,7 +75,7 @@ class ShortcutAction:
             category: Category for grouping in settings
             scope: Where the shortcut is available
             callback: Function to call when shortcut is triggered
-        """
+        """"
         self.id = id
         self.default_keys = default_keys
         self.current_keys = default_keys.copy()
@@ -87,10 +96,10 @@ class ShortcutAction:
                 logger.error(f"Error executing shortcut action {self.id}: {e}")
 
 class KeyboardShortcutsManager(QObject):
-    """
+    """"
     Manages keyboard shortcuts throughout the application.
     Allows for registration, customization and triggering of shortcuts.
-    """
+    """"
     
     shortcut_triggered = pyqtSignal(str)  # Signal emitted when shortcut is triggered
     
@@ -122,7 +131,7 @@ class KeyboardShortcutsManager(QObject):
     def _register_default_shortcuts(self) -> None:
         """Register all default shortcuts."""
         # File operations
-        self.register_action(
+        self.register_action()
             "file.new", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_N)],
             "New", 
@@ -131,7 +140,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "file.open", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_O)],
             "Open", 
@@ -140,7 +149,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "file.save", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_S)],
             "Save", 
@@ -149,7 +158,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "file.save_as", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Modifier.SHIFT | Qt.Key.Key_S)],
             "Save As", 
@@ -158,7 +167,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "file.export", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_E)],
             "Export", 
@@ -167,7 +176,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "file.close", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_W)],
             "Close", 
@@ -176,7 +185,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "file.exit", 
             [QKeySequence(Qt.Modifier.ALT | Qt.Key.Key_F4)],
             "Exit", 
@@ -186,7 +195,7 @@ class KeyboardShortcutsManager(QObject):
         )
         
         # Edit operations
-        self.register_action(
+        self.register_action()
             "edit.undo", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_Z)],
             "Undo", 
@@ -195,7 +204,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "edit.redo", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Modifier.SHIFT | Qt.Key.Key_Z)],
             "Redo", 
@@ -204,7 +213,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "edit.cut", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_X)],
             "Cut", 
@@ -213,7 +222,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "edit.copy", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_C)],
             "Copy", 
@@ -222,7 +231,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "edit.paste", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_V)],
             "Paste", 
@@ -231,7 +240,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "edit.delete", 
             [QKeySequence(Qt.Key.Key_Delete)],
             "Delete", 
@@ -240,7 +249,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "edit.select_all", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_A)],
             "Select All", 
@@ -250,7 +259,7 @@ class KeyboardShortcutsManager(QObject):
         )
         
         # View operations
-        self.register_action(
+        self.register_action()
             "view.toggle_dark_mode", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Modifier.ALT | Qt.Key.Key_D)],
             "Toggle Dark Mode", 
@@ -259,7 +268,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "view.zoom_in", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_Plus)],
             "Zoom In", 
@@ -268,7 +277,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "view.zoom_out", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_Minus)],
             "Zoom Out", 
@@ -277,7 +286,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "view.reset_zoom", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_0)],
             "Reset Zoom", 
@@ -286,7 +295,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "view.performance_monitor", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Modifier.SHIFT | Qt.Key.Key_P)],
             "Performance Monitor", 
@@ -296,7 +305,7 @@ class KeyboardShortcutsManager(QObject):
         )
         
         # Tools operations
-        self.register_action(
+        self.register_action()
             "tools.settings", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_Comma)],
             "Settings", 
@@ -305,7 +314,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "tools.download", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_D)],
             "Download Video", 
@@ -314,7 +323,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.MAIN_WINDOW
         )
         
-        self.register_action(
+        self.register_action()
             "tools.transcribe", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_T)],
             "Transcribe", 
@@ -323,7 +332,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.MAIN_WINDOW
         )
         
-        self.register_action(
+        self.register_action()
             "tools.translate", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_R)],
             "Translate", 
@@ -332,7 +341,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.MAIN_WINDOW
         )
         
-        self.register_action(
+        self.register_action()
             "tools.batch", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_B)],
             "Batch Processing", 
@@ -342,7 +351,7 @@ class KeyboardShortcutsManager(QObject):
         )
         
         # Playback operations
-        self.register_action(
+        self.register_action()
             "playback.play_pause", 
             [QKeySequence(Qt.Key.Key_Space)],
             "Play/Pause", 
@@ -351,7 +360,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.MAIN_WINDOW
         )
         
-        self.register_action(
+        self.register_action()
             "playback.stop", 
             [QKeySequence(Qt.Key.Key_S)],
             "Stop", 
@@ -360,7 +369,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.MAIN_WINDOW
         )
         
-        self.register_action(
+        self.register_action()
             "playback.forward", 
             [QKeySequence(Qt.Key.Key_Right)],
             "Forward", 
@@ -369,7 +378,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.MAIN_WINDOW
         )
         
-        self.register_action(
+        self.register_action()
             "playback.backward", 
             [QKeySequence(Qt.Key.Key_Left)],
             "Backward", 
@@ -378,7 +387,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.MAIN_WINDOW
         )
         
-        self.register_action(
+        self.register_action()
             "playback.volume_up", 
             [QKeySequence(Qt.Key.Key_Up)],
             "Volume Up", 
@@ -387,7 +396,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.MAIN_WINDOW
         )
         
-        self.register_action(
+        self.register_action()
             "playback.volume_down", 
             [QKeySequence(Qt.Key.Key_Down)],
             "Volume Down", 
@@ -397,7 +406,7 @@ class KeyboardShortcutsManager(QObject):
         )
         
         # Help and system
-        self.register_action(
+        self.register_action()
             "system.help", 
             [QKeySequence(Qt.Key.Key_F1)],
             "Help", 
@@ -406,7 +415,7 @@ class KeyboardShortcutsManager(QObject):
             ShortcutScope.GLOBAL
         )
         
-        self.register_action(
+        self.register_action()
             "system.shortcuts", 
             [QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_F1)],
             "Keyboard Shortcuts", 
@@ -417,7 +426,7 @@ class KeyboardShortcutsManager(QObject):
         
         logger.info(f"Registered {len(self.actions)} default keyboard shortcuts")
     
-    def register_action(self, 
+    def register_action(self, )
                        id: str, 
                        default_keys: List[QKeySequence], 
                        name: str, 
@@ -425,7 +434,7 @@ class KeyboardShortcutsManager(QObject):
                        category: ShortcutCategory,
                        scope: ShortcutScope,
                        callback: Callable = None) -> ShortcutAction:
-        """
+        """"
         Register a new shortcut action.
         
         Args:
@@ -439,13 +448,13 @@ class KeyboardShortcutsManager(QObject):
             
         Returns:
             Registered ShortcutAction
-        """
+        """"
         # Try to use localized strings if available
         localized_name = get_string(f"shortcut.{id}.name", name)
         localized_description = get_string(f"shortcut.{id}.description", description)
         
         # Create the action
-        action = ShortcutAction(
+        action = ShortcutAction()
             id=id,
             default_keys=default_keys,
             name=localized_name,
@@ -469,12 +478,12 @@ class KeyboardShortcutsManager(QObject):
         return action
     
     def register_shortcuts_with_widget(self, widget: QWidget) -> None:
-        """
+        """"
         Register QShortcut objects with a widget.
         
         Args:
             widget: Widget to register shortcuts with
-        """
+        """"
         for action_id, action in self.actions.items():
             # Only register shortcuts for enabled scopes
             if action.scope not in self.enabled_scopes:
@@ -489,38 +498,38 @@ class KeyboardShortcutsManager(QObject):
         logger.debug(f"Registered shortcuts with widget: {widget.__class__.__name__}")
     
     def _on_shortcut_activated(self, action_id: str) -> None:
-        """
+        """"
         Called when a shortcut is activated.
         
         Args:
             action_id: ID of the triggered action
-        """
+        """"
         if action_id in self.actions:
             action = self.actions[action_id]
             action.trigger()
             self.shortcut_triggered.emit(action_id)
     
     def set_shortcut_enabled(self, action_id: str, enabled: bool) -> None:
-        """
+        """"
         Enable or disable a shortcut.
         
         Args:
             action_id: ID of the action to enable/disable
             enabled: Whether to enable or disable
-        """
+        """"
         if action_id in self.actions:
             action = self.actions[action_id]
             for shortcut in action.shortcuts:
                 shortcut.setEnabled(enabled)
     
     def set_scope_enabled(self, scope: ShortcutScope, enabled: bool) -> None:
-        """
+        """"
         Enable or disable all shortcuts in a scope.
         
         Args:
             scope: Scope to enable/disable
             enabled: Whether to enable or disable
-        """
+        """"
         if enabled:
             self.enabled_scopes.add(scope)
         else:
@@ -532,13 +541,13 @@ class KeyboardShortcutsManager(QObject):
                 self.set_shortcut_enabled(action_id, enabled)
     
     def activate_widget_scope(self, widget: QWidget, scope: ShortcutScope) -> None:
-        """
+        """"
         Activate shortcuts for a widget in a specific scope.
         
         Args:
             widget: Widget to activate shortcuts for
             scope: Scope to activate
-        """
+        """"
         # Add the widget to the active set for this scope
         self.active_widgets[scope].add(widget)
         
@@ -546,13 +555,13 @@ class KeyboardShortcutsManager(QObject):
         self.set_scope_enabled(scope, True)
     
     def deactivate_widget_scope(self, widget: QWidget, scope: ShortcutScope) -> None:
-        """
+        """"
         Deactivate shortcuts for a widget in a specific scope.
         
         Args:
             widget: Widget to deactivate shortcuts for
             scope: Scope to deactivate
-        """
+        """"
         # Remove the widget from the active set for this scope
         self.active_widgets[scope].discard(widget)
         
@@ -561,13 +570,13 @@ class KeyboardShortcutsManager(QObject):
             self.set_scope_enabled(scope, False)
     
     def update_shortcut(self, action_id: str, new_keys: List[QKeySequence]) -> None:
-        """
+        """"
         Update the key sequences for a shortcut.
         
         Args:
             action_id: ID of the action to update
             new_keys: New key sequences
-        """
+        """"
         if action_id not in self.actions:
             logger.warning(f"Cannot update shortcut for unknown action: {action_id}")
             return
@@ -606,21 +615,21 @@ class KeyboardShortcutsManager(QObject):
         logger.info("Reset all keyboard shortcuts to defaults")
     
     def get_all_shortcuts(self) -> Dict[str, ShortcutAction]:
-        """
+        """"
         Get all registered shortcut actions.
         
         Returns:
             Dictionary of action ID to ShortcutAction
-        """
+        """"
         return self.actions.copy()
     
     def get_shortcuts_by_category(self) -> Dict[ShortcutCategory, List[ShortcutAction]]:
-        """
+        """"
         Get shortcuts grouped by category.
         
         Returns:
             Dictionary of category to list of actions
-        """
+        """"
         result = {category: [] for category in ShortcutCategory}
         
         for action in self.actions.values():
@@ -629,12 +638,12 @@ class KeyboardShortcutsManager(QObject):
         return result
     
     def get_shortcuts_by_scope(self) -> Dict[ShortcutScope, List[ShortcutAction]]:
-        """
+        """"
         Get shortcuts grouped by scope.
         
         Returns:
             Dictionary of scope to list of actions
-        """
+        """"
         result = {scope: [] for scope in ShortcutScope}
         
         for action in self.actions.values():
@@ -643,7 +652,7 @@ class KeyboardShortcutsManager(QObject):
         return result
     
     def get_action(self, action_id: str) -> Optional[ShortcutAction]:
-        """
+        """"
         Get a shortcut action by ID.
         
         Args:
@@ -651,11 +660,11 @@ class KeyboardShortcutsManager(QObject):
             
         Returns:
             ShortcutAction or None if not found
-        """
+        """"
         return self.actions.get(action_id)
     
     def get_action_for_key(self, key_sequence: QKeySequence) -> Optional[ShortcutAction]:
-        """
+        """"
         Get the action associated with a key sequence.
         
         Args:
@@ -663,7 +672,7 @@ class KeyboardShortcutsManager(QObject):
             
         Returns:
             ShortcutAction or None if not found
-        """
+        """"
         key_str = key_sequence.toString()
         if key_str in self.key_map:
             action_id = self.key_map[key_str]
@@ -675,7 +684,7 @@ shortcut_manager = KeyboardShortcutsManager()
 
 # Helper function to connect a shortcut to a callback
 def connect_shortcut(action_id: str, callback: Callable) -> bool:
-    """
+    """"
     Connect a callback to a shortcut action.
     
     Args:
@@ -684,7 +693,7 @@ def connect_shortcut(action_id: str, callback: Callable) -> bool:
         
     Returns:
         True if connected successfully, False otherwise
-    """
+    """"
     action = shortcut_manager.get_action(action_id)
     if action:
         action.callback = callback
@@ -693,7 +702,7 @@ def connect_shortcut(action_id: str, callback: Callable) -> bool:
 
 # Helper to get human-readable key sequence text
 def get_shortcut_text(action_id: str) -> str:
-    """
+    """"
     Get a human-readable text of the shortcut key sequence.
     
     Args:
@@ -701,7 +710,7 @@ def get_shortcut_text(action_id: str) -> str:
         
     Returns:
         Text representation of the shortcut or empty string if not found
-    """
+    """"
     action = shortcut_manager.get_action(action_id)
     if action and action.current_keys:
         return action.current_keys[0].toString()

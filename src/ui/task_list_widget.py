@@ -1,32 +1,44 @@
-"""
+""""
 Task list widget for YouTube Translator Pro.
 Displays the list of tasks, their status, and allows management.
-"""
+""""
 
 import logging
 from typing import Dict, Any, List, Optional
 from enum import Enum, auto
 
 try:
+    try:
     from PyQt6.QtCore import Qt, pyqtSlot
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSlot
 except ImportError:
     from PyQt5.QtCore import Qt, pyqtSlot
 
 try:
-    from PyQt6.QtWidgets import (
+    try:
+    from PyQt6.QtWidgets import ()
+except ImportError:
+    from PyQt5.QtWidgets import ()
         QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QTableWidget, QTableWidgetItem, QHeaderView, QGroupBox,
         QMenu, QAbstractItemView
     )
 except ImportError:
-    from PyQt5.QtWidgets import (
+    from PyQt5.QtWidgets import ()
         QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QTableWidget, QTableWidgetItem, QHeaderView, QGroupBox,
         QMenu, QAbstractItemView
     )
 try:
+    try:
     from PyQt6.QtGui import QAction, QColor, QIcon, QDesktopServices
+except ImportError:
+    from PyQt5.QtGui import QAction, QColor, QIcon, QDesktopServices
+    try:
     from PyQt6.QtCore import QUrl
+except ImportError:
+    from PyQt5.QtCore import QUrl
 except ImportError:
     from PyQt5.QtGui import QAction, QColor, QIcon, QDesktopServices
     from PyQt5.QtCore import QUrl
@@ -57,13 +69,13 @@ class TaskListWidget(QWidget):
     """Widget for displaying and managing the list of tasks."""
     
     def __init__(self, app_manager, parent=None):
-        """
+        """"
         Initialize the task list widget.
         
         Args:
             app_manager: Reference to the ApplicationManager
             parent: The parent widget
-        """
+        """"
         super().__init__(parent)
         self.app_manager = app_manager
         self.style_manager = StyleManager()
@@ -110,12 +122,12 @@ class TaskListWidget(QWidget):
     
     @pyqtSlot(dict)
     def update_task(self, task_data: Dict[str, Any]):
-        """
+        """"
         Update a task in the task list.
         
         Args:
             task_data: Dictionary containing task data
-        """
+        """"
         url = task_data.get("url")
         if not url:
             return
@@ -137,12 +149,12 @@ class TaskListWidget(QWidget):
         self._update_summary()
     
     def remove_task(self, url: str):
-        """
+        """"
         Remove a task from the task list.
         
         Args:
             url: URL of the task to remove
-        """
+        """"
         row = self._find_task_row(url)
         if row != -1:
             self.task_table.removeRow(row)
@@ -153,7 +165,7 @@ class TaskListWidget(QWidget):
             self._update_summary()
     
     def _find_task_row(self, url: str) -> int:
-        """
+        """"
         Find the row index for a task URL.
         
         Args:
@@ -161,7 +173,7 @@ class TaskListWidget(QWidget):
             
         Returns:
             The row index, or -1 if not found
-        """
+        """"
         for row in range(self.task_table.rowCount()):
             item = self.task_table.item(row, 0)
             if item and item.data(Qt.ItemDataRole.UserRole) == url:
@@ -169,13 +181,13 @@ class TaskListWidget(QWidget):
         return -1
     
     def _update_task_row(self, row: int, task_data: Dict[str, Any]):
-        """
+        """"
         Update a task row with new data.
         
         Args:
             row: The row index to update
             task_data: The task data
-        """
+        """"
         url = task_data.get("url", "")
         title = task_data.get("title", "Unknown video")
         status = task_data.get("status", "PENDING")
@@ -236,13 +248,13 @@ class TaskListWidget(QWidget):
         self.task_table.setCellWidget(row, 4, output_widget)
     
     def _style_status_item(self, item: QTableWidgetItem, status: str):
-        """
+        """"
         Apply styling to a status item based on the status.
         
         Args:
             item: The QTableWidgetItem to style
             status: The status string
-        """
+        """"
         if status == "COMPLETED":
             item.setForeground(QColor(self.style_manager.colors["success"]))
         elif status == "FAILED":
@@ -272,12 +284,12 @@ class TaskListWidget(QWidget):
         self.summary_label.setText(summary)
     
     def _show_context_menu(self, position):
-        """
+        """"
         Show context menu for a task.
         
         Args:
             position: The position where the context menu should appear
-        """
+        """"
         row = self.task_table.rowAt(position.y())
         if row == -1:
             return
@@ -325,32 +337,32 @@ class TaskListWidget(QWidget):
         menu.exec(self.task_table.mapToGlobal(position))
     
     def _retry_task(self, url: str):
-        """
+        """"
         Retry a failed task.
         
         Args:
             url: URL of the task to retry
-        """
+        """"
         if hasattr(self.app_manager, 'batch_processor'):
             self.app_manager.batch_processor.retry_task(url)
     
     def _cancel_task(self, url: str):
-        """
+        """"
         Cancel a task.
         
         Args:
             url: URL of the task to cancel
-        """
+        """"
         if hasattr(self.app_manager, 'batch_processor'):
             self.app_manager.batch_processor.cancel_task(url)
     
     def _remove_task(self, url: str):
-        """
+        """"
         Remove a task from the list.
         
         Args:
             url: URL of the task to remove
-        """
+        """"
         # First make sure it's cancelled if running'
         if url in self.tasks:
             status = self.tasks[url].get("status", "PENDING")
@@ -363,12 +375,12 @@ class TaskListWidget(QWidget):
             self.app_manager.batch_processor.remove_task(url)
     
     def _open_output(self, output_file: str):
-        """
+        """"
         Open an output file.
         
         Args:
             output_file: Path to the output file
-        """
+        """"
         try:
             QDesktopServices.openUrl(QUrl.fromLocalFile(output_file))
         except Exception as e:

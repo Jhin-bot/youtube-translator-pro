@@ -1,9 +1,9 @@
-"""
+""""
 Update management system for YouTube Translator Pro.
 
 Provides functionality for checking for updates, downloading updates,
 and applying updates to the application.
-"""
+""""
 
 import json
 import logging
@@ -22,9 +22,15 @@ from urllib.parse import urlparse
 import requests
 try:
     # First try PyQt6
+    try:
     from PyQt6.QtCore import QObject, QThread
+except ImportError:
+    from PyQt5.QtCore import QObject, QThread
     # Alias for signal compatibility
+    try:
     from PyQt6.QtCore import pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import pyqtSignal
     USE_PYQT6 = True
     logger = logging.getLogger(__name__)
     logger.info("Using PyQt6 for update manager")
@@ -84,13 +90,13 @@ class UpdateCheckWorker(QThread):
     check_failed = pyqtSignal(str)
     
     def __init__(self, update_url: str, current_version: str, timeout: int = 10):
-        """Initialize the update check worker.
+        """Initialize the update check worker."
         
         Args:
             update_url: URL to check for updates
             current_version: Current application version
             timeout: Request timeout in seconds
-        """
+        """"
         super().__init__()
         self.update_url = update_url
         self.current_version = current_version
@@ -146,14 +152,14 @@ class UpdateCheckWorker(QThread):
             raise NetworkError(f"Invalid update response: {e}")
     
     def _compare_versions(self, version1: str, version2: str) -> int:
-        """
+        """"
         Compare two version strings.
         
         Returns:
             1 if version1 > version2
             0 if version1 == version2
             -1 if version1 < version2
-        """
+        """"
         v1_parts = [int(x) for x in version1.split('.')]
         v2_parts = [int(x) for x in version2.split('.')]
         
@@ -181,12 +187,12 @@ class UpdateDownloadWorker(QThread):
     download_failed = pyqtSignal(str)
     
     def __init__(self, download_url: str, save_path: Optional[str] = None):
-        """Initialize the update download worker.
+        """Initialize the update download worker."
         
         Args:
             download_url: URL to download the update from
             save_path: Path to save the downloaded file
-        """
+        """"
         super().__init__()
         self.download_url = download_url
         
@@ -273,7 +279,7 @@ class UpdateManager(QObject):
         # Initialize last check time
         self.last_check_time = None
         
-        # Create data directory for updates if it doesn't exist
+        # Create data directory for updates if it doesn't exist'
         from src.config import DATA_DIR
         self.updates_dir = DATA_DIR / "updates"
         self.updates_dir.mkdir(parents=True, exist_ok=True)
@@ -294,7 +300,7 @@ class UpdateManager(QObject):
     
     @try_except_decorator
     def check_for_updates(self, force: bool = False) -> bool:
-        """
+        """"
         Check for application updates.
         
         Args:
@@ -302,13 +308,13 @@ class UpdateManager(QObject):
             
         Returns:
             True if check was initiated, False otherwise
-        """
+        """"
         if not force and not self._should_check_updates():
             logger.info("Skipping update check (too soon since last check)")
             return False
         
         # Create worker for background processing
-        self.check_worker = UpdateCheckWorker(
+        self.check_worker = UpdateCheckWorker()
             self.update_url,
             self.current_version,
             timeout=self.update_config.get("timeout", 10)
@@ -329,7 +335,7 @@ class UpdateManager(QObject):
     
     @try_except_decorator
     def download_update(self, download_url: str) -> bool:
-        """
+        """"
         Download an update package.
         
         Args:
@@ -337,7 +343,7 @@ class UpdateManager(QObject):
             
         Returns:
             True if download was initiated, False otherwise
-        """
+        """"
         # Create worker for background processing
         self.download_worker = UpdateDownloadWorker(download_url)
         
@@ -353,7 +359,7 @@ class UpdateManager(QObject):
     
     @try_except_decorator
     def install_update(self, update_file: str) -> bool:
-        """
+        """"
         Install an update from a downloaded file.
         
         Args:
@@ -361,7 +367,7 @@ class UpdateManager(QObject):
             
         Returns:
             True if installation was successful, False otherwise
-        """
+        """"
         # Signal that installation has started
         self.install_started.emit()
         

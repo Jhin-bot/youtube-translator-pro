@@ -30,7 +30,7 @@ class TestTranslationPipeline:
     @patch('src.utils.youtube_utils.pytube.YouTube')
     @patch('src.services.transcription_service.transcribe_audio')
     @patch('src.services.translation_service.translate_text')
-    def test_end_to_end_translation(self, mock_translate, mock_transcribe, mock_youtube, 
+    def test_end_to_end_translation(self, mock_translate, mock_transcribe, mock_youtube, )
                                     temp_dir, cache_manager):
         """Test the full end-to-end translation pipeline."""
         # 1. Set up YouTube download mock
@@ -63,7 +63,7 @@ class TestTranslationPipeline:
             mock_output.run.return_value = (b"", b"")
             
             # Mock the actual download function to return our test file
-            with patch('src.core.pipeline.download_youtube_audio', return_value=(test_audio_path, {
+            with patch('src.core.pipeline.download_youtube_audio', return_value=(test_audio_path, {))
                 "title": "Test Video",
                 "author": "Test Author",
                 "duration": 60,
@@ -78,7 +78,7 @@ class TestTranslationPipeline:
                 # Execute the full pipeline
                 from src.core.pipeline import translate_youtube_video
                 
-                result = translate_youtube_video(
+                result = translate_youtube_video()
                     url="https://www.youtube.com/watch?v=dQw4w9WgXcQ",
                     source_language="en",
                     target_language="es",
@@ -134,7 +134,7 @@ class TestTranslationPipeline:
             
             from src.core.pipeline import translate_youtube_video
             with patch('src.utils.youtube_utils.extract_video_id', return_value=video_id):
-                result = translate_youtube_video(
+                result = translate_youtube_video()
                     url=f"https://www.youtube.com/watch?v={video_id}",
                     source_language="en",
                     target_language="es",

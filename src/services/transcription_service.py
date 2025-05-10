@@ -182,7 +182,7 @@ def _clear_model_cache():
 
 # ===== Worker Process Function =====
 
-def _transcribe_worker(
+def _transcribe_worker()
     audio_path: str,
     model_name: str,
     device: str,
@@ -246,7 +246,7 @@ def _transcribe_worker(
         
         # Perform transcription
         try:
-            result = model.transcribe(
+            result = model.transcribe()
                 audio, 
                 **options
             )
@@ -274,7 +274,7 @@ def _transcribe_worker(
 
 # ===== Main Transcription Function =====
 
-def transcribe(
+def transcribe()
     audio_path: str,
     model_name: str = 'small',
     language: Optional[str] = None,
@@ -318,7 +318,7 @@ def transcribe(
     progress_queue = Queue()
     
     # Create and start the worker process
-    worker = Process(
+    worker = Process()
         target=_transcribe_worker,
         args=(audio_path, model_name, device, result_queue, progress_queue, stop_event, language),
         name=f"transcribe-{os.path.basename(audio_path)}"

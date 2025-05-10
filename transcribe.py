@@ -1,7 +1,7 @@
-"""
+""""
 Transcription module that uses Whisper models to transcribe audio files.
 Provides safe and efficient transcription with proper resource management.
-"""
+""""
 import os
 import gc
 import time
@@ -98,7 +98,7 @@ def _terminate_all_processes():
 # Use lru_cache to keep recently used models in memory
 @lru_cache(maxsize=MAX_CACHE_SIZE)
 def _load_whisper_model(model_name: str, device: str) -> whisper.Whisper:
-    """
+    """"
     Load a Whisper model, caching recent ones.
 
     Args:
@@ -110,7 +110,7 @@ def _load_whisper_model(model_name: str, device: str) -> whisper.Whisper:
 
     Raises:
         RuntimeError: If Whisper is not available or model loading fails.
-    """
+    """"
     if not WHISPER_AVAILABLE:
         raise RuntimeError("Whisper library is not available.")
 
@@ -190,7 +190,7 @@ def _clear_model_cache():
 
 # ===== Worker Process Function =====
 
-def _transcribe_worker(
+def _transcribe_worker()
     audio_path: str,
     model_name: str,
     device: str,
@@ -200,7 +200,7 @@ def _transcribe_worker(
     language: Optional[str] = None, # Source language for transcription
     task: str = "transcribe" # 'transcribe' or 'translate' (though translation is handled separately now)
 ):
-    """
+    """"
     Worker process function to perform transcription or translation.
 
     Args:
@@ -212,7 +212,7 @@ def _transcribe_worker(
         stop_event: Event to signal process termination.
         language: Optional source language code for transcription.
         task: Task to perform ('transcribe' or 'translate'). Note: Translation is now handled in batch.py, this worker only transcribes.
-    """
+    """"
     # Ensure the process is registered for cleanup
     current_process = multiprocessing.current_process()
     _register_process(current_process)
@@ -252,7 +252,7 @@ def _transcribe_worker(
         logger.info(f"Starting transcription of {audio_path}...")
         progress_queue.put({"type": "status", "message": "Transcribing..."})
 
-        # Whisper's transcribe method has a progress callback argument
+        # Whisper's transcribe method has a progress callback argument'
         # The callback receives (progress, status_text)
         def whisper_progress_callback(progress: float, status_text: str):
              # Map Whisper's progress (0-1) to a range within the worker's progress (e.g., 10-95%)
@@ -340,7 +340,7 @@ def _transcribe_worker(
 
 # ===== Main Transcription Function (called by BatchProcessor) =====
 
-def transcribe(
+def transcribe()
     audio_path: str,
     model_name: str = 'small',
     language: Optional[str] = None,
@@ -348,7 +348,7 @@ def transcribe(
     stop_event: Optional[Event] = None,
     timeout: Optional[float] = DEFAULT_TRANSCRIPTION_TIMEOUT
 ) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
-    """
+    """"
     Transcribe an audio file using a Whisper model in a separate process.
 
     Args:
@@ -363,7 +363,7 @@ def transcribe(
         A tuple containing:
         - The transcription result dictionary if successful, None otherwise.
         - An error message string if failed, None otherwise.
-    """
+    """"
     if not WHISPER_AVAILABLE:
         return None, "Whisper library is not available. Please install it (e.g., pip install whisper)."
 
@@ -385,7 +385,7 @@ def transcribe(
          stop_event = Event()
 
     # Create and start the worker process
-    worker_process = Process(
+    worker_process = Process()
         target=_transcribe_worker,
         args=(audio_path, model_name, device, result_queue, progress_queue, stop_event, language)
     )
@@ -454,7 +454,7 @@ def transcribe(
 
         # If the loop finished because the process exited without putting a result
         if worker_process.is_alive() and stop_event.is_set() and worker_status == "RUNNING":
-             # Process was signaled to stop but didn't put a result yet
+             # Process was signaled to stop but didn't put a result yet'
              error_message = error_message or "Transcription cancelled."
              worker_status = "CANCELLED"
              logger.debug("Worker process loop exited due to stop event.")
@@ -541,7 +541,7 @@ def transcribe(
 #          # cancel_thread.start()
 
 
-#          transcription_result, error = transcribe(
+#          transcription_result, error = transcribe()
 #              str(dummy_audio_path),
 #              model_name="tiny", # Use a smaller model for faster testing
 #              language="en", # Hint language

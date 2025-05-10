@@ -30,7 +30,7 @@ except ImportError:
 from pathlib import Path
 import webbrowser # Added for opening URLs or files
 
-# Try to import qtawesome, but provide a fallback if it's not available
+# Try to import qtawesome, but provide a fallback if it's not available'
 try:
     import qtawesome as qta
     QTA_AVAILABLE = True
@@ -40,7 +40,10 @@ except ImportError:
     class QtAwesomeMock:
         def icon(self, *args, **kwargs):
             try:
-                from PyQt6.QtGui import QIcon
+                try:
+    from PyQt6.QtGui import QIcon
+except ImportError:
+    from PyQt5.QtGui import QIcon
             except ImportError:
                 try:
                     from PyQt5.QtGui import QIcon
@@ -56,7 +59,10 @@ except ImportError:
 # PyQt Core imports with fallbacks
 try:
     # First try PyQt6
-    from PyQt6.QtCore import (
+    try:
+    from PyQt6.QtCore import ()
+except ImportError:
+    from PyQt5.QtCore import ()
         Qt, QSize, QUrl, QTimer, QThread, QObject, QSettings, QStandardPaths,
         pyqtSignal, pyqtSlot, QMimeData, QEvent, QPoint, QRect, QPropertyAnimation,
         QAbstractAnimation, QEasingCurve # Added QEasingCurve for animations
@@ -67,7 +73,7 @@ try:
 except ImportError:
     try:
         # Then try PyQt5
-        from PyQt5.QtCore import (
+        from PyQt5.QtCore import ()
             Qt, QSize, QUrl, QTimer, QThread, QObject, QSettings, QStandardPaths,
             pyqtSignal, pyqtSlot, QMimeData, QEvent, QPoint, QRect, QPropertyAnimation,
             QAbstractAnimation, QEasingCurve # Added QEasingCurve for animations
@@ -189,7 +195,10 @@ except ImportError:
 # PyQt GUI imports with fallbacks
 try:
     # First try PyQt6
-    from PyQt6.QtGui import (
+    try:
+    from PyQt6.QtGui import ()
+except ImportError:
+    from PyQt5.QtGui import ()
         QIcon, QAction, QFont, QColor, QPalette, QDragEnterEvent, QDropEvent,
         QPixmap, QPainter, QBrush, QPen, QMovie, QLinearGradient, QGradient,
         QFontMetrics, QCloseEvent, QStandardItemModel, QStandardItem, QDesktopServices,
@@ -199,7 +208,7 @@ try:
 except ImportError:
     try:
         # Then try PyQt5
-        from PyQt5.QtGui import (
+        from PyQt5.QtGui import ()
             QIcon, QAction, QFont, QColor, QPalette, QDragEnterEvent, QDropEvent,
             QPixmap, QPainter, QBrush, QPen, QMovie, QLinearGradient, QGradient,
             QFontMetrics, QCloseEvent, QStandardItemModel, QStandardItem, QDesktopServices,
@@ -213,7 +222,10 @@ except ImportError:
 # PyQt Widgets imports with fallbacks
 try:
     # First try PyQt6
-    from PyQt6.QtWidgets import (
+    try:
+    from PyQt6.QtWidgets import ()
+except ImportError:
+    from PyQt5.QtWidgets import ()
         QApplication, QMainWindow, QWidget, QLabel, QPushButton, QVBoxLayout,
         QHBoxLayout, QLineEdit, QTextEdit, QProgressBar, QFileDialog, QMessageBox,
         QScrollArea, QFrame, QSplitter, QComboBox, QCheckBox, QGroupBox, QTabWidget,
@@ -225,7 +237,7 @@ try:
 except ImportError:
     try:
         # Then try PyQt5
-        from PyQt5.QtWidgets import (
+        from PyQt5.QtWidgets import ()
             QApplication, QMainWindow, QWidget, QLabel, QPushButton, QVBoxLayout,
             QHBoxLayout, QLineEdit, QTextEdit, QProgressBar, QFileDialog, QMessageBox,
             QScrollArea, QFrame, QSplitter, QComboBox, QCheckBox, QGroupBox, QTabWidget,
@@ -245,14 +257,17 @@ except ImportError:
 # Additional Qt Widgets imports
 try:
     # First try PyQt6
-    from PyQt6.QtWidgets import (
+    try:
+    from PyQt6.QtWidgets import ()
+except ImportError:
+    from PyQt5.QtWidgets import ()
         QTableWidgetItem, QHeaderView, QAbstractItemView, QStyleFactory, QGraphicsOpacityEffect,
         QDoubleSpinBox # Added DoubleSpinBox for float values
     )
 except ImportError:
     try:
         # Then try PyQt5
-        from PyQt5.QtWidgets import (
+        from PyQt5.QtWidgets import ()
             QTableWidgetItem, QHeaderView, QAbstractItemView, QStyleFactory, QGraphicsOpacityEffect,
             QDoubleSpinBox # Added DoubleSpinBox for float values
         )
@@ -356,7 +371,7 @@ except ImportError as e:
 
 try:
     # Import advanced features components if available
-    from advanced_features import (
+    from advanced_features import ()
         RecentFilesManager, RecentFilesMenu,
         AutoUpdater, UpdateStatus, UpdateDialog,
         SystemTrayManager, NotificationType,
@@ -480,7 +495,7 @@ except ImportError as e:
 
 
 # Application metadata (should be defined once, ideally in a config file or main.py)
-# Keeping here for UI module's self-sufficiency if needed, but main.py is the source of truth
+# Keeping here for UI module's self-sufficiency if needed, but main.py is the source of truth'
 APP_NAME = "YouTube Transcriber Pro"
 APP_VERSION = "1.0.0" # Updated version
 
@@ -517,13 +532,13 @@ class SettingsDialog(QDialog):
     settings_saved = pyqtSignal(dict) # Signal to emit when settings are saved
 
     def __init__(self, current_settings: Dict[str, Any], parent: Optional[QWidget] = None):
-        """
+        """"
         Initialize the Settings Dialog.
 
         Args:
             current_settings: The current application settings dictionary.
             parent: The parent widget.
-        """
+        """"
         super().__init__(parent)
         self.setWindowTitle(f"{APP_NAME} - Settings")
         self.setMinimumSize(Dimensions.DIALOG_MIN_WIDTH, Dimensions.DIALOG_MIN_HEIGHT)
@@ -556,7 +571,7 @@ class SettingsDialog(QDialog):
         # Use .get with default and Path.home() for a more robust default
         default_output_dir = str(Path.home() / "Downloads" / "YouTubeTranscriber")
         self.output_dir_edit.setText(self.settings.get("output_dir", default_output_dir))
-        self.browse_output_button = style_manager.create_modern_button(
+        self.browse_output_button = style_manager.create_modern_button()
             "", parent=self.general_tab, is_flat=True,
             icon=IconSet.get_icon(IconSet.ICON_BROWSE) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_MEDIUM if Dimensions else QSize(24,24)
         )
@@ -648,7 +663,7 @@ class SettingsDialog(QDialog):
         # Use .get with default and Path.home() for a more robust default
         default_cache_dir = str(Path.home() / ".ytpro_cache")
         self.cache_dir_edit.setText(self.settings.get("cache_dir", default_cache_dir))
-        self.browse_cache_button = style_manager.create_modern_button(
+        self.browse_cache_button = style_manager.create_modern_button()
             "", parent=self.cache_tab, is_flat=True,
             icon=IconSet.get_icon(IconSet.ICON_BROWSE) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_MEDIUM if Dimensions else QSize(24,24)
         )
@@ -676,7 +691,7 @@ class SettingsDialog(QDialog):
         self.cache_stats_label = QLabel("Loading cache stats...", self.cache_tab)
         self.cache_layout.addRow("Current Cache:", self.cache_stats_label)
 
-        self.clear_cache_button = style_manager.create_modern_button(
+        self.clear_cache_button = style_manager.create_modern_button()
             "Clear Cache", parent=self.cache_tab, is_danger=True,
             icon=IconSet.get_icon(IconSet.ICON_REMOVE) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_MEDIUM if Dimensions else QSize(24,24)
         )
@@ -714,7 +729,7 @@ class SettingsDialog(QDialog):
         self.update_layout.addRow("Update URL:", self.update_url_edit)
 
         # Check for Updates Button
-        self.check_now_button = style_manager.create_modern_button(
+        self.check_now_button = style_manager.create_modern_button()
             "Check for Updates Now", parent=self.update_tab, is_primary=True,
             icon=IconSet.get_icon(IconSet.ICON_REFRESH) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_MEDIUM if Dimensions else QSize(24,24)
         )
@@ -768,7 +783,7 @@ class SettingsDialog(QDialog):
         """Request and display current cache statistics."""
         # This should ideally be handled by the ApplicationManager
         # which has access to the CacheManager instance.
-        # We'll emit a signal requesting the stats, and AppManager will respond.
+        # We'll emit a signal requesting the stats, and AppManager will respond.'
         # Need a signal like `request_cache_stats = pyqtSignal()` in MainWindow
         # and a slot in AppManager that calls CacheManager.get_cache_stats()
         # and emits a signal back with the results, connected to a slot here.
@@ -789,7 +804,7 @@ class SettingsDialog(QDialog):
 
     def _clear_cache(self):
         """Request to clear the cache."""
-        reply = QMessageBox.question(self, "Confirm Clear Cache",
+        reply = QMessageBox.question(self, "Confirm Clear Cache",)
                                      "Are you sure you want to clear the entire cache? This cannot be undone.",
                                      QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                                      QMessageBox.StandardButton.No)
@@ -973,13 +988,13 @@ class ShortcutConfigDialog(QDialog):
     shortcuts_saved = pyqtSignal(dict) # Emits the new shortcut configuration dictionary
 
     def __init__(self, current_shortcuts: Dict[ShortcutAction, Tuple[str, bool]], parent: Optional[QWidget] = None):
-        """
+        """"
         Initialize the Shortcut Configuration Dialog.
 
         Args:
             current_shortcuts: Dictionary of current shortcut configurations.
             parent: The parent widget.
-        """
+        """"
         super().__init__(parent)
         self.setWindowTitle(f"{APP_NAME} - Configure Shortcuts")
         self.setMinimumSize(500, 400)
@@ -1048,14 +1063,14 @@ class ShortcutConfigDialog(QDialog):
             checkbox_layout.setContentsMargins(0, 0, 0, 0)
             self.shortcut_table.setCellWidget(row, 2, checkbox_widget)
 
-            # Store the action in the row's data (optional, but can be useful)
+            # Store the action in the row's data (optional, but can be useful)'
             # self.shortcut_table.verticalHeaderItem(row).setData(Qt.UserRole, action)
 
 
     def _restore_defaults(self):
         """Restore shortcut configurations to default values."""
         logger.info("Restoring shortcut defaults.")
-        # Get default configs from KeyboardManager (assuming it's the parent or accessible)
+        # Get default configs from KeyboardManager (assuming it's the parent or accessible)'
         if self.parent() and hasattr(self.parent(), 'app_manager') and self.parent().app_manager and hasattr(self.parent().app_manager, 'keyboard_manager') and self.parent().app_manager.keyboard_manager:
              default_configs = self.parent().app_manager.keyboard_manager._default_configs.copy()
              self._current_shortcuts = default_configs
@@ -1176,14 +1191,14 @@ class TaskListItem(QFrame):
         self.actions_layout.setSpacing(Spacing.XS)
         self.actions_layout.setAlignment(Qt.AlignmentFlag.AlignTop) # Align actions to the top
 
-        self.cancel_button = style_manager.create_modern_button(
+        self.cancel_button = style_manager.create_modern_button()
             "", parent=self, is_flat=True, icon=IconSet.get_icon(IconSet.ICON_CANCEL) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_SMALL if Dimensions else QSize(16,16)
         )
         self.cancel_button.setToolTip("Cancel Task")
         self.cancel_button.clicked.connect(lambda: self.cancel_requested.emit(self.url))
         self.actions_layout.addWidget(self.cancel_button)
 
-        self.remove_button = style_manager.create_modern_button(
+        self.remove_button = style_manager.create_modern_button()
             "", parent=self, is_flat=True, icon=IconSet.get_icon(IconSet.ICON_REMOVE) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_SMALL if Dimensions else QSize(16,16)
         )
         self.remove_button.setToolTip("Remove Task")
@@ -1191,7 +1206,7 @@ class TaskListItem(QFrame):
         self.remove_button.setVisible(False) # Initially hidden
         self.actions_layout.addWidget(self.remove_button)
 
-        self.retry_button = style_manager.create_modern_button(
+        self.retry_button = style_manager.create_modern_button()
             "", parent=self, is_flat=True, icon=IconSet.get_icon(IconSet.ICON_REFRESH) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_SMALL if Dimensions else QSize(16,16)
         )
         self.retry_button.setToolTip("Retry Task")
@@ -1199,7 +1214,7 @@ class TaskListItem(QFrame):
         self.retry_button.setVisible(False) # Initially hidden
         self.actions_layout.addWidget(self.retry_button)
 
-        self.open_output_button = style_manager.create_modern_button(
+        self.open_output_button = style_manager.create_modern_button()
             "", parent=self, is_flat=True, icon=IconSet.get_icon(IconSet.ICON_OPEN) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_SMALL if Dimensions else QSize(16,16)
         )
         self.open_output_button.setToolTip("Open Output Directory")
@@ -1342,12 +1357,12 @@ class MainWindow(QMainWindow):
 
 
     def __init__(self, app_manager: Optional[QObject] = None):
-        """
+        """"
         Initialize the main window.
 
         Args:
             app_manager: Optional reference to the ApplicationManager.
-        """
+        """"
         super().__init__()
         self.app_manager = app_manager # Store reference to application manager
         self.settings = {} # To store current application settings
@@ -1404,21 +1419,21 @@ class MainWindow(QMainWindow):
         self.input_actions_layout.setContentsMargins(0, 0, 0, 0)
         self.input_actions_layout.setSpacing(Spacing.S if Spacing else 8)
 
-        self.add_button = style_manager.create_modern_button(
+        self.add_button = style_manager.create_modern_button()
             "Add to Batch", parent=self.input_card, is_primary=True,
             icon=IconSet.get_icon(IconSet.ICON_ADD) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_MEDIUM if Dimensions else QSize(24,24)
         )
         self.add_button.clicked.connect(self._add_urls_to_batch)
         self.input_actions_layout.addWidget(self.add_button)
 
-        self.paste_button = style_manager.create_modern_button(
+        self.paste_button = style_manager.create_modern_button()
             "Paste from Clipboard", parent=self.input_card, is_flat=True,
             icon=IconSet.get_icon(IconSet.ICON_CLIPBOARD) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_MEDIUM if Dimensions else QSize(24,24)
         )
         self.paste_button.clicked.connect(self._paste_from_clipboard)
         self.input_actions_layout.addWidget(self.paste_button)
 
-        self.clear_input_button = style_manager.create_modern_button(
+        self.clear_input_button = style_manager.create_modern_button()
             "Clear Input", parent=self.input_card, is_flat=True,
             icon=IconSet.get_icon(IconSet.ICON_REMOVE) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_MEDIUM if Dimensions else QSize(24,24)
         )
@@ -1442,7 +1457,7 @@ class MainWindow(QMainWindow):
 
 
         self.options_heading = style_manager.create_modern_heading("Options", self.options_card, is_subheading=True) if hasattr(style_manager, 'create_modern_heading') else QLabel("Options", self.options_card)
-        # Add heading to the layout (FormLayout doesn't have addWidget directly, need a container or addRow)
+        # Add heading to the layout (FormLayout doesn't have addWidget directly, need a container or addRow)'
         self.options_layout.addRow(self.options_heading)
 
 
@@ -1480,7 +1495,7 @@ class MainWindow(QMainWindow):
         default_output_dir = self.settings.get("output_dir", str(Path.home() / "Downloads" / "YouTubeTranscriber"))
         self.output_dir_edit.setText(default_output_dir)
 
-        self.browse_output_button = style_manager.create_modern_button(
+        self.browse_output_button = style_manager.create_modern_button()
             "", parent=self.options_card, is_flat=True,
             icon=IconSet.get_icon(IconSet.ICON_BROWSE) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_MEDIUM if Dimensions else QSize(24,24)
         )
@@ -1520,14 +1535,14 @@ class MainWindow(QMainWindow):
         self.control_layout.setContentsMargins(Spacing.M if Spacing else 12, Spacing.M if Spacing else 12, Spacing.M if Spacing else 12, Spacing.M if Spacing else 12)
         self.control_layout.setSpacing(Spacing.M if Spacing else 12)
 
-        self.start_button = style_manager.create_modern_button(
+        self.start_button = style_manager.create_modern_button()
             "Start Batch", parent=self.control_card, is_primary=True,
             icon=IconSet.get_icon(IconSet.ICON_PLAY) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_MEDIUM if Dimensions else QSize(24,24)
         )
         self.start_button.clicked.connect(self._start_batch_processing)
         self.control_layout.addWidget(self.start_button)
 
-        self.pause_button = style_manager.create_modern_button(
+        self.pause_button = style_manager.create_modern_button()
             "Pause", parent=self.control_card,
             icon=IconSet.get_icon(IconSet.ICON_PAUSE) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_MEDIUM if Dimensions else QSize(24,24)
         )
@@ -1535,7 +1550,7 @@ class MainWindow(QMainWindow):
         self.pause_button.setEnabled(False) # Disabled when not running
         self.control_layout.addWidget(self.pause_button)
 
-        self.cancel_button = style_manager.create_modern_button(
+        self.cancel_button = style_manager.create_modern_button()
             "Cancel", parent=self.control_card, is_danger=True,
             icon=IconSet.get_icon(IconSet.ICON_CANCEL) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_MEDIUM if Dimensions else QSize(24,24)
         )
@@ -1571,7 +1586,7 @@ class MainWindow(QMainWindow):
         self.task_list_layout.addWidget(self.task_scroll_area, 1) # Give task list stretch factor
 
         # Add a button to clear completed tasks
-        self.clear_completed_button = style_manager.create_modern_button(
+        self.clear_completed_button = style_manager.create_modern_button()
             "Clear Completed", parent=self.task_list_card, is_flat=True,
             icon=IconSet.get_icon(IconSet.ICON_REMOVE) if IconSet else QIcon(), icon_size=Dimensions.ICON_SIZE_MEDIUM if Dimensions else QSize(24,24)
         )
@@ -1643,7 +1658,7 @@ class MainWindow(QMainWindow):
              # This is connected in AppManager now: self.recent_files_menu.file_opened.connect(self.app_manager._open_recent_file)
              # Connect the RecentFilesManager's signal to this menu's update method
              # This is connected in AppManager now: self.app_manager.recent_files_changed.connect(self.recent_files_menu.update_menu)
-             # Connect the menu's clear recent files signal back to AppManager
+             # Connect the menu's clear recent files signal back to AppManager'
              # This is connected in AppManager now: self.recent_files_menu.clear_recent_files_requested.connect(self.app_manager._clear_recent_files)
 
              # Add the recent files menu to the file menu
@@ -1842,7 +1857,7 @@ class MainWindow(QMainWindow):
         """Cancel batch processing."""
         logger.info("Cancel batch button clicked.")
         # Confirm cancellation with the user
-        reply = QMessageBox.question(self, "Confirm Cancellation",
+        reply = QMessageBox.question(self, "Confirm Cancellation",)
                                      "Are you sure you want to cancel the current batch?",
                                      QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                                      QMessageBox.StandardButton.No)
@@ -1862,16 +1877,16 @@ class MainWindow(QMainWindow):
         if directory:
             self.output_dir_edit.setText(directory)
             # Optionally save this selected directory to settings immediately
-            # This should be handled by the Settings Dialog or AppManager's settings saving logic
+            # This should be handled by the Settings Dialog or AppManager's settings saving logic'
             # For now, just update the UI field.
 
 
     @pyqtSlot(dict)
     def _update_ui_progress(self, update: Dict[str, Any]):
-        """
+        """"
         Slot to receive progress updates from the ApplicationManager and update the UI.
         This slot is called from the main GUI thread, so direct UI updates are safe.
-        """
+        """"
         update_type = update.get("type")
 
         if update_type == "task_progress":
@@ -2150,7 +2165,7 @@ class MainWindow(QMainWindow):
             task_widget.deleteLater() # Schedule for deletion
 
             # If the task was running/pending, this removal should also cancel it in the batch processor
-            # The signal remove_task_requested should be connected to the BatchProcessor's remove method
+            # The signal remove_task_requested should be connected to the BatchProcessor's remove method'
 
             # Update UI state if the last task was removed
             if not self.task_widgets and self.batch_processor and BatchStatus:
@@ -2196,7 +2211,7 @@ class MainWindow(QMainWindow):
         """Handle window close event."""
         # Ask for confirmation if batch is running
         if self.batch_processor and BatchStatus and self.batch_processor.status in [BatchStatus.RUNNING, BatchStatus.PAUSED, BatchStatus.THROTTLED, BatchStatus.STOPPING]:
-            reply = QMessageBox.question(self, "Confirm Exit",
+            reply = QMessageBox.question(self, "Confirm Exit",)
                                          "A batch is currently in progress. Are you sure you want to exit?",
                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                                          QMessageBox.StandardButton.No)
@@ -2204,7 +2219,7 @@ class MainWindow(QMainWindow):
             if reply == QMessageBox.StandardButton.Yes:
                 # Initiate graceful shutdown of the batch processor
                 if self.batch_processor:
-                    self.batch_processor.shutdown(wait=False) # Don't wait for shutdown here
+                    self.batch_processor.shutdown(wait=False) # Don't wait for shutdown here'
                 event.accept() # Accept the close event
             else:
                 event.ignore() # Ignore the close event
@@ -2221,7 +2236,7 @@ class MainWindow(QMainWindow):
         # Ensure SettingsDialog class is available
         if 'SettingsDialog' in globals() and SettingsDialog is not None:
              settings_dialog = SettingsDialog(current_settings, self)
-             # Connect the dialog's settings_saved signal to a slot in ApplicationManager
+             # Connect the dialog's settings_saved signal to a slot in ApplicationManager'
              if self.app_manager and hasattr(self.app_manager, '_handle_settings_saved'):
                   settings_dialog.settings_saved.connect(self.app_manager._handle_settings_saved)
              settings_dialog.exec() # Show dialog modally
@@ -2253,7 +2268,7 @@ class MainWindow(QMainWindow):
         # Ensure ShortcutConfigDialog class is available
         if 'ShortcutConfigDialog' in globals() and ShortcutConfigDialog is not None:
              shortcut_dialog = ShortcutConfigDialog(current_shortcuts, self)
-             # Connect the dialog's shortcuts_saved signal to a slot in ApplicationManager
+             # Connect the dialog's shortcuts_saved signal to a slot in ApplicationManager'
              if self.app_manager and hasattr(self.app_manager, '_handle_shortcuts_saved'):
                   shortcut_dialog.shortcuts_saved.connect(self.app_manager._handle_shortcuts_saved)
              shortcut_dialog.exec() # Show dialog modally

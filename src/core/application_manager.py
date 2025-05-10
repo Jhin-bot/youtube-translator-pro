@@ -1,7 +1,7 @@
-"""
+""""
 Application Manager for YouTube Translator Pro.
 Serves as the central coordinator for all application components.
-"""
+""""
 
 import os
 import sys
@@ -12,12 +12,18 @@ from typing import Dict, Any, Optional, List, Tuple
 from pathlib import Path
 
 try:
+    try:
     from PyQt6.QtCore import QObject, pyqtSignal, QSettings, QTimer
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal, QSettings, QTimer
 except ImportError:
     from PyQt5.QtCore import QObject, pyqtSignal, QSettings, QTimer
 
 try:
+    try:
     from PyQt6.QtWidgets import QApplication
+except ImportError:
+    from PyQt5.QtWidgets import QApplication
 except ImportError:
     from PyQt5.QtWidgets import QApplication
 
@@ -28,10 +34,10 @@ from src.config import load_settings, save_settings, DEFAULT_SETTINGS, VERSION
 logger = logging.getLogger(__name__)
 
 class ApplicationManager(QObject):
-    """
+    """"
     Central manager for all application features.
     Coordinates UI, processing, settings, and advanced features.
-    """
+    """"
     # Define signals for communication between components
     error_occurred = pyqtSignal(str, str)
     batch_status_changed = pyqtSignal(object)  # BatchStatus enum
@@ -42,13 +48,13 @@ class ApplicationManager(QObject):
     notification_requested = pyqtSignal(str, str, object)  # NotificationType enum
     
     def __init__(self, app: QApplication, splash=None):
-        """
+        """"
         Initialize the Application Manager.
         
         Args:
             app: The QApplication instance
             splash: Optional splash screen instance
-        """
+        """"
         super().__init__()
         self.app = app
         self._splash = splash
@@ -88,21 +94,21 @@ class ApplicationManager(QObject):
             sys.excepthook = self.crash_handler.handle_exception
             
             # Initialize cache manager
-            self.cache_manager = CacheManager(
+            self.cache_manager = CacheManager()
                 cache_dir=self.settings.get("cache_dir"),
                 max_size_mb=self.settings.get("cache_size_mb", 1000),
                 ttl_seconds=self.settings.get("cache_ttl", 60*60*24*30)
             )
             
             # Initialize batch processor
-            self.batch_processor = BatchProcessor(
+            self.batch_processor = BatchProcessor()
                 cache_manager=self.cache_manager,
                 concurrency=self.settings.get("concurrency", 2),
                 parent=self
             )
             
             # Initialize utility components
-            self.recent_files_manager = RecentFilesManager(
+            self.recent_files_manager = RecentFilesManager()
                 max_files=self.settings.get("max_recent_files", 20),
                 parent=self
             )
@@ -126,7 +132,7 @@ class ApplicationManager(QObject):
                 
                 # Allow device info only if explicitly permitted
                 if self.settings.get("telemetry_device", False):
-                    sys_info.update({
+                    sys_info.update({)
                         "cpu": platform.processor(),
                         "architecture": platform.machine()
                     })
@@ -243,7 +249,7 @@ class ApplicationManager(QObject):
         Args:
             wait: If True, wait for background processes to finish
             timeout: Maximum time to wait for processes
-        """
+        """"
         logger.info("Application shutting down...")
         
         # Save session
@@ -307,7 +313,7 @@ class ApplicationManager(QObject):
     def _handle_resource_warning(self, warning_data: Dict[str, Any]):
         """Handle resource warning signals."""
         if 'message' in warning_data and 'details' in warning_data:
-            self.notification_requested.emit(
+            self.notification_requested.emit()
                 "Resource Warning", 
                 warning_data['message'], 
                 warning_data.get('type', 'WARNING')

@@ -1,6 +1,6 @@
-"""
+""""
 Configuration and fixtures for pytest.
-"""
+""""
 
 import os
 import sys

@@ -1,7 +1,7 @@
-"""
+""""
 Localization utilities for YouTube Translator Pro.
 Supports multiple languages and dynamic language switching.
-"""
+""""
 
 import os
 import json
@@ -15,19 +15,19 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 class LocalizationManager:
-    """
+    """"
     Manages localization of strings throughout the application.
     Supports dynamic language switching and fallback to default language.
-    """
+    """"
     
     def __init__(self, default_language: str = "en", auto_detect: bool = True):
-        """
+        """"
         Initialize the localization manager.
         
         Args:
             default_language: Default language code
             auto_detect: Whether to auto-detect system language
-        """
+        """"
         self.default_language = default_language
         self.current_language = default_language
         self.strings: Dict[str, Dict[str, str]] = {}
@@ -51,7 +51,7 @@ class LocalizationManager:
         base_path = Path(__file__).parent.parent.parent  # Go up to project root
         loc_dir = base_path / "localization"
         
-        # Create directory if it doesn't exist
+        # Create directory if it doesn't exist'
         if not loc_dir.exists():
             loc_dir.mkdir(parents=True)
             logger.info(f"Created localization directory: {loc_dir}")
@@ -152,7 +152,7 @@ class LocalizationManager:
             logger.error(f"Error creating default language file: {e}")
     
     def set_language(self, language_code: str) -> bool:
-        """
+        """"
         Set the current language.
         
         Args:
@@ -160,7 +160,7 @@ class LocalizationManager:
             
         Returns:
             True if language was set successfully, False otherwise
-        """
+        """"
         if language_code not in self.strings:
             logger.warning(f"Language '{language_code}' not available")
             return False
@@ -170,7 +170,7 @@ class LocalizationManager:
         return True
     
     def get_string(self, key: str, default: Optional[str] = None) -> str:
-        """
+        """"
         Get a localized string by key.
         
         Args:
@@ -179,7 +179,7 @@ class LocalizationManager:
             
         Returns:
             Localized string or default/key if not found
-        """
+        """"
         # Try current language
         if self.current_language in self.strings and key in self.strings[self.current_language]:
             return self.strings[self.current_language][key]
@@ -194,14 +194,14 @@ class LocalizationManager:
         return default if default is not None else key
     
     def add_string(self, language_code: str, key: str, value: str) -> None:
-        """
+        """"
         Add or update a string for a specific language.
         
         Args:
             language_code: Language code
             key: String identifier key
             value: String value
-        """
+        """"
         if language_code not in self.strings:
             self.strings[language_code] = {}
             if language_code not in self.available_languages:
@@ -229,12 +229,12 @@ class LocalizationManager:
             logger.error(f"Error saving language file {file_path}: {e}")
     
     def get_available_languages(self) -> Dict[str, str]:
-        """
+        """"
         Get a dictionary of available languages with their native names.
         
         Returns:
             Dictionary mapping language codes to their native names
-        """
+        """"
         return self.available_languages
     
     def get_language_name(self, language_code: str) -> str:
@@ -257,12 +257,12 @@ class LocalizationManager:
         return language_names.get(language_code, language_code.upper())
         
     def detect_system_language(self) -> Optional[str]:
-        """
+        """"
         Detect the system language and return the corresponding language code.
         
         Returns:
             Language code (e.g., 'en', 'fr') or None if detection fails
-        """
+        """"
         try:
             # Get system locale
             if platform.system() == 'Windows':
@@ -287,12 +287,12 @@ class LocalizationManager:
         return None
 
     def get_language_names(self) -> Dict[str, str]:
-        """
+        """"
         Get a dictionary of language names for all available languages.
         
         Returns:
             Dictionary mapping language codes to their native names
-        """
+        """"
         return {code: self.get_language_name(code) for code in self.available_languages}
 
 
@@ -301,7 +301,7 @@ localization = LocalizationManager()
 
 # Helper function for easier access
 def get_string(key: str, default: Optional[str] = None) -> str:
-    """
+    """"
     Get a localized string by key.
     
     Args:
@@ -310,5 +310,5 @@ def get_string(key: str, default: Optional[str] = None) -> str:
         
     Returns:
         Localized string
-    """
+    """"
     return localization.get_string(key, default)

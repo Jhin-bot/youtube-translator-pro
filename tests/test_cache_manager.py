@@ -1,6 +1,6 @@
-"""
+""""
 Tests for the CacheManager component.
-"""
+""""
 
 import json
 import time
@@ -25,7 +25,7 @@ class TestCacheManager:
     
     def test_cache_manager_initialization(self, temp_cache_dir):
         """Test that CacheManager initializes correctly."""
-        cache_manager = CacheManager(
+        cache_manager = CacheManager()
             cache_dir=temp_cache_dir,
             max_size_mb=100,
             ttl_days=1,
@@ -59,7 +59,7 @@ class TestCacheManager:
         
         # Cache the audio file
         video_id = "test_video_id"
-        cached_path = cache_manager.cache_audio(
+        cached_path = cache_manager.cache_audio()
             video_id=video_id,
             audio_file=str(test_audio),
             metadata={"title": "Test Video"}
@@ -87,7 +87,7 @@ class TestCacheManager:
         
         # Cache the audio file
         video_id = "test_video_id"
-        cached_path = cache_manager.cache_audio(
+        cached_path = cache_manager.cache_audio()
             video_id=video_id,
             audio_file=str(test_audio),
             metadata={"title": "Test Video"}
@@ -127,7 +127,7 @@ class TestCacheManager:
         
         # Try to cache a file
         video_id = "test_video_id"
-        cached_path = cache_manager.cache_audio(
+        cached_path = cache_manager.cache_audio()
             video_id=video_id,
             audio_file=str(test_audio)
         )
@@ -148,7 +148,7 @@ class TestCacheManager:
         test_audio.write_bytes(b"test audio data")
         
         # Initialize cache manager with a short TTL
-        cache_manager = CacheManager(
+        cache_manager = CacheManager()
             cache_dir=temp_cache_dir,
             ttl_days=0.0001,  # Very short TTL (~9 seconds)
             enabled=True
@@ -156,7 +156,7 @@ class TestCacheManager:
         
         # Cache the audio file
         video_id = "test_video_id"
-        cache_manager.cache_audio(
+        cache_manager.cache_audio()
             video_id=video_id,
             audio_file=str(test_audio)
         )
@@ -182,7 +182,7 @@ class TestCacheManager:
             test_files.append(test_file)
         
         # Initialize cache manager with a small max size - make it 5MB to allow 2 files at most
-        cache_manager = CacheManager(
+        cache_manager = CacheManager()
             cache_dir=temp_cache_dir,
             max_size_mb=5,  # Only 5MB max (2 files max)
             enabled=True
@@ -190,7 +190,7 @@ class TestCacheManager:
         
         # First, add the "oldest" files with explicit timestamps
         for i in range(3):  # Add 3 files = 6MB total
-            cache_manager.cache_audio(
+            cache_manager.cache_audio()
                 video_id=f"test_video_{i}",
                 audio_file=str(test_files[i])
             )
@@ -233,7 +233,7 @@ class TestCacheManager:
         
         # Cache the audio file
         video_id = "test_video_id"
-        cache_manager.cache_audio(
+        cache_manager.cache_audio()
             video_id=video_id,
             audio_file=str(test_audio)
         )

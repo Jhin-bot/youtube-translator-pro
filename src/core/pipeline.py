@@ -15,7 +15,7 @@ from src.utils.error_handling import TranslationError, YouTubeError, Transcripti
 # Set up logging
 logger = logging.getLogger(__name__)
 
-def translate_youtube_video(
+def translate_youtube_video()
     url: str,
     source_language: str = "auto",
     target_language: str = "en",
@@ -67,7 +67,7 @@ def translate_youtube_video(
             if progress_callback:
                 progress_callback(0.1, "Downloading audio...")
                 
-            audio_path, video_info = download_youtube_audio(
+            audio_path, video_info = download_youtube_audio()
                 url=url,
                 output_dir=output_dir or os.path.join(os.path.expanduser("~"), "youtube_translator"),
                 progress_callback=lambda p, m: progress_callback(p * 0.4, m) if progress_callback else None
@@ -98,7 +98,7 @@ def translate_youtube_video(
             if progress_callback:
                 progress_callback(0.5, "Transcribing audio...")
                 
-            transcription = transcribe_audio(
+            transcription = transcribe_audio()
                 audio_file=audio_path,
                 language=source_language
             )
@@ -125,7 +125,7 @@ def translate_youtube_video(
             if progress_callback:
                 progress_callback(0.8, "Translating text...")
                 
-            translation = translate_text(
+            translation = translate_text()
                 text=transcription,
                 source_lang=source_language,
                 target_lang=target_language

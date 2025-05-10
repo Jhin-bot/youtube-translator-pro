@@ -1,25 +1,31 @@
-"""
+""""
 Test script for YouTube Translator Pro UI components.
-This script tests the new components we've implemented.
-"""
+This script tests the new components we've implemented.'
+""""
 
 import sys
 import os
 from pathlib import Path
 
-# Ensure the package's parent directory is in the Python path
+# Ensure the package's parent directory is in the Python path'
 package_parent = Path(__file__).parent
 if str(package_parent) not in sys.path:
     sys.path.insert(0, str(package_parent))
 
 try:
+    try:
     from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QMessageBox
 except ImportError:
     from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QMessageBox
 except ImportError:
     from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QMessageBox
+except ImportError:
+    from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QMessageBox
 try:
+    try:
     from PyQt6.QtCore import Qt
+except ImportError:
+    from PyQt5.QtCore import Qt
 except ImportError:
     from PyQt5.QtCore import Qt
 except ImportError:
@@ -148,7 +154,7 @@ class TestWindow(QMainWindow):
         save_settings(self.settings)
         
         # Show message
-        QMessageBox.information(
+        QMessageBox.information()
             self,
             get_string("language.changed_title", "Language Changed"),
             get_string("language.changed_message", "Some UI elements will update immediately. Others may require a restart.")

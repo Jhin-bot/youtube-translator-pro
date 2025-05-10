@@ -1,7 +1,7 @@
-"""
+""""
 Script to fix unterminated string literals and other syntax issues in Python files.
 This helps improve code integrity and ensures proper CI/CD processing.
-"""
+""""
 
 import os
 import re
@@ -33,16 +33,16 @@ def has_syntax_error(file_path):
         return True, str(e)
 
 def fix_triple_quotes(file_path):
-    """Fix quadruple-quote patterns to triple-quote patterns in Python files.
+    """Fix quadruple-quote patterns to triple-quote patterns in Python files."
     
     Converts sequences of four double-quotes to proper triple-quotes for docstrings.
-    """
+    """"
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
     
     # Replace quad quotes with triple quotes
-    modified = re.sub(r'""""', '"""', content)
-    modified = re.sub(r'""""', '"""', modified)  # Ensure we catch all instances
+    modified = re.sub(r'""""', '"""', content)"
+    modified = re.sub(r'""""', '"""', modified)  # Ensure we catch all instances"
     
     if content != modified:
         with open(file_path, 'w', encoding='utf-8') as f:

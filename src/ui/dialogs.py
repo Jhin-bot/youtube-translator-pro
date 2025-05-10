@@ -1,26 +1,32 @@
-"""
+""""
 Dialog components for YouTube Translator Pro.
 Contains all dialogs used in the application.
-"""
+""""
 
 import logging
 from typing import Dict, Any, Optional
 from pathlib import Path
 
 try:
+    try:
     from PyQt6.QtCore import Qt
+except ImportError:
+    from PyQt5.QtCore import Qt
 except ImportError:
     from PyQt5.QtCore import Qt
 
 try:
-    from PyQt6.QtWidgets import (
+    try:
+    from PyQt6.QtWidgets import ()
+except ImportError:
+    from PyQt5.QtWidgets import ()
         QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QTabWidget, QWidget, QFormLayout, QLineEdit, QSpinBox,
         QCheckBox, QComboBox, QFileDialog, QTextEdit, QGroupBox,
         QDialogButtonBox, QScrollArea
     )
 except ImportError:
-    from PyQt5.QtWidgets import (
+    from PyQt5.QtWidgets import ()
         QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QTabWidget, QWidget, QFormLayout, QLineEdit, QSpinBox,
         QCheckBox, QComboBox, QFileDialog, QTextEdit, QGroupBox,
@@ -37,13 +43,13 @@ class SettingsDialog(QDialog):
     """Dialog for application settings."""
     
     def __init__(self, current_settings: Dict[str, Any], parent=None):
-        """
+        """"
         Initialize the settings dialog.
         
         Args:
             current_settings: The current application settings
             parent: The parent widget
-        """
+        """"
         super().__init__(parent)
         self.current_settings = current_settings.copy()
         self.style_manager = StyleManager()
@@ -203,7 +209,7 @@ class SettingsDialog(QDialog):
         update_layout = QFormLayout(update_group)
         
         self.auto_check_updates = QCheckBox("Check for updates automatically")
-        self.auto_check_updates.setChecked(
+        self.auto_check_updates.setChecked()
             self.current_settings.get("update_config", {}).get("auto_check", True)
         )
         update_layout.addRow("", self.auto_check_updates)
@@ -212,7 +218,7 @@ class SettingsDialog(QDialog):
         self.update_interval_spin.setMinimum(1)
         self.update_interval_spin.setMaximum(168)
         self.update_interval_spin.setSuffix(" hours")
-        self.update_interval_spin.setValue(
+        self.update_interval_spin.setValue()
             self.current_settings.get("update_config", {}).get("check_interval", 24)
         )
         update_layout.addRow("Check Interval:", self.update_interval_spin)
@@ -225,7 +231,7 @@ class SettingsDialog(QDialog):
     def _browse_output_dir(self):
         """Open a file dialog to select the output directory."""
         current_dir = self.output_dir_edit.text() or Path.home()
-        directory = QFileDialog.getExistingDirectory(
+        directory = QFileDialog.getExistingDirectory()
             self,
             "Select Output Directory",
             str(current_dir)
@@ -234,12 +240,12 @@ class SettingsDialog(QDialog):
             self.output_dir_edit.setText(directory)
     
     def get_settings(self) -> Dict[str, Any]:
-        """
+        """"
         Get the updated settings from the dialog.
         
         Returns:
             Dictionary containing the updated settings
-        """
+        """"
         # Get settings from UI components
         settings = {
             "theme": self.theme_combo.currentText().lower(),
@@ -266,12 +272,12 @@ class AboutDialog(QDialog):
     """Dialog showing information about the application."""
     
     def __init__(self, parent=None):
-        """
+        """"
         Initialize the about dialog.
         
         Args:
             parent: The parent widget
-        """
+        """"
         super().__init__(parent)
         self.style_manager = StyleManager()
         
@@ -298,7 +304,7 @@ class AboutDialog(QDialog):
         layout.addSpacing(20)
         
         # Description
-        description = (
+        description = ()
             "YouTube Translator Pro is an advanced desktop application for transcribing "
             "and translating YouTube videos. It utilizes cutting-edge AI models to provide "
             "high-quality transcriptions and translations in multiple languages."
@@ -348,14 +354,14 @@ class ErrorDialog(QDialog):
     """Dialog for displaying error information."""
     
     def __init__(self, message: str, details: str, parent=None):
-        """
+        """"
         Initialize the error dialog.
         
         Args:
             message: The error message
             details: Detailed error information
             parent: The parent widget
-        """
+        """"
         super().__init__(parent)
         self.style_manager = StyleManager()
         self.message = message

@@ -9,6 +9,7 @@ import logging
 from typing import Dict, Any, List, Tuple, Union
 import time
 import json
+from enum import Enum, auto
 
 # Add requests for HTTP functionality
 try:
@@ -29,12 +30,14 @@ except ImportError:
             return MockResponse()
         def post(self, *args, **kwargs):
             return MockResponse()
+            
+    requests = MockRequests()
     
     requests = MockRequests()
 from datetime import datetime
 from pathlib import Path
 import traceback # Added for better error logging
-from enum import Enum, auto # Added for enum support
+# Enum is already imported above # Added for enum support
 
 try:
     from PyQt6.QtCore import QObject, pyqtSignal as Signal, pyqtSlot as Slot, QSettings, QTimer, Qt, QStandardPaths
@@ -43,58 +46,67 @@ try:
     pyqtSlot = Slot      # For backward compatibility
 except ImportError:
     try:
-        from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QSettings, QTimer, Qt, QStandardPaths
-        from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QDialog, QMenu, QSplashScreen, QSystemTrayIcon
+        # Then try PyQt5
+        from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
+        from PyQt5.QtWidgets import QWidget, QMainWindow, QDialog, QMenu, QMessageBox, QApplication
+        from PyQt5.QtWidgets import QSystemTrayIcon, QSplashScreen, QSettings
+        from PyQt5.QtCore import Qt, QTimer, QStandardPaths
+        logger = logging.getLogger(__name__)
+        logger.info("Using PyQt5 for UI components")
     except ImportError:
-        # Create mock classes if neither PyQt6 nor PyQt5 is available
-        logging.critical("Neither PyQt6 nor PyQt5 is available. UI functionality will be limited.")
+        # Mock implementation if neither PyQt6 nor PyQt5 is available
+        logger = logging.getLogger(__name__)
+        logger.warning("PyQt not available. Using mock UI components")
         
+        # Create mock classes
         class QObject:
-            pass
-            
+            def __init__(self, *args, **kwargs):
+                pass
+
+        # Create Signal class to provide pyqtSignal functionality
         class Signal:
             def __init__(self, *args):
                 pass
+            
             def connect(self, func):
                 pass
+            
             def emit(self, *args):
                 pass
-        
+                
         pyqtSignal = Signal
         pyqtSlot = lambda *args, **kwargs: lambda func: func
         
         class QWidget(QObject):
             def __init__(self, *args, **kwargs):
                 pass
-                
+
         class QMainWindow(QWidget):
             def __init__(self, *args, **kwargs):
                 pass
-                
+
         class QDialog(QWidget):
             def __init__(self, *args, **kwargs):
                 pass
-                
+
         class QMenu(QWidget):
             def __init__(self, *args, **kwargs):
                 pass
-                
+
         class QSystemTrayIcon(QObject):
             def __init__(self, *args, **kwargs):
                 pass
-                
-            # Define enum for ActivationReason
             class ActivationReason(Enum):
                 Trigger = 0
                 DoubleClick = 1
                 MiddleClick = 2
                 Context = 3
                 Unknown = 4
-                
+
         class QSplashScreen(QWidget):
             def __init__(self, *args, **kwargs):
                 pass
-                
+
         class QMessageBox:
             @staticmethod
             def information(*args, **kwargs):
@@ -105,11 +117,11 @@ except ImportError:
             @staticmethod
             def critical(*args, **kwargs):
                 pass
-                
+
         class QSettings:
             def __init__(self, *args, **kwargs):
                 pass
-                
+
         class QTimer(QObject):
             def __init__(self, *args, **kwargs):
                 pass
@@ -117,15 +129,15 @@ except ImportError:
                 pass
             def stop(self):
                 pass
-                
+
         class Qt:
             ApplicationFlags = 0
-                
+
         class QStandardPaths:
             @staticmethod
             def writableLocation(*args):
                 return ""
-                
+
         class QApplication:
             @staticmethod
             def instance():
@@ -139,7 +151,7 @@ except ImportError:
     try:
         from PyQt5.QtNetwork import QSslSocket
     except ImportError:
-        # Create a mock class if needed
+        # Mock class if needed
         class QSslSocket:
             pass
 

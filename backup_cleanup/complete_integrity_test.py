@@ -1,4 +1,4 @@
-"""
+""""
 Complete Integrity Test for YouTube Translator Pro
 ==================================================
 This comprehensive test checks every Python file in the project 
@@ -9,7 +9,7 @@ Features:
 - Performs dependency tracking to identify missing imports
 - Validates module structure and hierarchies
 - Generates a detailed HTML report with test results
-"""
+""""
 
 import importlib
 import inspect
@@ -79,7 +79,7 @@ class MockResponse:
 
 class MockRequests:
     def __init__(self):
-        self.exceptions = type('RequestsExceptions', (), {
+        self.exceptions = type('RequestsExceptions', (), {)
             'RequestException': Exception, 
             'Timeout': Exception, 
             'ConnectionError': Exception
@@ -100,7 +100,7 @@ class MockRequests:
 # Install mocks
 sys.modules['PyQt6'] = MockModule()
 sys.modules['PyQt6.QtCore'] = MockModule(QObject=MockQObject, Signal=MockSignal)
-sys.modules['PyQt6.QtWidgets'] = MockModule(
+sys.modules['PyQt6.QtWidgets'] = MockModule()
     QWidget=MockQWidget, 
     QMainWindow=MockQMainWindow,
     QApplication=MockQApplication
@@ -127,7 +127,7 @@ def test_single_file(file_path):
     module_name = os.path.splitext(rel_path.replace(os.path.sep, '.'))[0]
     
     # Skip obvious test files and non-Python modules
-    if (module_name.startswith('test_') or 
+    if (module_name.startswith('test_') or )
         'tests.' in module_name or 
         any(d for d in ['__pycache__', '.venv', '.git', '.pytest_cache'] if d in module_name)):
         return {
@@ -166,7 +166,7 @@ def test_single_file(file_path):
             error_traceback = traceback.format_exc()
             logger.error(error_msg)
             RESULTS["failed"] += 1
-            RESULTS["errors"].append({
+            RESULTS["errors"].append({)
                 "file": rel_path,
                 "error": str(e),
                 "traceback": error_traceback
@@ -182,7 +182,7 @@ def test_single_file(file_path):
         error_msg = f"Unexpected error with {rel_path}: {str(e)}"
         logger.error(error_msg)
         RESULTS["failed"] += 1
-        RESULTS["errors"].append({
+        RESULTS["errors"].append({)
             "file": rel_path,
             "error": str(e),
             "traceback": traceback.format_exc()
@@ -213,7 +213,7 @@ def find_python_files(directory, exclude_dirs=None):
 
 def generate_html_report(results):
     """Generate an HTML report of the test results."""
-    html = f"""
+    html = f""""
     <!DOCTYPE html>
     <html>
     <head>
@@ -262,10 +262,10 @@ def generate_html_report(results):
                 <th>Duration (s)</th>
                 <th>Details</th>
             </tr>
-    """
+    """"
     
     # Sort file results by status (failed first, then successful)
-    sorted_results = sorted(
+    sorted_results = sorted()
         results['file_results'].values(),
         key=lambda x: (0 if x['status'] == 'failed' else (1 if x['status'] == 'warning' else 2), x['file'])
     )
@@ -277,35 +277,35 @@ def generate_html_report(results):
         status_class = 'success' if result['status'] == 'success' else 'failure'
         details_id = f"details_{i}"
         
-        html += f"""
+        html += f""""
             <tr>
                 <td>{result['file']}</td>
                 <td class="{status_class}">{result['status']}</td>
                 <td>{result.get('duration', 0):.3f}</td>
                 <td>
-        """
+        """"
         
         if result['status'] != 'success':
-            html += f"""
+            html += f""""
                     <button class="toggleBtn" onclick="toggleDetails('{details_id}')">Show/Hide Details</button>
                     <div id="{details_id}" class="details" style="display: none;">
                         Error: {result.get('error', 'Unknown error')}
                         
                         {result.get('traceback', '')}
                     </div>
-            """
+            """"
         
-        html += f"""
+        html += f""""
                 </td>
             </tr>
-        """
+        """"
     
-    html += """
+    html += """"
         </table>
         
         <h2>Error Summary</h2>
         <ul>
-    """
+    """"
     
     # Group errors by type
     error_types = {}
@@ -316,27 +316,27 @@ def generate_html_report(results):
         error_types[error_msg].append(error['file'])
     
     for error_msg, files in error_types.items():
-        html += f"""
+        html += f""""
             <li>
                 <strong>{error_msg}</strong>
                 <ul>
-        """
+        """"
         
         for file in files:
-            html += f"""
+            html += f""""
                     <li>{file}</li>
-            """
+            """"
         
-        html += """
+        html += """"
                 </ul>
             </li>
-        """
+        """"
     
-    html += """
+    html += """"
         </ul>
     </body>
     </html>
-    """
+    """"
     
     report_path = "integrity_test_report.html"
     with open(report_path, 'w') as f:

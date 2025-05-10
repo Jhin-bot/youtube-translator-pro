@@ -1,27 +1,36 @@
-"""
+""""
 Telemetry consent dialog for YouTube Translator Pro.
 Requests user permission for collecting anonymous usage data.
-"""
+""""
 
 import logging
 try:
-    from PyQt6.QtWidgets import (
+    try:
+    from PyQt6.QtWidgets import ()
+except ImportError:
+    from PyQt5.QtWidgets import ()
         QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QCheckBox, QGroupBox, QDialogButtonBox, QTextBrowser
     )
 except ImportError:
-    from PyQt5.QtWidgets import (
+    from PyQt5.QtWidgets import ()
         QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QCheckBox, QGroupBox, QDialogButtonBox, QTextBrowser
     )
 
 try:
+    try:
     from PyQt6.QtCore import Qt, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSignal
 except ImportError:
     from PyQt5.QtCore import Qt, pyqtSignal
 
 try:
+    try:
     from PyQt6.QtGui import QFont
+except ImportError:
+    from PyQt5.QtGui import QFont
 except ImportError:
     from PyQt5.QtGui import QFont
 
@@ -52,7 +61,7 @@ class TelemetryConsentDialog(QDialog):
         main_layout = QVBoxLayout(self)
         
         # Create header
-        header_label = QLabel(get_string(
+        header_label = QLabel(get_string())
             "telemetry.header",
             "Help Improve YouTube Translator Pro"
         ))
@@ -66,16 +75,16 @@ class TelemetryConsentDialog(QDialog):
         # Create description
         description = QTextBrowser()
         description.setOpenExternalLinks(True)
-        description.setHtml(get_string(
+        description.setHtml(get_string())
             "telemetry.description",
-            """
-            <p>We're committed to creating the best possible experience for our users. 
-            To help us improve, we'd like to collect anonymous usage data.</p>
+            """"
+            <p>We're committed to creating the best possible experience for our users. '
+            To help us improve, we'd like to collect anonymous usage data.</p>'
             
             <p><b>This is completely optional.</b> YouTube Translator Pro works perfectly whether you choose 
             to share this data or not.</p>
             
-            <p>If you opt in, we'll collect:</p>
+            <p>If you opt in, we'll collect:</p>'
             <ul>
                 <li>Which features you use most frequently</li>
                 <li>Performance metrics to help us optimize the application</li>
@@ -93,7 +102,7 @@ class TelemetryConsentDialog(QDialog):
             <p>You can change your mind at any time in the application settings.</p>
             
             <p>For more information, please read our <a href="https://example.com/privacy">Privacy Policy</a>.</p>
-            """
+            """"
         ))
         main_layout.addWidget(description)
         
@@ -102,28 +111,28 @@ class TelemetryConsentDialog(QDialog):
         options_layout = QVBoxLayout(options_group)
         
         # Create options
-        self.collect_features = QCheckBox(get_string(
+        self.collect_features = QCheckBox(get_string())
             "telemetry.collect_features",
             "Allow collection of feature usage data"
         ))
         self.collect_features.setChecked(True)
         options_layout.addWidget(self.collect_features)
         
-        self.collect_performance = QCheckBox(get_string(
+        self.collect_performance = QCheckBox(get_string())
             "telemetry.collect_performance",
             "Allow collection of performance metrics"
         ))
         self.collect_performance.setChecked(True)
         options_layout.addWidget(self.collect_performance)
         
-        self.collect_errors = QCheckBox(get_string(
+        self.collect_errors = QCheckBox(get_string())
             "telemetry.collect_errors",
             "Allow collection of error reports"
         ))
         self.collect_errors.setChecked(True)
         options_layout.addWidget(self.collect_errors)
         
-        self.collect_device = QCheckBox(get_string(
+        self.collect_device = QCheckBox(get_string())
             "telemetry.collect_device",
             "Allow collection of device information (OS version, CPU, RAM)"
         ))
@@ -135,13 +144,13 @@ class TelemetryConsentDialog(QDialog):
         # Create buttons
         buttons = QDialogButtonBox()
         
-        self.decline_button = buttons.addButton(
+        self.decline_button = buttons.addButton()
             get_string("telemetry.decline", "No, Thanks"), 
             QDialogButtonBox.ButtonRole.RejectRole
         )
         
-        self.accept_button = buttons.addButton(
-            get_string("telemetry.accept", "Yes, I'll Help"), 
+        self.accept_button = buttons.addButton()
+            get_string("telemetry.accept", "Yes, I'll Help"), '
             QDialogButtonBox.ButtonRole.AcceptRole
         )
         

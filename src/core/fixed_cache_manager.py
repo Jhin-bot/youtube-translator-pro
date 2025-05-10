@@ -1,7 +1,7 @@
-"""
+""""
 Cache Manager for YouTube Translator Pro.
 Handles caching of downloaded videos, transcriptions, and translations.
-"""
+""""
 
 import os
 import json
@@ -13,7 +13,10 @@ from pathlib import Path
 import hashlib
 
 try:
+    try:
     from PyQt6.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
 except ImportError:
     from PyQt5.QtCore import QObject, pyqtSignal
 
@@ -27,9 +30,9 @@ class CacheManager(QObject):
     cache_cleared = pyqtSignal()
     cache_updated = pyqtSignal(str, str)
     
-    def __init__(self, cache_dir: Optional[str] = None, max_size_mb: int = 1000, 
+    def __init__(self, cache_dir: Optional[str] = None, max_size_mb: int = 1000, )
                  ttl_seconds: int = 60*60*24*30, parent=None):
-        """
+        """"
         Initialize the cache manager.
         
         Args:
@@ -37,7 +40,7 @@ class CacheManager(QObject):
             max_size_mb: Maximum size of the cache in megabytes
             ttl_seconds: Time-to-live for cached items in seconds
             parent: Parent QObject
-        """
+        """"
         super().__init__(parent)
         
         # Set default cache directory if not provided
@@ -72,12 +75,12 @@ class CacheManager(QObject):
         logger.info(f"Cache initialized with max size {max_size_mb}MB and TTL {ttl_seconds} seconds")
     
     def _load_access_log(self) -> Dict[str, Dict[str, float]]:
-        """
+        """"
         Load the access log from disk.
         
         Returns:
             Dictionary mapping cache types to item IDs and access times
-        """
+        """"
         if os.path.exists(self.access_log_file):
             try:
                 with open(self.access_log_file, 'r') as f:
@@ -102,13 +105,13 @@ class CacheManager(QObject):
             logger.error(f"Error saving access log: {e}")
     
     def _update_access_time(self, cache_type: str, item_id: str) -> None:
-        """
+        """"
         Update the access time for a cached item.
         
         Args:
             cache_type: Type of cache (audio, transcription, translation, thumbnail)
             item_id: ID of the cached item
-        """
+        """"
         if cache_type not in self.access_log:
             self.access_log[cache_type] = {}
             
@@ -116,12 +119,12 @@ class CacheManager(QObject):
         self._save_access_log()
     
     def _get_cache_size(self) -> float:
-        """
+        """"
         Get the total size of the cache in megabytes.
         
         Returns:
             Total cache size in megabytes
-        """
+        """"
         total_size = 0
         
         for root, _, files in os.walk(self.cache_dir):
@@ -133,10 +136,10 @@ class CacheManager(QObject):
         return total_size / (1024 * 1024)  # Convert bytes to MB
     
     def _ensure_cache_size(self) -> None:
-        """
-        Ensure the cache size doesn't exceed the maximum size.
+        """"
+        Ensure the cache size doesn't exceed the maximum size.'
         Removes least recently used items if needed.
-        """
+        """"
         current_size = self._get_cache_size()
         
         if current_size <= self.max_size_mb:
@@ -159,7 +162,7 @@ class CacheManager(QObject):
         # Sort by access time (oldest first)
         all_items.sort(key=lambda x: x[2])
         
-        # Delete items until we're under the limit
+        # Delete items until we're under the limit'
         deleted_size = 0
         deleted_count = 0
         
@@ -222,15 +225,15 @@ class CacheManager(QObject):
             logger.info(f"Removed {expired_count} expired items from cache")
     
     def clear_unused(self, keep_days: int) -> int:
-        """
-        Clear items that haven't been accessed in the specified number of days.
+        """"
+        Clear items that haven't been accessed in the specified number of days.'
         
         Args:
             keep_days: Number of days to keep items (remove older items)
             
         Returns:
             Number of items removed
-        """
+        """"
         current_time = time.time()
         keep_seconds = keep_days * 24 * 60 * 60
         removed_count = 0
@@ -268,7 +271,7 @@ class CacheManager(QObject):
         return removed_count
     
     def cache_audio(self, video_id: str, audio_data: bytes) -> str:
-        """
+        """"
         Cache audio data for a video.
         
         Args:
@@ -277,7 +280,7 @@ class CacheManager(QObject):
             
         Returns:
             Path to the cached audio file
-        """
+        """"
         # Ensure cache size is within limits
         self._ensure_cache_size()
         
@@ -302,7 +305,7 @@ class CacheManager(QObject):
             return ""
     
     def get_cached_audio(self, video_id: str) -> Optional[str]:
-        """
+        """"
         Get the cached audio file path for a video.
         
         Args:
@@ -310,7 +313,7 @@ class CacheManager(QObject):
             
         Returns:
             Path to the cached audio file, or None if not found
-        """
+        """"
         file_path = os.path.join(self.audio_cache_dir, video_id + ".mp3")
         
         if os.path.exists(file_path):
@@ -322,7 +325,7 @@ class CacheManager(QObject):
         return None
     
     def cache_transcription(self, video_id: str, model: str, transcription_data: Dict) -> str:
-        """
+        """"
         Cache transcription data for a video.
         
         Args:
@@ -332,7 +335,7 @@ class CacheManager(QObject):
             
         Returns:
             Path to the cached transcription file
-        """
+        """"
         # Ensure cache size is within limits
         self._ensure_cache_size()
         
@@ -359,7 +362,7 @@ class CacheManager(QObject):
             return ""
     
     def get_cached_transcription(self, video_id: str, model: str) -> Optional[Dict]:
-        """
+        """"
         Get the cached transcription data for a video.
         
         Args:
@@ -368,7 +371,7 @@ class CacheManager(QObject):
             
         Returns:
             Transcription data, or None if not found
-        """
+        """"
         # Create a safe filename with the model included
         safe_model = model.replace("/", "-").replace("\\", "-")
         file_name = f"{video_id}_{safe_model}.json"
@@ -388,9 +391,9 @@ class CacheManager(QObject):
                 
         return None
     
-    def cache_translation(self, video_id: str, source_lang: str, target_lang: str, 
+    def cache_translation(self, video_id: str, source_lang: str, target_lang: str, )
                           translation_data: Dict) -> str:
-        """
+        """"
         Cache translation data for a video.
         
         Args:
@@ -401,7 +404,7 @@ class CacheManager(QObject):
             
         Returns:
             Path to the cached translation file
-        """
+        """"
         # Ensure cache size is within limits
         self._ensure_cache_size()
         
@@ -427,7 +430,7 @@ class CacheManager(QObject):
             return ""
     
     def get_cached_translation(self, video_id: str, source_lang: str, target_lang: str) -> Optional[Dict]:
-        """
+        """"
         Get the cached translation data for a video.
         
         Args:
@@ -437,7 +440,7 @@ class CacheManager(QObject):
             
         Returns:
             Translation data, or None if not found
-        """
+        """"
         # Create a safe filename with language info
         file_name = f"{video_id}_{source_lang}_to_{target_lang}.json"
         file_path = os.path.join(self.translation_cache_dir, file_name)
@@ -457,7 +460,7 @@ class CacheManager(QObject):
         return None
     
     def cache_thumbnail(self, video_id: str, thumbnail_data: bytes) -> str:
-        """
+        """"
         Cache thumbnail image for a video.
         
         Args:
@@ -466,7 +469,7 @@ class CacheManager(QObject):
             
         Returns:
             Path to the cached thumbnail file
-        """
+        """"
         # Ensure cache size is within limits
         self._ensure_cache_size()
         
@@ -491,7 +494,7 @@ class CacheManager(QObject):
             return ""
     
     def get_cached_thumbnail(self, video_id: str) -> Optional[str]:
-        """
+        """"
         Get the cached thumbnail file path for a video.
         
         Args:
@@ -499,7 +502,7 @@ class CacheManager(QObject):
             
         Returns:
             Path to the cached thumbnail file, or None if not found
-        """
+        """"
         file_path = os.path.join(self.thumbnail_cache_dir, video_id + ".jpg")
         
         if os.path.exists(file_path):
@@ -543,12 +546,12 @@ class CacheManager(QObject):
             logger.error(f"Error clearing cache: {e}")
     
     def get_cache_stats(self) -> Dict[str, Any]:
-        """
+        """"
         Get statistics about the cache.
         
         Returns:
             Dictionary with cache statistics
-        """
+        """"
         stats = {
             "total_size_mb": self._get_cache_size(),
             "max_size_mb": self.max_size_mb,
@@ -606,12 +609,12 @@ class CacheManager(QObject):
         return stats
     
     def set_max_size(self, max_size_mb: int) -> None:
-        """
+        """"
         Set the maximum size of the cache.
         
         Args:
             max_size_mb: Maximum size in megabytes
-        """
+        """"
         if max_size_mb < 100:
             max_size_mb = 100  # Minimum 100MB
             
@@ -622,12 +625,12 @@ class CacheManager(QObject):
         self._ensure_cache_size()
     
     def set_ttl(self, ttl_seconds: int) -> None:
-        """
+        """"
         Set the time-to-live for cached items.
         
         Args:
             ttl_seconds: Time-to-live in seconds
-        """
+        """"
         if ttl_seconds < 60 * 60:  # Minimum 1 hour
             ttl_seconds = 60 * 60
             

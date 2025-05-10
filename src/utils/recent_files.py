@@ -10,8 +10,10 @@ from typing import List, Optional
 from datetime import datetime
 
 try:
-    try:
+        try:
     from PyQt6.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
 except ImportError:
     from PyQt5.QtCore import QObject, pyqtSignal
 except ImportError:
@@ -67,7 +69,7 @@ class RecentFilesManager(QObject):
         """"
         if os.path.exists(self.storage_file):
             try:
-                with open(self.storage_file, 'r', encoding='utf-8') as f:
+                    with open(self.storage_file, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     
                     # For backwards compatibility
@@ -91,7 +93,7 @@ class RecentFilesManager(QObject):
     def _save_recent_files(self) -> None:
         """Save recent files to storage."""
         try:
-            with open(self.storage_file, 'w', encoding='utf-8') as f:
+                with open(self.storage_file, 'w', encoding='utf-8') as f:
                 data = {
                     "timestamp": datetime.now().isoformat(),
                     "files": self.recent_files

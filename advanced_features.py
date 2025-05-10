@@ -1,9 +1,9 @@
-"""
+""""
 Advanced features for YouTube Transcriber Pro.
 Provides professional-level enhancements like recent files management,
 auto-updates, system tray integration, keyboard shortcuts, session management,
 and error reporting.
-"""
+""""
 
 import os
 import sys
@@ -31,18 +31,27 @@ import ssl # Added for SSL context
 
 try:
     # First try PyQt6
-    from PyQt6.QtCore import (
+    try:
+    from PyQt6.QtCore import ()
+except ImportError:
+    from PyQt5.QtCore import ()
         Qt, QObject, QSettings, QTimer, QSize, QPoint, QRect, QUrl, QEvent,
         QStandardPaths, QPropertyAnimation, QEasingCurve, QThread, pyqtSignal as Signal,
         pyqtSlot as Slot, QByteArray, QBuffer, QModelIndex, QSortFilterProxyModel,
         QShortcut
     )
-    from PyQt6.QtGui import (
+    try:
+    from PyQt6.QtGui import ()
+except ImportError:
+    from PyQt5.QtGui import ()
         QIcon, QAction, QPixmap, QDesktopServices, QFont,
         QColor, QCloseEvent, QImage, QFontMetrics, QMovie, QStandardItemModel,
         QStandardItem, QKeySequence
     )
-    from PyQt6.QtWidgets import (
+    try:
+    from PyQt6.QtWidgets import ()
+except ImportError:
+    from PyQt5.QtWidgets import ()
         QApplication, QMainWindow, QWidget, QDialog, QLabel, QPushButton, QToolButton,
         QCheckBox, QComboBox, QListWidget, QListWidgetItem, QTreeWidget, QTreeWidgetItem,
         QTableWidget, QTableWidgetItem, QHeaderView, QLineEdit, QTextEdit, QMenu,
@@ -60,18 +69,18 @@ try:
 except ImportError:
     try:
         # Then try PyQt5
-        from PyQt5.QtCore import (
+        from PyQt5.QtCore import ()
             Qt, QObject, QSettings, QTimer, QSize, QPoint, QRect, QUrl, QEvent,
             QStandardPaths, QPropertyAnimation, QEasingCurve, QThread, pyqtSignal,
             pyqtSlot, QByteArray, QBuffer, QModelIndex, QSortFilterProxyModel,
             QShortcut
         )
-        from PyQt5.QtGui import (
+        from PyQt5.QtGui import ()
             QIcon, QAction, QPixmap, QDesktopServices, QFont,
             QColor, QCloseEvent, QImage, QFontMetrics, QMovie, QStandardItemModel,
             QStandardItem, QKeySequence
         )
-        from PyQt5.QtWidgets import (
+        from PyQt5.QtWidgets import ()
             QApplication, QMainWindow, QWidget, QDialog, QLabel, QPushButton, QToolButton,
             QCheckBox, QComboBox, QListWidget, QListWidgetItem, QTreeWidget, QTreeWidgetItem,
             QTableWidget, QTableWidgetItem, QHeaderView, QLineEdit, QTextEdit, QMenu,
@@ -653,7 +662,7 @@ except ImportError:
 try:
     # Import necessary classes and constants from ui and settings
     # Assuming SettingsDialog, AboutDialog, ErrorDialog, ShortcutConfigDialog are defined in ui.py
-    from ui import (
+    from ui import ()
         APP_NAME, APP_VERSION, SettingsDialog, AboutDialog, ErrorDialog,
         ShortcutConfigDialog, TaskStatus, BatchStatus, AVAILABLE_LANGUAGES, VALID_MODELS
     )
@@ -788,13 +797,13 @@ class RecentFilesManager(QObject):
     recent_files_changed = pyqtSignal(list) # Emits the updated list of recent files
 
     def __init__(self, max_files: int = 20, parent: Optional[QObject] = None):
-        """
+        """"
         Initialize the Recent Files Manager.
 
         Args:
             max_files: Maximum number of recent files to keep.
             parent: The parent QObject.
-        """
+        """"
         super().__init__(parent)
         self.max_files = max_files
         self._recent_files: List[str] = []
@@ -891,12 +900,12 @@ class RecentFilesMenu(QMenu):
     clear_recent_files_requested = pyqtSignal() # Emitted when "Clear Recent Files" is selected
 
     def __init__(self, parent: Optional[QWidget] = None):
-        """
+        """"
         Initialize the Recent Files Menu.
 
         Args:
             parent: The parent widget (usually the MainWindow).
-        """
+        """"
         super().__init__("&Recent Files", parent)
         self._actions: List[QAction] = [] # To keep track of actions
         self._clear_action: Optional[QAction] = None # Action to clear the list
@@ -939,7 +948,7 @@ class RecentFilesMenu(QMenu):
                  self._clear_action = QAction("C&lear Recent Files", self)
                  self._clear_action.triggered.connect(self.clear_recent_files_requested.emit) # Connect signal
             self.addAction(self._clear_action)
-            self._clear_action.setEnabled(True) # Ensure it's enabled if there are files
+            self._clear_action.setEnabled(True) # Ensure it's enabled if there are files'
         elif self._clear_action:
              self._clear_action.setEnabled(False) # Disable if no files
 
@@ -947,7 +956,7 @@ class RecentFilesMenu(QMenu):
     @pyqtSlot()
     def _update_menu_before_show(self):
         """Slot called just before the menu is shown. Requests the latest list."""
-        # The ApplicationManager should be connected to RecentFilesManager's
+        # The ApplicationManager should be connected to RecentFilesManager's'
         # recent_files_changed signal and update this menu directly.
         # This slot might not be strictly necessary if the AppManager keeps the menu updated.
         # However, it can serve as a fallback to request the latest list if needed.
@@ -955,9 +964,9 @@ class RecentFilesMenu(QMenu):
         # This would require a signal from the menu back to the AppManager,
         # or the AppManager having a direct reference to this menu and calling update_menu.
         # The current design has AppManager listening to RecentFilesManager and calling update_menu.
-        # So, this slot is likely redundant unless there's a reason the AppManager
+        # So, this slot is likely redundant unless there's a reason the AppManager'
         # might not have the absolute latest list right before the menu is shown.
-        # Let's keep it simple for now and rely on the AppManager connection.
+        # Let's keep it simple for now and rely on the AppManager connection.'
         pass
 
 
@@ -970,13 +979,13 @@ class AutoUpdater(QObject):
     notification_requested = pyqtSignal(str, str, NotificationType) # title, message, type
 
     def __init__(self, update_config: Dict[str, Any], parent: Optional[QObject] = None):
-        """
+        """"
         Initialize the Auto Updater.
 
         Args:
             update_config: Dictionary containing update settings.
             parent: The parent QObject.
-        """
+        """"
         super().__init__(parent)
         self.update_config = update_config
         self._current_status = UpdateStatus.NO_UPDATE
@@ -1012,7 +1021,7 @@ class AutoUpdater(QObject):
         """Check for available updates."""
         if self._current_status in [UpdateStatus.CHECKING, UpdateStatus.DOWNLOADING, UpdateStatus.READY_TO_INSTALL]:
             logger.debug("Update check already in progress or update ready.")
-            return # Don't check if already busy
+            return # Don't check if already busy'
 
         update_url = self.update_config.get("update_url")
         if not update_url:
@@ -1235,11 +1244,11 @@ class AutoUpdater(QObject):
                  # os.chmod(download_path, 0o755) # Make executable
                  # subprocess.Popen([download_path])
                  logger.warning(f"Automatic update installation not fully implemented for Linux. Please run {download_path} manually.")
-                 QMessageBox.information(None, "Manual Update Required",
+                 QMessageBox.information(None, "Manual Update Required",)
                                          f"Please run the downloaded update file manually:\n{download_path}")
                  self._current_status = UpdateStatus.ERROR # Mark as error as automatic install failed
                  self.update_status_changed.emit(self._current_status, "Manual installation required.")
-                 return # Don't exit if manual install is needed
+                 return # Don't exit if manual install is needed'
 
             # If automatic installation was initiated, exit the current application
             logger.info("Update installation initiated. Exiting application.")
@@ -1344,19 +1353,19 @@ class UpdateDownloaderWorker(QObject):
 # --- System Tray Management ---
 
 class SystemTrayManager(QObject):
-    """Manages the application's system tray icon and notifications."""
+    """Manages the application's system tray icon and notifications."""'
 
     # Signals for tray icon activation (e.g., restore window)
     tray_icon_activated = pyqtSignal(QSystemTrayIcon.ActivationReason)
     message_clicked = pyqtSignal() # Emitted when a tray message is clicked
 
     def __init__(self, parent: Optional[QObject] = None):
-        """
+        """"
         Initialize the System Tray Manager.
 
         Args:
             parent: The parent QObject.
-        """
+        """"
         super().__init__(parent)
         self._tray_icon: Optional[QSystemTrayIcon] = None
         self._tray_menu: Optional[QMenu] = None
@@ -1433,12 +1442,12 @@ class KeyboardManager(QObject):
     shortcut_activated = pyqtSignal(ShortcutAction) # Emits the action of the activated shortcut
 
     def __init__(self, parent: Optional[QObject] = None):
-        """
+        """"
         Initialize the Keyboard Manager.
 
         Args:
             parent: The parent QObject.
-        """
+        """"
         super().__init__(parent)
         self._main_window: Optional[QMainWindow] = None # Reference to the main window
         self._shortcuts: Dict[ShortcutAction, QShortcut] = {} # Dictionary to hold QShortcut objects
@@ -1489,7 +1498,7 @@ class KeyboardManager(QObject):
                         # Create QShortcut attached to the main window
                         shortcut = QShortcut(key_sequence, self._main_window)
                         shortcut.setEnabled(enabled)
-                        # Store the action in the shortcut's properties for easy retrieval
+                        # Store the action in the shortcut's properties for easy retrieval'
                         shortcut.setProperty("shortcut_action", action.value)
                         # Connect the activated signal to a handler
                         shortcut.activated.connect(lambda a=action: self.shortcut_activated.emit(a))
@@ -1529,7 +1538,7 @@ class KeyboardManager(QObject):
 
 
     def update_shortcut(self, action: ShortcutAction, key_sequence_str: str, enabled: bool) -> bool:
-        """
+        """"
         Update the key sequence and enabled state for a specific shortcut action.
         Re-registers the shortcut after updating.
 
@@ -1540,7 +1549,7 @@ class KeyboardManager(QObject):
 
         Returns:
             True if the shortcut was updated successfully, False otherwise.
-        """
+        """"
         if action not in self._default_configs:
             logger.error(f"Cannot update unknown shortcut action: {action.name}")
             return False
@@ -1622,13 +1631,13 @@ class ShortcutConfigDialog(QDialog):
     shortcuts_saved = pyqtSignal(dict) # Emits the new shortcut configuration dictionary
 
     def __init__(self, current_shortcuts: Dict[ShortcutAction, Tuple[str, bool]], parent: Optional[QWidget] = None):
-        """
+        """"
         Initialize the Shortcut Configuration Dialog.
 
         Args:
             current_shortcuts: Dictionary of current shortcut configurations.
             parent: The parent widget.
-        """
+        """"
         super().__init__(parent)
         self.setWindowTitle(f"{APP_NAME} - Configure Shortcuts")
         self.setMinimumSize(500, 400)
@@ -1697,14 +1706,14 @@ class ShortcutConfigDialog(QDialog):
             checkbox_layout.setContentsMargins(0, 0, 0, 0)
             self.shortcut_table.setCellWidget(row, 2, checkbox_widget)
 
-            # Store the action in the row's data (optional, but can be useful)
+            # Store the action in the row's data (optional, but can be useful)'
             # self.shortcut_table.verticalHeaderItem(row).setData(Qt.UserRole, action)
 
 
     def _restore_defaults(self):
         """Restore shortcut configurations to default values."""
         logger.info("Restoring shortcut defaults.")
-        # Get default configs from KeyboardManager (assuming it's the parent or accessible)
+        # Get default configs from KeyboardManager (assuming it's the parent or accessible)'
         if self.parent() and hasattr(self.parent(), 'app_manager') and self.parent().app_manager and hasattr(self.parent().app_manager, 'keyboard_manager') and self.parent().app_manager.keyboard_manager:
              default_configs = self.parent().app_manager.keyboard_manager._default_configs.copy()
              self._current_shortcuts = default_configs
@@ -1767,12 +1776,12 @@ class SessionManager(QObject):
     """Manages saving and restoring the application session state."""
 
     def __init__(self, parent: Optional[QObject] = None):
-        """
+        """"
         Initialize the Session Manager.
 
         Args:
             parent: The parent QObject.
-        """
+        """"
         super().__init__(parent)
         self._settings = QSettings() # Use QSettings for session data
         self._session_key = "session/state"
@@ -1781,13 +1790,13 @@ class SessionManager(QObject):
 
 
     def save_session(self, window: QMainWindow, data: Dict[str, Any]):
-        """
+        """"
         Save the current application session state.
 
         Args:
             window: The main application window.
             data: A dictionary containing application-specific state data.
-        """
+        """"
         logger.info("Saving application session.")
         try:
             # Save window geometry and state
@@ -1806,7 +1815,7 @@ class SessionManager(QObject):
 
 
     def restore_session(self, window: QMainWindow) -> Dict[str, Any]:
-        """
+        """"
         Restore the application session state.
 
         Args:
@@ -1814,7 +1823,7 @@ class SessionManager(QObject):
 
         Returns:
             A dictionary containing the restored application-specific state data.
-        """
+        """"
         logger.info("Restoring application session.")
         restored_data: Dict[str, Any] = {}
 
@@ -1920,26 +1929,26 @@ class ErrorReporter(QObject):
     error_reported = pyqtSignal(str, str, ErrorSeverity) # Emits message, details, severity
 
     def __init__(self, parent: Optional[QObject] = None):
-        """
+        """"
         Initialize the Error Reporter.
 
         Args:
             parent: The parent QObject.
-        """
+        """"
         super().__init__(parent)
         # You might add logging configuration or other setup here
         # The main logging is typically configured in the application entry point.
 
 
     def report_error(self, message: str, details: str = "", severity: ErrorSeverity = ErrorSeverity.ERROR):
-        """
+        """"
         Report an error to the system.
 
         Args:
             message: A concise error message.
             details: Detailed information about the error (e.g., traceback).
             severity: The severity level of the error.
-        """
+        """"
         # Log the error
         if severity == ErrorSeverity.INFO:
             logger.info(f"Reported Info: {message}")
@@ -1959,7 +1968,7 @@ class ErrorReporter(QObject):
 
         # For critical errors, also show a message box immediately
         if severity == ErrorSeverity.CRITICAL:
-             QMessageBox.critical(None, f"{APP_NAME} - Critical Error",
+             QMessageBox.critical(None, f"{APP_NAME} - Critical Error",)
                                   f"A critical error occurred:\n{message}\n\nDetails: {details}")
 
 
@@ -1969,13 +1978,13 @@ class CrashHandler(QObject):
     """Handles application crashes and attempts session recovery."""
 
     def __init__(self, session_manager: Optional[SessionManager] = None, parent: Optional[QObject] = None):
-        """
+        """"
         Initialize the Crash Handler.
 
         Args:
             session_manager: An optional SessionManager instance for recovery.
             parent: The parent QObject.
-        """
+        """"
         super().__init__(parent)
         self.session_manager = session_manager
         self._settings = QSettings() # Use QSettings to track crash count
@@ -1993,14 +2002,14 @@ class CrashHandler(QObject):
 
 
     def handle_exception(self, exc_type, exc_value, exc_traceback):
-        """
+        """"
         Global exception hook to catch unhandled exceptions.
 
         Args:
             exc_type: The exception type.
             exc_value: The exception instance.
             exc_traceback: The traceback object.
-        """
+        """"
         # Log the unhandled exception
         logger.critical("An unhandled exception occurred!", exc_info=(exc_type, exc_value, exc_traceback))
 
@@ -2014,9 +2023,9 @@ class CrashHandler(QObject):
 
         # Optionally save session data before crashing (best effort)
         # This requires the main window to be available and the session manager
-        # This is better handled by the ApplicationManager's shutdown logic
+        # This is better handled by the ApplicationManager's shutdown logic'
         # which is triggered by QCoreApplication.instance().aboutToQuit.connect(self.shutdown)
-        # The crash handler's role is primarily to *detect* the crash and mark for recovery.
+        # The crash handler's role is primarily to *detect* the crash and mark for recovery.'
 
         # Call the default exception handler to print to console/stderr
         sys.__excepsecthook__(exc_type, exc_value, exc_traceback)
@@ -2031,7 +2040,7 @@ class CrashHandler(QObject):
 
 
     def perform_recovery(self, window: QMainWindow) -> bool:
-        """
+        """"
         Perform recovery after a crash.
 
         Args:
@@ -2039,7 +2048,7 @@ class CrashHandler(QObject):
 
         Returns:
             True if recovery was initiated (even if session restore fails), False otherwise.
-        """
+        """"
         if not self.needs_recovery():
             logger.debug("Recovery not needed.")
             return False
@@ -2059,7 +2068,7 @@ class CrashHandler(QObject):
                       # The AppManager will then load the batch state etc.
                       # Need a signal like `restore_session_data = pyqtSignal(dict)` in AppManager
                       # and SessionManager emits this signal after restoring data.
-                      # For now, let's just call restore_session and return the data to AppManager.
+                      # For now, let's just call restore_session and return the data to AppManager.'
                       restored_data = self.session_manager.restore_session(window)
                       if restored_data:
                            logger.info("Session data restored during recovery attempt.")
@@ -2085,7 +2094,7 @@ class CrashHandler(QObject):
             else:
                  recovery_message += "\nNo previous session data was found to restore."
 
-            QMessageBox.information(
+            QMessageBox.information()
                  window,
                  "Application Recovery",
                  recovery_message
@@ -2232,7 +2241,7 @@ class CrashHandler(QObject):
     pass
 #     #      raise RuntimeError("Simulated crash for testing CrashHandler")
 #     # except Exception:
-#     #      # Call the handler directly if the hook isn't catching it as expected
+#     #      # Call the handler directly if the hook isn't catching it as expected'
 #     #      ch.handle_exception(*sys.exc_info())
 
 #     # Test recovery on next run by checking ch.needs_recovery()

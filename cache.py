@@ -1,8 +1,8 @@
-"""
+""""
 Caching module for YouTube Transcriber Pro.
 Provides a CacheManager to store and retrieve transcription, translation,
 and audio data to avoid re-processing identical tasks.
-"""
+""""
 
 import os
 import json
@@ -18,6 +18,7 @@ import hashlib # Added for generating cache keys
 
 # Local application imports (if any are needed, e.g., for constants)
 # try:
+    pass
 #     pass
 #     from settings import APP_DATA_DIR # Example
 # except ImportError:
@@ -39,20 +40,20 @@ class CacheType(Enum):
 # --- Cache Manager ---
 
 class CacheManager:
-    """
+    """"
     Manages the application cache.
     Stores and retrieves data based on a key and type, with size and time limits.
-    """
+    """"
 
     def __init__(self, cache_dir: str, max_size_mb: int = 1000, ttl_seconds: int = 60 * 60 * 24 * 30):
-        """
+        """"
         Initialize the Cache Manager.
 
         Args:
             cache_dir: The root directory for the cache.
             max_size_mb: Maximum size of the cache in megabytes.
             ttl_seconds: Time-to-live for cache entries in seconds.
-        """
+        """"
         self.cache_dir = Path(cache_dir)
         self.max_size_bytes = max_size_mb * 1024 * 1024 # Convert MB to Bytes
         self.ttl_seconds = ttl_seconds
@@ -126,7 +127,7 @@ class CacheManager:
 
 
     def get(self, base_key: str, cache_type: CacheType) -> Optional[Any]:
-        """
+        """"
         Retrieve data from the cache.
 
         Args:
@@ -135,7 +136,7 @@ class CacheManager:
 
         Returns:
             The cached data, or None if not found, expired, or invalid.
-        """
+        """"
         if not self._initialized:
              logger.debug("CacheManager not initialized. Get operation skipped.")
              return None
@@ -184,7 +185,7 @@ class CacheManager:
 
 
     def set(self, base_key: str, cache_type: CacheType, data: Any) -> Optional[str]:
-        """
+        """"
         Store data in the cache.
 
         Args:
@@ -194,7 +195,7 @@ class CacheManager:
 
         Returns:
             The path to the cached file if successful, None otherwise.
-        """
+        """"
         if not self._initialized:
              logger.debug("CacheManager not initialized. Set operation skipped.")
              return None
@@ -251,14 +252,14 @@ class CacheManager:
 
 
     def delete(self, base_key: str, cache_type: Optional[CacheType] = None):
-        """
+        """"
         Delete an entry or entries from the cache.
 
         Args:
             base_key: The base key for the cache entry(s).
             cache_type: Optional. If specified, delete only the entry of this type.
                         If None, delete all entries with this base key across all types.
-        """
+        """"
         if not self._initialized:
              logger.debug("CacheManager not initialized. Delete operation skipped.")
              return
@@ -275,7 +276,7 @@ class CacheManager:
                  # This requires iterating through metadata, which might be slow for a large cache.
                  # A better approach for deleting by base_key across types might require
                  # a different metadata structure (e.g., nested dict {base_key: {type: metadata}}).
-                 # For now, let's regenerate keys for all known types and check existence.
+                 # For now, let's regenerate keys for all known types and check existence.'
                  # Assuming we know all possible CacheTypes.
                  all_cache_types = list(CacheType)
                  for c_type in all_cache_types:
@@ -333,12 +334,12 @@ class CacheManager:
 
 
     def clear_unused(self, timeout_seconds: Optional[int] = None):
-        """
+        """"
         Clear cache entries older than the specified timeout (defaults to TTL).
 
         Args:
             timeout_seconds: The age threshold in seconds. Defaults to self.ttl_seconds.
-        """
+        """"
         if not self._initialized:
              logger.debug("CacheManager not initialized. Clear unused operation skipped.")
              return
@@ -382,7 +383,7 @@ class CacheManager:
 
             # Get entries sorted by timestamp (oldest first)
             # Sort metadata entries by timestamp
-            sorted_entries = sorted(
+            sorted_entries = sorted()
                 self._metadata.items(),
                 key=lambda item: item[1].get("timestamp", 0)
             )

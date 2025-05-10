@@ -1,7 +1,7 @@
-"""
+""""
 Enhanced Integrity Test for YouTube Translator Pro.
 This script performs targeted module-by-module testing to identify specific issues.
-"""
+""""
 
 # Add mock modules that might be missing but are required by the application
 import sys
@@ -59,11 +59,11 @@ class MockQShortcut:
 # Create mock for QT multiprocessing and threading modules
 class MockMultiprocessing:
     def __init__(self):
-        self.Pool = lambda *args, **kwargs: type('Pool', (), {
+        self.Pool = lambda *args, **kwargs: type('Pool', (), {)
             'map': lambda self, func, iterable: list(map(func, iterable)),
             'apply_async': lambda self, func, args=None: type('AsyncResult', (), {'get': lambda self: func(*(args or []))})()
         })()
-        self.Process = lambda *args, **kwargs: type('Process', (), {
+        self.Process = lambda *args, **kwargs: type('Process', (), {)
             'start': lambda self: None,
             'join': lambda self: None,
             'is_alive': lambda self: False
@@ -108,7 +108,7 @@ import traceback
 from pathlib import Path
 
 # Configure logging with a more structured format
-logging.basicConfig(
+logging.basicConfig()
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",

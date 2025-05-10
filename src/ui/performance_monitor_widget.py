@@ -1,32 +1,41 @@
-"""
+""""
 Performance monitoring widget for YouTube Translator Pro.
 Displays real-time performance metrics for the application.
-"""
+""""
 
 import logging
 import time
 from datetime import datetime, timedelta
 
 try:
-    from PyQt6.QtWidgets import (
+    try:
+    from PyQt6.QtWidgets import ()
+except ImportError:
+    from PyQt5.QtWidgets import ()
         QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QTableWidget, QTableWidgetItem, QHeaderView, QGroupBox,
         QProgressBar, QSplitter, QDialog, QTabWidget
     )
 except ImportError:
-    from PyQt5.QtWidgets import (
+    from PyQt5.QtWidgets import ()
         QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QTableWidget, QTableWidgetItem, QHeaderView, QGroupBox,
         QProgressBar, QSplitter, QDialog, QTabWidget
     )
 
 try:
+    try:
     from PyQt6.QtCore import Qt, QTimer, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import Qt, QTimer, pyqtSignal
 except ImportError:
     from PyQt5.QtCore import Qt, QTimer, pyqtSignal
 
 try:
+    try:
     from PyQt6.QtGui import QColor, QBrush, QFont
+except ImportError:
+    from PyQt5.QtGui import QColor, QBrush, QFont
 except ImportError:
     from PyQt5.QtGui import QColor, QBrush, QFont
 
@@ -182,7 +191,7 @@ class PerformanceMonitorWidget(QWidget):
         # Create table for all metrics
         self.metrics_table = QTableWidget()
         self.metrics_table.setColumnCount(6)
-        self.metrics_table.setHorizontalHeaderLabels([
+        self.metrics_table.setHorizontalHeaderLabels([)
             get_string("performance.operation", "Operation"),
             get_string("performance.count", "Count"),
             get_string("performance.total_time", "Total Time (ms)"),
@@ -308,7 +317,7 @@ class PerformanceMonitorWidget(QWidget):
     def refresh_text(self):
         """Refresh text after language change."""
         # Update table headers
-        self.metrics_table.setHorizontalHeaderLabels([
+        self.metrics_table.setHorizontalHeaderLabels([)
             get_string("performance.operation", "Operation"),
             get_string("performance.count", "Count"),
             get_string("performance.total_time", "Total Time (ms)"),

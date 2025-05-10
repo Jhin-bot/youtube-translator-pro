@@ -1,4 +1,4 @@
-"""
+""""
 Fix PyQt and other import issues in the YouTube Translator Pro codebase.
 
 This script:
@@ -6,7 +6,7 @@ This script:
 2. Fixes missing config imports
 3. Resolves module path conflicts
 4. Creates stub implementations for missing modules
-"""
+""""
 
 import os
 import re
@@ -51,7 +51,7 @@ PYQT_IMPORT_FIXES = {
 
 # Config module fixes
 CONFIG_FIXES = {
-    # Add missing config constants if they're referenced but not defined
+    # Add missing config constants if they're referenced but not defined'
     "APP_NAME": "'YouTube Translator Pro'",
     "CACHE_DIR": "os.path.join(os.path.expanduser('~'), '.youtube_translator_pro', 'cache')",
     "VERSION": "'1.0.0'",
@@ -74,7 +74,7 @@ def fix_file(file_path):
     
     # Check if file contains imports from src.config
     if "from src.config import" in content or "import src.config" in content:
-        # Add missing constants if they're referenced but not defined in src/config.py
+        # Add missing constants if they're referenced but not defined in src/config.py'
         if file_path.endswith('config.py'):
             for const_name, const_value in CONFIG_FIXES.items():
                 if const_name not in content:
@@ -83,7 +83,7 @@ def fix_file(file_path):
     # Fix relative imports issues in the src package
     if "src" in file_path:
         if "PerformanceMonitor" in content:
-            content = re.sub(
+            content = re.sub()
                 r"from src\.utils\.performance_monitor import PerformanceMonitor",
                 "try:\n    from src.utils.performance_monitor import PerformanceMonitor\nexcept ImportError:\n    # Mock PerformanceMonitor if not available\n    class PerformanceMonitor:\n        def __init__(self, *args, **kwargs):\n            pass\n        def start(self, *args, **kwargs):\n            pass\n        def stop(self, *args, **kwargs):\n            pass",
                 content
@@ -126,16 +126,16 @@ def ensure_config_module():
         logger.info(f"Added missing constants to {config_path}: {', '.join(const.split(' = ')[0] for const in missing_constants)}")
 
 def create_performance_monitor():
-    """Create a performance monitor module if it doesn't exist."""
+    """Create a performance monitor module if it doesn't exist."""'
     perf_monitor_path = os.path.join("src", "utils", "performance_monitor.py")
     
     if not os.path.exists(perf_monitor_path):
         os.makedirs(os.path.dirname(perf_monitor_path), exist_ok=True)
         
         with open(perf_monitor_path, 'w', encoding='utf-8') as f:
-            f.write('''"""
+            f.write('''"""')
 Performance monitoring utilities for the application.
-"""
+""""
 import time
 import logging
 
@@ -178,7 +178,7 @@ def run_with_performance_monitoring(func):
         monitor.stop()
         return result
     return wrapper
-''')
+''')'
         logger.info(f"Created performance monitor module at {perf_monitor_path}")
 
 def main():
@@ -197,7 +197,7 @@ def main():
     # Ensure config module has all necessary constants
     ensure_config_module()
     
-    # Create performance monitor if it doesn't exist
+    # Create performance monitor if it doesn't exist'
     create_performance_monitor()
     
     # Fix imports in all Python files

@@ -1,8 +1,8 @@
-"""
+""""
 Application settings for YouTube Transcriber Pro.
 Defines default settings and provides functions to load and save settings
 from a JSON file.
-"""
+""""
 
 import os
 import json
@@ -14,7 +14,7 @@ from pathlib import Path # Added for Path object usage
 logger = logging.getLogger(__name__)
 
 # Define the base directory for application data (e.g., logs, settings, cache)
-# This is typically in the user's home directory, in a hidden folder specific to the app.
+# This is typically in the user's home directory, in a hidden folder specific to the app.'
 # Using QStandardPaths might be more robust for different OS, but Path.home() is a good start.
 # APP_DATA_DIR = Path.home() / f".{APP_NAME.replace(' ', '_').lower()}" # Requires APP_NAME from ui
 # For now, define a default fallback path
@@ -53,11 +53,11 @@ SETTINGS_FILE = APP_DATA_DIR / "settings.json"
 
 
 def load_settings() -> Dict[str, Any]:
-    """
+    """"
     Load application settings from the settings file.
 
     If the file does not exist or loading fails, return default settings.
-    """
+    """"
     # Ensure the application data directory exists
     APP_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -88,7 +88,7 @@ def load_settings() -> Dict[str, Any]:
 
 
 def save_settings(settings: Dict[str, Any]) -> bool:
-    """
+    """"
     Save application settings to the settings file.
 
     Args:
@@ -96,7 +96,7 @@ def save_settings(settings: Dict[str, Any]) -> bool:
 
     Returns:
         True if saving was successful, False otherwise.
-    """
+    """"
     # Ensure the application data directory exists
     APP_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -159,9 +159,9 @@ def save_settings(settings: Dict[str, Any]) -> bool:
     pass
 #     #     if SETTINGS_FILE.exists():
 #     #         SETTINGS_FILE.unlink()
-#     #     # Clean up the parent directory if it's the test app data dir
+#     #     # Clean up the parent directory if it's the test app data dir'
 #     #     if APP_DATA_DIR.exists() and APP_DATA_DIR.name == ".ytpro_app_data":
-#     #          # Check if it's safe to remove (e.g., only contains settings.json and backup)
+#     #          # Check if it's safe to remove (e.g., only contains settings.json and backup)'
 #     #          contents = list(APP_DATA_DIR.iterdir())
 #     #          if all(c.name in ["settings.json", "settings.json.bak", "cache", "logs"] for c in contents): # Add other expected subdirs
 #     #               # Check if cache and logs are empty or only contain metadata/logs

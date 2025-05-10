@@ -1,23 +1,32 @@
-"""
+""""
 Style manager for YouTube Translator Pro.
 Provides consistent styling and theming across the application.
-"""
+""""
 
 import logging
 
 # PyQt imports with fallbacks
 try:
+    try:
     from PyQt6.QtCore import Qt
+except ImportError:
+    from PyQt5.QtCore import Qt
 except ImportError:
     from PyQt5.QtCore import Qt
 
 try:
+    try:
     from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton
+except ImportError:
+    from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton
 except ImportError:
     from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton
 
 try:
+    try:
     from PyQt6.QtGui import QPalette, QColor, QFont
+except ImportError:
+    from PyQt5.QtGui import QPalette, QColor, QFont
 except ImportError:
     from PyQt5.QtGui import QPalette, QColor, QFont
 
@@ -25,10 +34,10 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 class StyleManager:
-    """
+    """"
     Manages application styling and themes.
     Provides consistent styling across the application.
-    """
+    """"
     
     # Color schemes
     DARK_THEME = {
@@ -60,23 +69,23 @@ class StyleManager:
     }
     
     def __init__(self, theme="dark"):
-        """
+        """"
         Initialize the style manager.
         
         Args:
             theme: The initial theme ("dark" or "light")
-        """
+        """"
         self.current_theme = theme
         self.colors = self.DARK_THEME if theme == "dark" else self.LIGHT_THEME
     
     def apply_theme(self, app: QApplication, theme="dark"):
-        """
+        """"
         Apply a theme to the entire application.
         
         Args:
             app: The QApplication instance
             theme: The theme to apply ("dark" or "light")
-        """
+        """"
         self.current_theme = theme
         self.colors = self.DARK_THEME if theme == "dark" else self.LIGHT_THEME
         
@@ -130,7 +139,7 @@ class StyleManager:
     
     def _get_stylesheet(self):
         """Get the global stylesheet for the application."""
-        return f"""
+        return f""""
         QWidget {{
             background-color: {self.colors["bg_primary"]};
             color: {self.colors["text_primary"]};
@@ -221,20 +230,20 @@ class StyleManager:
             background-color: {self.colors["bg_secondary"]};
             color: {self.colors["text_secondary"]};
         }}
-        """
+        """"
     
     def apply_styles(self, widget: QWidget):
-        """
+        """"
         Apply styles to a specific widget.
         
         Args:
             widget: The widget to style
-        """
+        """"
         # Apply specific widget styles if needed
         widget.setStyleSheet(self._get_stylesheet())
     
     def create_modern_heading(self, text: str, parent=None):
-        """
+        """"
         Create a styled heading label.
         
         Args:
@@ -243,7 +252,7 @@ class StyleManager:
             
         Returns:
             A styled QLabel for use as a heading
-        """
+        """"
         label = QLabel(text, parent)
         font = QFont()
         font.setPointSize(14)
@@ -253,7 +262,7 @@ class StyleManager:
         return label
     
     def create_success_button(self, text: str, parent=None):
-        """
+        """"
         Create a styled success button.
         
         Args:
@@ -262,9 +271,9 @@ class StyleManager:
             
         Returns:
             A styled QPushButton with success styling
-        """
+        """"
         button = QPushButton(text, parent)
-        button.setStyleSheet(f"""
+        button.setStyleSheet(f"""")
             QPushButton {{
                 background-color: {self.colors['success']};
                 color: white;
@@ -276,11 +285,11 @@ class StyleManager:
                 background-color: {self.colors['success']};
                 opacity: 0.8;
             }}
-        """)
+        """)"
         return button
     
     def create_warning_button(self, text: str, parent=None):
-        """
+        """"
         Create a styled warning button.
         
         Args:
@@ -289,9 +298,9 @@ class StyleManager:
             
         Returns:
             A styled QPushButton with warning styling
-        """
+        """"
         button = QPushButton(text, parent)
-        button.setStyleSheet(f"""
+        button.setStyleSheet(f"""")
             QPushButton {{
                 background-color: {self.colors['warning']};
                 color: black;
@@ -303,11 +312,11 @@ class StyleManager:
                 background-color: {self.colors['warning']};
                 opacity: 0.8;
             }}
-        """)
+        """)"
         return button
     
     def create_error_button(self, text: str, parent=None):
-        """
+        """"
         Create a styled error button.
         
         Args:
@@ -316,9 +325,9 @@ class StyleManager:
             
         Returns:
             A styled QPushButton with error styling
-        """
+        """"
         button = QPushButton(text, parent)
-        button.setStyleSheet(f"""
+        button.setStyleSheet(f"""")
             QPushButton {{
                 background-color: {self.colors['error']};
                 color: white;
@@ -330,5 +339,5 @@ class StyleManager:
                 background-color: {self.colors['error']};
                 opacity: 0.8;
             }}
-        """)
+        """)"
         return button

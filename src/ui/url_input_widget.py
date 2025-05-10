@@ -1,7 +1,7 @@
-"""
+""""
 URL input widget for YouTube Translator Pro.
 Provides the interface for entering YouTube URLs to process.
-"""
+""""
 
 import logging
 from typing import List
@@ -12,19 +12,28 @@ logger = logging.getLogger(__name__)
 
 try:
     # First try PyQt6
+    try:
     from PyQt6.QtCore import Qt, pyqtSignal
-    from PyQt6.QtWidgets import (
+except ImportError:
+    from PyQt5.QtCore import Qt, pyqtSignal
+    try:
+    from PyQt6.QtWidgets import ()
+except ImportError:
+    from PyQt5.QtWidgets import ()
         QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
         QTextEdit, QGroupBox, QCheckBox
     )
+    try:
     from PyQt6.QtGui import QClipboard, QKeySequence
+except ImportError:
+    from PyQt5.QtGui import QClipboard, QKeySequence
     USE_PYQT6 = True
     logger.info("Using PyQt6 for URL input widget")
 except ImportError:
     try:
         # Then try PyQt5
         from PyQt5.QtCore import Qt, pyqtSignal
-        from PyQt5.QtWidgets import (
+        from PyQt5.QtWidgets import ()
             QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
             QTextEdit, QGroupBox, QCheckBox
         )
@@ -127,13 +136,13 @@ class UrlInputWidget(QWidget):
     urls_entered = pyqtSignal(list)
     
     def __init__(self, app_manager, parent=None):
-        """
+        """"
         Initialize the URL input widget.
         
         Args:
             app_manager: Reference to the ApplicationManager
             parent: The parent widget
-        """
+        """"
         super().__init__(parent)
         self.app_manager = app_manager
         self.style_manager = StyleManager()
@@ -151,7 +160,7 @@ class UrlInputWidget(QWidget):
         group_layout = QVBoxLayout(group_box)
         
         # Instructions label
-        instructions = (
+        instructions = ()
             "Enter YouTube URLs, one per line. You can paste multiple URLs at once. "
             "Only valid YouTube URLs will be processed."
         )
@@ -208,12 +217,12 @@ class UrlInputWidget(QWidget):
         self.url_text_edit.clear()
     
     def get_urls(self) -> List[str]:
-        """
+        """"
         Get the list of valid YouTube URLs from the input field.
         
         Returns:
             List of valid YouTube URLs
-        """
+        """"
         text = self.url_text_edit.toPlainText()
         lines = text.strip().split('\n')
         
@@ -231,7 +240,7 @@ class UrlInputWidget(QWidget):
         return valid_urls
     
     def _is_valid_youtube_url(self, url: str) -> bool:
-        """
+        """"
         Check if the given URL is a valid YouTube URL.
         
         Args:
@@ -239,7 +248,7 @@ class UrlInputWidget(QWidget):
             
         Returns:
             True if the URL is a valid YouTube URL, False otherwise
-        """
+        """"
         # Simple pattern matching for YouTube URLs
         patterns = [
             r'^(https?://)?(www\.)?(youtube\.com/watch\?v=[\w-]+)',

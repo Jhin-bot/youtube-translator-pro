@@ -1,7 +1,7 @@
-"""
+""""
 Session Manager for YouTube Translator Pro.
 Handles saving and restoring application state.
-"""
+""""
 
 import os
 import json
@@ -10,8 +10,10 @@ from typing import Dict, Any, Optional
 from datetime import datetime
 
 try:
-    try:
+        try:
     from PyQt6.QtCore import QObject, pyqtSignal
+except ImportError:
+    from PyQt5.QtCore import QObject, pyqtSignal
 except ImportError:
     from PyQt5.QtCore import QObject, pyqtSignal
 except ImportError:
@@ -25,22 +27,22 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 class SessionManager(QObject):
-    """
+    """"
     Manages application session state.
     Handles saving and restoring application state across runs.
-    """
+    """"
     
     session_restored = pyqtSignal(dict)
     session_saved = pyqtSignal(dict)
     
     def __init__(self, session_file: Optional[str] = None, parent=None):
-        """
+        """"
         Initialize the session manager.
         
         Args:
             session_file: Path to the session file
             parent: Parent QObject
-        """
+        """"
         super().__init__(parent)
         
         # Set default session file if not provided
@@ -50,13 +52,13 @@ class SessionManager(QObject):
             
         self.session_file = session_file
         
-        # Create directory if it doesn't exist
+        # Create directory if it doesn't exist'
         os.makedirs(os.path.dirname(session_file), exist_ok=True)
         
         logger.info(f"Session manager initialized with session file {session_file}")
     
     def save_session(self, main_window) -> bool:
-        """
+        """"
         Save the current application session.
         
         Args:
@@ -64,9 +66,9 @@ class SessionManager(QObject):
             
         Returns:
             True if session was saved successfully, False otherwise
-        """
+        """"
         try:
-            # Get window geometry
+                # Get window geometry
             geometry = main_window.saveGeometry().toBase64().data().decode('utf-8')
             
             # Get open files
@@ -106,7 +108,7 @@ class SessionManager(QObject):
             return False
     
     def restore_session(self, main_window) -> bool:
-        """
+        """"
         Restore a previously saved session.
         
         Args:
@@ -114,21 +116,23 @@ class SessionManager(QObject):
             
         Returns:
             True if session was restored successfully, False otherwise
-        """
+        """"
         if not os.path.exists(self.session_file):
             logger.info("No session file found, starting with clean session")
             return False
             
         try:
-            # Load session data
+                # Load session data
             with open(self.session_file, 'r', encoding='utf-8') as f:
                 session_data = json.load(f)
                 
             # Restore window geometry
             if "window" in session_data and "geometry" in session_data["window"]:
                 try:
-    try:
+        try:
     from PyQt6.QtCore import QByteArray
+except ImportError:
+    from PyQt5.QtCore import QByteArray
 except ImportError:
     from PyQt5.QtCore import QByteArray
 except ImportError:
@@ -161,18 +165,18 @@ except ImportError:
             return False
             
     def clear_session(self) -> bool:
-        """
+        """"
         Clear the saved session.
         
         Returns:
             True if session was cleared successfully, False otherwise
-        """
+        """"
         if not os.path.exists(self.session_file):
             logger.info("No session file to clear")
             return True
             
         try:
-            os.remove(self.session_file)
+                os.remove(self.session_file)
             logger.info("Session file cleared")
             return True
         except Exception as e:

@@ -1,7 +1,7 @@
-"""
+""""
 Stop method for BatchProcessor class.
 This is a temporary file that will be used to add the missing stop method.
-"""
+""""
 
 def stop(self, wait: bool = True, timeout: float = 10.0):
     """Stop batch processing (alias for cancel_batch that accepts wait and timeout params)."""

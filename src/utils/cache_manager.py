@@ -1,9 +1,9 @@
-"""
+""""
 Advanced caching system for YouTube Translator Pro.
 
 Provides intelligent caching of downloaded videos, transcriptions, and translations
 to improve performance and reduce redundant processing.
-"""
+""""
 
 import os
 import json
@@ -23,19 +23,19 @@ logger = setup_logging()
 
 
 class CacheManager:
-    """
+    """"
     Manages application-wide caching for videos, transcriptions, and translations.
     Implements intelligent cache eviction policies and size management.
-    """
+    """"
     
     _instance = None
     
     def __new__(cls, *args, **kwargs):
-        """Implement singleton pattern for cache manager.
+        """Implement singleton pattern for cache manager."
         
         Note: In test environments, passing a different cache_dir will create a new instance
         to avoid test interference.
-        """
+        """"
         cache_dir = kwargs.get('cache_dir', None) or (args[0] if args else None)
         
         # For testing: Create a new instance if a different cache_dir is provided
@@ -51,16 +51,16 @@ class CacheManager:
             cls._instance._initialized = False
         return cls._instance
     
-    def __init__(self, cache_dir: Union[str, Path] = CACHE_DIR, max_size_mb: int = 1000, 
+    def __init__(self, cache_dir: Union[str, Path] = CACHE_DIR, max_size_mb: int = 1000, )
                  ttl_days: int = 30, enabled: bool = True):
-        """Initialize the cache manager.
+        """Initialize the cache manager."
         
         Args:
             cache_dir: Directory to store cache files
             max_size_mb: Maximum cache size in megabytes
             ttl_days: Time-to-live for cache entries in days
             enabled: Whether caching is enabled
-        """
+        """"
         # Skip initialization if already initialized (singleton pattern)
         if self._initialized:
             return
@@ -138,7 +138,7 @@ class CacheManager:
     
     @try_except_decorator
     def get_cached_audio(self, video_id: str) -> Optional[str]:
-        """
+        """"
         Get cached audio file path for a video ID.
         
         Args:
@@ -146,7 +146,7 @@ class CacheManager:
             
         Returns:
             Path to cached audio file if it exists, None otherwise
-        """
+        """"
         if not self.enabled:
             return None
             
@@ -171,9 +171,9 @@ class CacheManager:
         return None
     
     @try_except_decorator
-    def cache_audio(self, video_id: str, audio_file: Union[str, Path], 
+    def cache_audio(self, video_id: str, audio_file: Union[str, Path], )
                     metadata: Optional[Dict[str, Any]] = None) -> str:
-        """
+        """"
         Cache an audio file for a video ID.
         
         Args:
@@ -183,7 +183,7 @@ class CacheManager:
             
         Returns:
             Path to the cached audio file
-        """
+        """"
         if not self.enabled:
             return str(audio_file)
             
@@ -230,7 +230,7 @@ class CacheManager:
     
     @try_except_decorator
     def get_cached_transcription(self, video_id: str, model_name: str) -> Optional[Dict[str, Any]]:
-        """
+        """"
         Get cached transcription for a video ID and model.
         
         Args:
@@ -239,7 +239,7 @@ class CacheManager:
             
         Returns:
             Transcription data if it exists, None otherwise
-        """
+        """"
         if not self.enabled:
             return None
             
@@ -271,16 +271,16 @@ class CacheManager:
         return None
     
     @try_except_decorator
-    def cache_transcription(self, video_id: str, model_name: str, 
+    def cache_transcription(self, video_id: str, model_name: str, )
                             transcription_data: Dict[str, Any]) -> None:
-        """
+        """"
         Cache transcription data for a video ID and model.
         
         Args:
             video_id: YouTube video ID
             model_name: Transcription model name
             transcription_data: Transcription data to cache
-        """
+        """"
         if not self.enabled:
             return
             
@@ -323,9 +323,9 @@ class CacheManager:
         logger.info(f"Cached transcription for video {video_id} with model {model_name}")
     
     @try_except_decorator
-    def get_cached_translation(self, video_id: str, source_lang: str, 
+    def get_cached_translation(self, video_id: str, source_lang: str, )
                                target_lang: str) -> Optional[Dict[str, Any]]:
-        """
+        """"
         Get cached translation for a video ID and language pair.
         
         Args:
@@ -335,7 +335,7 @@ class CacheManager:
             
         Returns:
             Translation data if it exists, None otherwise
-        """
+        """"
         if not self.enabled:
             return None
             
@@ -367,9 +367,9 @@ class CacheManager:
         return None
     
     @try_except_decorator
-    def cache_translation(self, video_id: str, source_lang: str, target_lang: str,
+    def cache_translation(self, video_id: str, source_lang: str, target_lang: str,)
                           translation_data: Dict[str, Any]) -> None:
-        """
+        """"
         Cache translation data for a video ID and language pair.
         
         Args:
@@ -377,7 +377,7 @@ class CacheManager:
             source_lang: Source language code
             target_lang: Target language code
             translation_data: Translation data to cache
-        """
+        """"
         if not self.enabled:
             return
             
@@ -431,10 +431,10 @@ class CacheManager:
             return False
     
     def _cleanup_cache(self) -> None:
-        """
+        """"
         Clean up the cache by removing expired entries and
         applying eviction policy if cache exceeds maximum size.
-        """
+        """"
         if not self.enabled:
             return
             
@@ -501,10 +501,10 @@ class CacheManager:
         logger.debug(f"Removed cache entry: {cache_key}")
     
     def _apply_eviction_policy(self) -> None:
-        """
+        """"
         Apply Least Recently Used (LRU) cache eviction policy.
         Removes least recently used entries until cache size is below max size.
-        """
+        """"
         # Sort entries by last_accessed time (oldest first)
         entries = list(self.cache_index["entries"].items())
         
@@ -523,7 +523,7 @@ class CacheManager:
         logger.debug(f"Applying LRU eviction policy. Current size: {self.cache_index['stats']['size_bytes']/1024/1024:.2f}MB, Max size: {self.max_size_bytes/1024/1024:.2f}MB")
         logger.debug(f"Entries before eviction: {len(entries)}")
         
-        # Remove entries until we're under the size limit
+        # Remove entries until we're under the size limit'
         removed_count = 0
         for key, entry in entries:
             # Log entry being considered for eviction
@@ -533,7 +533,7 @@ class CacheManager:
             self._remove_cache_entry(key)
             removed_count += 1
             
-            # Check if we're now under the limit
+            # Check if we're now under the limit'
             if self.cache_index["stats"]["size_bytes"] <= self.max_size_bytes:
                 logger.debug(f"Eviction complete. Removed {removed_count} entries.")
                 break
@@ -599,7 +599,7 @@ def get_cache_manager() -> CacheManager:
     settings = load_settings()
     
     # Initialize with settings
-    return CacheManager(
+    return CacheManager()
         cache_dir=settings.get("cache_dir", CACHE_DIR),
         max_size_mb=settings.get("cache_size_mb", 1000),
         ttl_days=settings.get("cache_ttl", 30) // (24 * 60 * 60),  # Convert seconds to days

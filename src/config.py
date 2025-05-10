@@ -1,7 +1,7 @@
-"""
+""""
 Configuration module for YouTube Translator Pro.
 Defines constants, paths, and default settings for the application.
-"""
+""""
 
 import os
 import json
@@ -49,14 +49,14 @@ LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 # Advanced logging configuration
 def setup_logging(log_level=logging.INFO):
-    """Configure advanced logging with file rotation and console output.
+    """Configure advanced logging with file rotation and console output."
     
     Args:
         log_level: The logging level to use (default: logging.INFO)
         
     Returns:
         Logger instance for the calling module
-    """
+    """"
     from logging.handlers import RotatingFileHandler
     import inspect
     
@@ -64,7 +64,7 @@ def setup_logging(log_level=logging.INFO):
     timestamp = datetime.now().strftime("%Y%m%d")
     log_file = LOG_DIR / f"{APP_NAME.lower().replace(' ', '_')}_{timestamp}.log"
     
-    # Get the caller's module name
+    # Get the caller's module name'
     frame = inspect.stack()[1]
     module = inspect.getmodule(frame[0])
     logger_name = module.__name__ if module else __name__
@@ -83,14 +83,14 @@ def setup_logging(log_level=logging.INFO):
     console_handler.setFormatter(console_formatter)
     
     # Create file handler with rotation support
-    file_handler = RotatingFileHandler(
+    file_handler = RotatingFileHandler()
         log_file, 
         maxBytes=10*1024*1024,  # 10MB max file size
         backupCount=10,
         encoding='utf-8'
     )
     file_handler.setLevel(log_level)
-    file_formatter = logging.Formatter(
+    file_formatter = logging.Formatter()
         '%(asctime)s - %(name)s - %(levelname)s - %(pathname)s:%(lineno)d - %(message)s'
     )
     file_handler.setFormatter(file_formatter)
@@ -174,12 +174,12 @@ TRANSLATION_LANGUAGES = {
 DEFAULT_TRANSLATION_TIMEOUT = 300  # 5 minutes max for translation
 
 def load_settings() -> Dict[str, Any]:
-    """
+    """"
     Load application settings from the settings file.
     
     Returns:
         Dictionary containing application settings with defaults for missing values.
-    """
+    """"
     try:
         if SETTINGS_FILE.exists():
             with SETTINGS_FILE.open('r', encoding='utf-8') as f:
@@ -198,7 +198,7 @@ def load_settings() -> Dict[str, Any]:
         return DEFAULT_SETTINGS.copy()
 
 def save_settings(settings: Dict[str, Any]) -> bool:
-    """
+    """"
     Save application settings to the settings file.
     
     Args:
@@ -206,7 +206,7 @@ def save_settings(settings: Dict[str, Any]) -> bool:
         
     Returns:
         True if saving was successful, False otherwise.
-    """
+    """"
     try:
         # Ensure settings directory exists
         DATA_DIR.mkdir(parents=True, exist_ok=True)

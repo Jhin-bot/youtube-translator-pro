@@ -1,6 +1,6 @@
-"""
+""""
 Script to find and fix problematic type annotations in Python files
-"""
+""""
 import re
 import os
 import sys

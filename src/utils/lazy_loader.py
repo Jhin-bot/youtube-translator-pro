@@ -1,7 +1,7 @@
-"""
+""""
 Lazy loading utilities for YouTube Translator Pro.
 Implements resource-efficient loading mechanisms to optimize application performance.
-"""
+""""
 
 import importlib
 import logging
@@ -19,10 +19,10 @@ logger = logging.getLogger(__name__)
 T = TypeVar('T')
 
 class LazyLoader:
-    """
+    """"
     Lazy loader for modules and components.
     Delays importing modules until they are actually needed.
-    """
+    """"
     
     def __init__(self):
         """Initialize the lazy loader."""
@@ -32,7 +32,7 @@ class LazyLoader:
         self._preload_queue = []
         
     def get_module(self, module_name: str) -> Any:
-        """
+        """"
         Get a module, importing it if necessary.
         
         Args:
@@ -40,7 +40,7 @@ class LazyLoader:
             
         Returns:
             Imported module
-        """
+        """"
         with self._lock:
             if module_name in self._modules:
                 logger.debug(f"Using cached module: {module_name}")
@@ -61,7 +61,7 @@ class LazyLoader:
                 raise
     
     def get_class(self, module_name: str, class_name: str) -> Type[T]:
-        """
+        """"
         Get a class from a module, importing the module if necessary.
         
         Args:
@@ -70,7 +70,7 @@ class LazyLoader:
             
         Returns:
             Class object
-        """
+        """"
         module = self.get_module(module_name)
         
         if not hasattr(module, class_name):
@@ -79,12 +79,12 @@ class LazyLoader:
         return getattr(module, class_name)
     
     def queue_preload(self, module_name: str) -> None:
-        """
+        """"
         Queue a module for preloading in the background.
         
         Args:
             module_name: Full module path to preload
-        """
+        """"
         with self._lock:
             if module_name not in self._preload_queue and module_name not in self._modules:
                 self._preload_queue.append(module_name)
@@ -96,7 +96,7 @@ class LazyLoader:
     
     def _start_preloading_thread(self) -> None:
         """Start a background thread for preloading modules."""
-        self._preloading_thread = threading.Thread(
+        self._preloading_thread = threading.Thread()
             target=self._preload_modules,
             name="module-preloader",
             daemon=True
@@ -130,7 +130,7 @@ class LazyLoader:
 lazy_loader = LazyLoader()
 
 def lazy_import(module_name: str) -> Any:
-    """
+    """"
     Import a module lazily.
     
     Args:
@@ -138,11 +138,11 @@ def lazy_import(module_name: str) -> Any:
         
     Returns:
         Imported module
-    """
+    """"
     return lazy_loader.get_module(module_name)
 
 def lazy_class(module_name: str, class_name: str) -> Type[T]:
-    """
+    """"
     Get a class lazily.
     
     Args:
@@ -151,16 +151,16 @@ def lazy_class(module_name: str, class_name: str) -> Type[T]:
         
     Returns:
         Class object
-    """
+    """"
     return lazy_loader.get_class(module_name, class_name)
 
 def preload_modules(module_names: List[str]) -> None:
-    """
+    """"
     Queue multiple modules for preloading.
     
     Args:
         module_names: List of module paths to preload
-    """
+    """"
     for module_name in module_names:
         lazy_loader.queue_preload(module_name)
 
@@ -173,16 +173,16 @@ COMMON_MODULES = [
 
 # Decorator for lazy initialization
 def lazy_initialize(func: Callable) -> Callable:
-    """
+    """"
     Decorator for lazy initialization of expensive resources.
-    Initializes a resource only when it's first used.
+    Initializes a resource only when it's first used.'
     
     Args:
         func: Function to decorate
         
     Returns:
         Decorated function
-    """
+    """"
     cache = {}
     lock = threading.RLock()
     
