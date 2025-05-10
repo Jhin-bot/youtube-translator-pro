@@ -40,7 +40,6 @@ except ImportError:
     class QtAwesomeMock:
         def icon(self, *args, **kwargs):
             try:
-    try:
     from PyQt6.QtGui import QIcon
 except ImportError:
     from PyQt5.QtGui import QIcon
@@ -62,7 +61,6 @@ except ImportError:
     QAbstractAnimation, QEasingCurve # Added QEasingCurve for animations
 )
 try:
-    try:
     from PyQt6.QtGui import (
 except ImportError:
     from PyQt5.QtGui import (
@@ -74,7 +72,6 @@ except ImportError:
     QValidator, QIntValidator, QDoubleValidator, QShortcut, QKeySequence # Added QKeySequence
 )
 try:
-    try:
     from PyQt6.QtWidgets import (
 except ImportError:
     from PyQt5.QtWidgets import (

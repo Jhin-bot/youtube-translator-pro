@@ -20,7 +20,6 @@ except ImportError:
     QCoreApplication
 )
 try:
-    try:
     from PyQt6.QtGui import (
 except ImportError:
     from PyQt5.QtGui import (
@@ -30,7 +29,6 @@ except ImportError:
     QFontMetrics, QImage
 )
 try:
-    try:
     from PyQt6.QtWidgets import (
 except ImportError:
     from PyQt5.QtWidgets import (

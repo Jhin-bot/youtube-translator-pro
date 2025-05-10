@@ -8,27 +8,114 @@ import logging
 import threading
 from functools import partial
 
+# Set up logging
+logger = logging.getLogger(__name__)
+
 try:
+    # First try PyQt6
     from PyQt6.QtWidgets import (
         QToolBar, QMenu, QStatusBar, QLabel,
         QMenuBar, QMainWindow, QMessageBox, QDialog,
         QVBoxLayout
     )
-except ImportError:
-    from PyQt5.QtWidgets import (
-        QToolBar, QMenu, QStatusBar, QLabel,
-        QMenuBar, QMainWindow, QMessageBox, QDialog,
-        QVBoxLayout
-    )
-try:
     from PyQt6.QtGui import QAction, QIcon
-except ImportError:
-    from PyQt5.QtGui import QAction, QIcon
-
-try:
     from PyQt6.QtCore import Qt, QSettings, QTimer, pyqtSignal
+    USE_PYQT6 = True
+    logger.info("Using PyQt6 for UI integration components")
 except ImportError:
-    from PyQt5.QtCore import Qt, QSettings, QTimer, pyqtSignal
+    try:
+        # Then try PyQt5
+        from PyQt5.QtWidgets import (
+            QToolBar, QMenu, QStatusBar, QLabel,
+            QMenuBar, QMainWindow, QMessageBox, QDialog,
+            QVBoxLayout
+        )
+        from PyQt5.QtGui import QAction, QIcon
+        from PyQt5.QtCore import Qt, QSettings, QTimer, pyqtSignal
+        USE_PYQT6 = False
+        logger.info("Using PyQt5 for UI integration components")
+    except ImportError:
+        # If neither PyQt6 nor PyQt5 is available, create mock classes
+        logger.warning("Neither PyQt6 nor PyQt5 is available. Creating mock classes for integration components.")
+        USE_PYQT6 = False
+        
+        # Mock implementations for QtWidgets classes
+        class QToolBar:
+            def __init__(self, *args, **kwargs): pass
+            def addAction(self, *args, **kwargs): pass
+            def addSeparator(self, *args, **kwargs): pass
+        
+        class QMenu:
+            def __init__(self, *args, **kwargs): pass
+            def addAction(self, *args, **kwargs): pass
+            def addSeparator(self, *args, **kwargs): pass
+            
+        class QStatusBar:
+            def __init__(self, *args, **kwargs): pass
+            def showMessage(self, *args, **kwargs): pass
+            
+        class QLabel:
+            def __init__(self, *args, **kwargs): pass
+            def setText(self, *args, **kwargs): pass
+            
+        class QMenuBar:
+            def __init__(self, *args, **kwargs): pass
+            def addMenu(self, *args, **kwargs): pass
+            
+        class QMainWindow:
+            def __init__(self, *args, **kwargs): pass
+            def setCentralWidget(self, *args, **kwargs): pass
+            
+        class QMessageBox:
+            def __init__(self, *args, **kwargs): pass
+            @staticmethod
+            def information(*args, **kwargs): pass
+            @staticmethod
+            def warning(*args, **kwargs): pass
+            @staticmethod
+            def critical(*args, **kwargs): pass
+            
+        class QDialog:
+            def __init__(self, *args, **kwargs): pass
+            def exec(self, *args, **kwargs): pass
+            
+        class QVBoxLayout:
+            def __init__(self, *args, **kwargs): pass
+            def addWidget(self, *args, **kwargs): pass
+            
+        # Mock implementations for QtGui classes
+        class QAction:
+            def __init__(self, *args, **kwargs): pass
+            def triggered(self): return MockSignal()
+            def setEnabled(self, *args, **kwargs): pass
+            
+        class QIcon:
+            def __init__(self, *args, **kwargs): pass
+            
+        # Mock implementations for QtCore classes
+        class Qt:
+            AlignCenter = 0
+            AlignLeft = 0
+            AlignRight = 0
+            
+        class QSettings:
+            def __init__(self, *args, **kwargs): pass
+            def setValue(self, *args, **kwargs): pass
+            def value(self, *args, **kwargs): return None
+            
+        class QTimer:
+            def __init__(self, *args, **kwargs): pass
+            def timeout(self): return MockSignal()
+            def start(self, *args, **kwargs): pass
+            def stop(self): pass
+            
+        class MockSignal:
+            def __init__(self): pass
+            def connect(self, func): pass
+            def emit(self, *args): pass
+            
+        # Alias for pyqtSignal
+        pyqtSignal = lambda *args, **kwargs: MockSignal()
 
 from src.utils.localization import localization, get_string
 from src.utils.telemetry import telemetry

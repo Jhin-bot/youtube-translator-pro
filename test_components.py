@@ -13,15 +13,12 @@ if str(package_parent) not in sys.path:
     sys.path.insert(0, str(package_parent))
 
 try:
-    try:
     from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QMessageBox
 except ImportError:
     from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QMessageBox
 except ImportError:
     from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QMessageBox
 try:
-    try:
-    try:
     from PyQt6.QtCore import Qt
 except ImportError:
     from PyQt5.QtCore import Qt

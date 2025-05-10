@@ -22,8 +22,6 @@ from urllib.parse import urlparse
 import requests
 try:
     try:
-    try:
-    try:
     from PyQt6.QtCore import QObject, pyqtSignal, QThread
 except ImportError:
     from PyQt5.QtCore import QObject, pyqtSignal, QThread

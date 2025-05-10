@@ -27,7 +27,6 @@ def main():
     
     # Import Qt modules here to avoid circular imports
     try:
-    try:
     from PyQt6.QtWidgets import QApplication
 except ImportError:
     from PyQt5.QtWidgets import QApplication

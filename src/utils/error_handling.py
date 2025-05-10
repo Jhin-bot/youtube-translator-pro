@@ -17,7 +17,6 @@ from datetime import datetime
 from pathlib import Path
 
 try:
-    try:
     from PyQt6.QtWidgets import QMessageBox, QApplication
 except ImportError:
     from PyQt5.QtWidgets import QMessageBox, QApplication

@@ -179,7 +179,7 @@ jobs:
     - name: Build with PyInstaller
       run: |
         # Use the platform-specific separator for add-data
-        pyinstaller --onefile --windowed --name YouTube_Translator_Pro --add-data "resources${{ matrix.add_data_separator }}resources" main.py
+        pyinstaller --onefile --windowed --name YouTube_Translator_Pro --add-data "src/resources${{ matrix.add_data_separator }}resources" main.py
       shell: bash
         
     - name: Upload artifact

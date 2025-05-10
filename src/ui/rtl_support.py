@@ -5,7 +5,6 @@ Provides helper functions and classes for handling RTL languages.
 
 import logging
 try:
-    try:
     from PyQt6.QtWidgets import QWidget, QApplication
 except ImportError:
     from PyQt5.QtWidgets import QWidget, QApplication

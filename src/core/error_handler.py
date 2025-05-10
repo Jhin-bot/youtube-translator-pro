@@ -16,8 +16,6 @@ from enum import Enum, auto
 
 try:
     try:
-    try:
-    try:
     from PyQt6.QtCore import QObject, pyqtSignal
 except ImportError:
     from PyQt5.QtCore import QObject, pyqtSignal
